@@ -1,6 +1,6 @@
 ﻿namespace Multiplayer_game_met_bois
 {
-    partial class Form1
+    public partial class Form1
     {
         /// <summary>
         ///  Required designer variable.
@@ -36,6 +36,7 @@
             this.rtServer = new System.Windows.Forms.RichTextBox();
             this.Tabs = new System.Windows.Forms.TabControl();
             this.ServerPage = new System.Windows.Forms.TabPage();
+            this.btnSendServer = new System.Windows.Forms.Button();
             this.txtOutput = new System.Windows.Forms.TextBox();
             this.btnStop = new System.Windows.Forms.Button();
             this.ClientPage = new System.Windows.Forms.TabPage();
@@ -47,7 +48,6 @@
             this.lbl = new System.Windows.Forms.Label();
             this.txtHostClient = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.btnSendServer = new System.Windows.Forms.Button();
             this.Tabs.SuspendLayout();
             this.ServerPage.SuspendLayout();
             this.ClientPage.SuspendLayout();
@@ -135,12 +135,22 @@
             this.ServerPage.TabIndex = 0;
             this.ServerPage.Text = "Server";
             // 
+            // btnSendServer
+            // 
+            this.btnSendServer.Location = new System.Drawing.Point(18, 281);
+            this.btnSendServer.Name = "btnSendServer";
+            this.btnSendServer.Size = new System.Drawing.Size(234, 48);
+            this.btnSendServer.TabIndex = 8;
+            this.btnSendServer.Text = "Send";
+            this.btnSendServer.UseVisualStyleBackColor = true;
+            this.btnSendServer.Click += new System.EventHandler(this.btnSendServer_Click);
+            // 
             // txtOutput
             // 
             this.txtOutput.Location = new System.Drawing.Point(18, 119);
             this.txtOutput.Multiline = true;
             this.txtOutput.Name = "txtOutput";
-            this.txtOutput.Size = new System.Drawing.Size(234, 156);
+            this.txtOutput.Size = new System.Drawing.Size(397, 156);
             this.txtOutput.TabIndex = 7;
             // 
             // btnStop
@@ -241,16 +251,6 @@
             this.label4.TabIndex = 9;
             this.label4.Text = "Port:";
             // 
-            // btnSendServer
-            // 
-            this.btnSendServer.Location = new System.Drawing.Point(18, 281);
-            this.btnSendServer.Name = "btnSendServer";
-            this.btnSendServer.Size = new System.Drawing.Size(234, 48);
-            this.btnSendServer.TabIndex = 8;
-            this.btnSendServer.Text = "Send";
-            this.btnSendServer.UseVisualStyleBackColor = true;
-            this.btnSendServer.Click += new System.EventHandler(this.btnSendServer_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -288,7 +288,7 @@
         private Label lbl;
         private TextBox txtHostClient;
         private Label label4;
-        private TextBox txtOutput;
+        public TextBox txtOutput;
         private Button btnSendServer;
     }
 }

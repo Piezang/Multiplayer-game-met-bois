@@ -11,6 +11,7 @@ namespace Multiplayer_game_met_bois
 {
     public partial class Form1 : Form   //Server class
     {
+        
         Stopwatch timer = new Stopwatch();
         static int elapsedTime = 0;
         int count = 0;
@@ -29,11 +30,12 @@ namespace Multiplayer_game_met_bois
             //timer.Stop();
             //MessageBox.Show(FixedDeltaTime.ToString());
         }
-
+        
         private void btnStart_Click(object sender, EventArgs e)
         {
             //Server server = new Server();
             //server.start(txtHost.Text, Convert.ToInt32(txtPort.Text));
+            
             Thread ServerThread = new Thread(() => 
             Server.start(txtHost.Text, Convert.ToInt32(txtPort.Text)));
             ServerThread.Start();
@@ -90,7 +92,7 @@ namespace Multiplayer_game_met_bois
             //return;
         }
 
-        void TrueFixedUpdate() //Word tussen 61 en 63 keer per sekonde gecall
+        public void TrueFixedUpdate() //Word tussen 61 en 63 keer per sekonde gecall
         {
             count++;
             //MessageBox.Show(timer.ElapsedMilliseconds.ToString());
@@ -100,7 +102,9 @@ namespace Multiplayer_game_met_bois
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            Client.connect(txtHostClient.Text, Convert.ToInt32(txtPortClient.Text));
+            FormKaas k = new FormKaas(this);
+            //k.Start();
+            //Client.connect(txtHostClient.Text, Convert.ToInt32(txtPortClient.Text));
         }
 
         private void btnSend_Click(object sender, EventArgs e)
@@ -111,11 +115,48 @@ namespace Multiplayer_game_met_bois
         private void btnSendServer_Click(object sender, EventArgs e)
         {
             //Server.Message(txtOutput.Text, default(Socket)!);
+            change();
         }
+        public void change()
+        {
+            Server server = new Server(this);
+            for (int i = 0; i < 2000; i ++)
+            {
+                txtOutput.Text += server.waarde();
+            }
+            
+        }
+        public TextBox txtOutput1;
     }
 
-    class Server
+    public class Server : FormKaas
     {
+        Form1 _form;
+        bool ja = false;
+        public Server(Form1 form) : base(form)
+        {
+            _form = form;
+        }
+
+        protected override void FixedUpdate(Form1 f) //word soos 60 keer per sekonde gecall?
+        {
+            if (ja == false) { ja = true; return; }
+            if (ja == true) { ja = false; return; }
+            //Thread.CurrentThread.Join();
+            MessageBox.Show(ja.ToString());
+            //MessageBox.Show("ha");
+            //if (f == null) return;
+            //f.txtOutput.Text = "hehe";//change("Ha");
+        }
+        public string waarde()
+        {
+            if (ja)
+            {
+                //ja = false;
+                return "K";
+            }
+            return "n";
+        }
         public static void start(string ip, int port)
         {
             Socket Serverlistener = new Socket(AddressFamily
@@ -124,47 +165,38 @@ namespace Multiplayer_game_met_bois
 
             Serverlistener.Bind(ep);
             Serverlistener.Listen(100);
-            //rtServer.Text += "Server is listening";
             MessageBox.Show("Server is listening");
 
-            Server s = new Server();
+            Server s = new Server(null!);
             Socket ClientSocket = default(Socket)!;
             int counter = 0;
             while (true)
             {
                 counter++;
                 ClientSocket = Serverlistener.Accept();
-                //rtServer.Text += (counter.ToString() + " Clients connected");
                 MessageBox.Show(counter.ToString() + " Clients connected");
                 Thread UserThread = new Thread(new ThreadStart(() =>  s.User(ClientSocket)));  //verander
                 //Thread UserThread = new Thread(new ThreadStart(() => s.User(ClientSocket)));  // ou een
                 UserThread.Start();
-                //await Task.Delay(100); 
             }
         }
-        public void User(Socket client)  //verander
+        public void User(Socket client) 
         {
             while (true)
             {
                 byte[] msg = new byte[1024];
-                //int size = client.Receive(msg);
-                if (Encoding.Default.GetString(msg).Length > 3)
+                int size = client.Receive(msg);
+                string message = System.Text.Encoding.ASCII.GetString(msg, 0, size);
+                //MessageBox.Show(message);
+                if (message[0] == 'm')
                 {
-                    MessageBox.Show("Message from client: " + Encoding.Default.GetString(msg));
+                    message = message.Substring(1);
+                    MessageBox.Show("Message from client: " + message);
                     msg = Encoding.Default.GetBytes("Server has received your message");
                     client.Send(msg);
                 }                   
-                //client.Send(msg, 0, size, SocketFlags.None);   
-                //break;                                  //nuut
-                //await Task.Run(() => User(client)); //nuut
             }
         }   
-        //public static void Message(string input, Socket client) //Hierdie gaan nie werk nie ook onnodig
-        //{
-            //byte[] msg = new byte[1024];
-            //msg = Encoding.Default.GetBytes(input);
-            //client.Send(msg);
-        //}
     }
 
     class Client
@@ -177,14 +209,13 @@ namespace Multiplayer_game_met_bois
             //string ip = "127.0.0.1";//txtHostClient.Text;
             //int port = 8910;//Convert.ToInt32(txtPort.Text);          
             IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
-
             ClientSocket.Connect(ep);
-            //rt.Lines.Append("Server is listening");
             MessageBox.Show("Client is connected");
         }
 
         public static void Message(string messageFromClient)
         {
+            messageFromClient = "m" + messageFromClient;
             ClientSocket.Send(System.Text.Encoding.ASCII.GetBytes(messageFromClient), 0,
                 messageFromClient.Length, SocketFlags.None);
 
