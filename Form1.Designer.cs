@@ -49,9 +49,9 @@
             this.lbl = new System.Windows.Forms.Label();
             this.txtHostClient = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.Tabs.SuspendLayout();
             this.ServerPage.SuspendLayout();
             this.ClientPage.SuspendLayout();
@@ -258,11 +258,6 @@
             this.label4.TabIndex = 9;
             this.label4.Text = "Port:";
             // 
-            // timer1
-            // 
-            this.timer1.Interval = 17;
-            this.timer1.Tick += new System.EventHandler(this.TimerUpdate);
-            // 
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.pictureBox1);
@@ -276,11 +271,17 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(61, 35);
+            this.pictureBox1.BackColor = System.Drawing.Color.Black;
+            this.pictureBox1.Location = new System.Drawing.Point(42, 31);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(744, 432);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 17;
+            this.timer1.Tick += new System.EventHandler(this.TimerUpdate);
             // 
             // Form1
             // 
