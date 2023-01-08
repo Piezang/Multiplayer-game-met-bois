@@ -29,6 +29,8 @@ namespace Multiplayer_game_met_bois
             //FixedDeltaTime = 1/(count*1000/timer.ElapsedMilliseconds);
             //timer.Stop();
             //MessageBox.Show(FixedDeltaTime.ToString());
+            timer1.Enabled= true;
+            timer1.Enabled = false;
         }
         
         private void btnStart_Click(object sender, EventArgs e)
@@ -102,9 +104,9 @@ namespace Multiplayer_game_met_bois
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            FormKaas k = new FormKaas(this);
+            //FormKaas k = new FormKaas(this);
             //k.Start();
-            //Client.connect(txtHostClient.Text, Convert.ToInt32(txtPortClient.Text));
+            Client.connect(txtHostClient.Text, Convert.ToInt32(txtPortClient.Text));
         }
 
         private void btnSend_Click(object sender, EventArgs e)
@@ -115,6 +117,7 @@ namespace Multiplayer_game_met_bois
         private void btnSendServer_Click(object sender, EventArgs e)
         {
             //Server.Message(txtOutput.Text, default(Socket)!);
+            txtOutput.Clear();
             change();
         }
         public void change()
@@ -124,9 +127,33 @@ namespace Multiplayer_game_met_bois
             {
                 txtOutput.Text += server.waarde();
             }
-            
+            char prev = 'K';
+            int amountInLine = 0;
+            int amountOfLines = 0;
+            foreach (char c in txtOutput.Text)
+            {      
+                if (c == 'K')
+                {
+                    amountInLine++;
+                    prev = c;
+                    continue;
+                }
+                if (c == 'n' && prev == 'K')
+                {
+                    amountOfLines++;
+                }
+                prev = c;
+            }
+            MessageBox.Show(amountInLine.ToString());
+            MessageBox.Show(amountOfLines.ToString());
+            MessageBox.Show((amountInLine/amountOfLines).ToString());
+            var FixedDeltaTime = 1/(amountInLine / amountOfLines);
         }
-        public TextBox txtOutput1;
+
+        private void TimerUpdate(object sender, EventArgs e)
+        {
+            txtOutput.Text += "K";
+        }
     }
 
     public class Server : FormKaas
@@ -143,7 +170,7 @@ namespace Multiplayer_game_met_bois
             if (ja == false) { ja = true; return; }
             if (ja == true) { ja = false; return; }
             //Thread.CurrentThread.Join();
-            MessageBox.Show(ja.ToString());
+            //MessageBox.Show(ja.ToString());
             //MessageBox.Show("ha");
             //if (f == null) return;
             //f.txtOutput.Text = "hehe";//change("Ha");

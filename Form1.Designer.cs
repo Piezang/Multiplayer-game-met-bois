@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.txtHost = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -48,6 +49,7 @@
             this.lbl = new System.Windows.Forms.Label();
             this.txtHostClient = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.Tabs.SuspendLayout();
             this.ServerPage.SuspendLayout();
             this.ClientPage.SuspendLayout();
@@ -251,6 +253,11 @@
             this.label4.TabIndex = 9;
             this.label4.Text = "Port:";
             // 
+            // timer1
+            // 
+            this.timer1.Interval = 17;
+            this.timer1.Tick += new System.EventHandler(this.TimerUpdate);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -290,5 +297,6 @@
         private Label label4;
         public TextBox txtOutput;
         private Button btnSendServer;
+        private System.Windows.Forms.Timer timer1;
     }
 }
