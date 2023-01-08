@@ -152,7 +152,7 @@
             this.txtOutput.Location = new System.Drawing.Point(18, 119);
             this.txtOutput.Multiline = true;
             this.txtOutput.Name = "txtOutput";
-            this.txtOutput.Size = new System.Drawing.Size(397, 156);
+            this.txtOutput.Size = new System.Drawing.Size(234, 156);
             this.txtOutput.TabIndex = 7;
             // 
             // btnStop
