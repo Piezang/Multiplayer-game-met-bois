@@ -50,9 +50,13 @@
             this.txtHostClient = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.Tabs.SuspendLayout();
             this.ServerPage.SuspendLayout();
             this.ClientPage.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // txtHost
@@ -102,7 +106,7 @@
             // rtServer
             // 
             this.rtServer.BackColor = System.Drawing.SystemColors.HotTrack;
-            this.rtServer.Location = new System.Drawing.Point(445, 167);
+            this.rtServer.Location = new System.Drawing.Point(440, 295);
             this.rtServer.Name = "rtServer";
             this.rtServer.Size = new System.Drawing.Size(409, 134);
             this.rtServer.TabIndex = 5;
@@ -112,6 +116,7 @@
             // 
             this.Tabs.Controls.Add(this.ServerPage);
             this.Tabs.Controls.Add(this.ClientPage);
+            this.Tabs.Controls.Add(this.tabPage1);
             this.Tabs.Location = new System.Drawing.Point(12, 12);
             this.Tabs.Name = "Tabs";
             this.Tabs.SelectedIndex = 0;
@@ -149,10 +154,10 @@
             // 
             // txtOutput
             // 
-            this.txtOutput.Location = new System.Drawing.Point(18, 119);
+            this.txtOutput.Location = new System.Drawing.Point(18, 105);
             this.txtOutput.Multiline = true;
             this.txtOutput.Name = "txtOutput";
-            this.txtOutput.Size = new System.Drawing.Size(397, 156);
+            this.txtOutput.Size = new System.Drawing.Size(287, 156);
             this.txtOutput.TabIndex = 7;
             // 
             // btnStop
@@ -258,6 +263,25 @@
             this.timer1.Interval = 17;
             this.timer1.Tick += new System.EventHandler(this.TimerUpdate);
             // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.pictureBox1);
+            this.tabPage1.Location = new System.Drawing.Point(4, 24);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(886, 503);
+            this.tabPage1.TabIndex = 2;
+            this.tabPage1.Text = "tabPage1";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(61, 35);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(744, 432);
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -271,6 +295,8 @@
             this.ServerPage.PerformLayout();
             this.ClientPage.ResumeLayout(false);
             this.ClientPage.PerformLayout();
+            this.tabPage1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -298,5 +324,7 @@
         public TextBox txtOutput;
         private Button btnSendServer;
         private System.Windows.Forms.Timer timer1;
+        private TabPage tabPage1;
+        private PictureBox pictureBox1;
     }
 }
