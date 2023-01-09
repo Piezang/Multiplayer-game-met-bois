@@ -1,8 +1,16 @@
-﻿using System;
+﻿using Multiplayer_game_met_bois;
+using System;
 
-public class Class1
+public class TerrainGen
 {
-	public Class1()
+	Point[] TerrainOutln = new Point[832];
+
+	public TerrainGen()
 	{
+		for (int i = 0; i < 833; i++)
+		{
+			Point Coords = new Point(i, (int)Math.Sin(60));
+			TerrainOutln[i] = Coords;
+		}
 	}
 }
