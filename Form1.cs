@@ -30,16 +30,18 @@ namespace Multiplayer_game_met_bois
             //timer.Stop();
             //MessageBox.Show(FixedDeltaTime.ToString());
             timer1.Enabled = true;
-            timer1.Enabled = false;
+            //timer1.Enabled = false;
             KeyPreview = true;         
         }
 
-        SharpShooterTank tank = new SharpShooterTank(new Point(), 0, new Point(), 180);
+        SharpShooterTank tank = new SharpShooterTank(new Point(100, 100), 3, new Point(0,0), 180);
         private void Form1_keyPress(object sender, KeyPressEventArgs e)
         {
             //MessageBox.Show(e.KeyChar.ToString());
             tank.Move(e.KeyChar);
-         
+            //pictureBox1.Image.Dispose();
+            
+
             if (e.KeyChar >= 48 && e.KeyChar <= 57)
             {
                 MessageBox.Show($"Form.KeyPress: '{e.KeyChar}' pressed.");
@@ -176,6 +178,11 @@ namespace Multiplayer_game_met_bois
         private void TimerUpdate(object sender, EventArgs e)
         {
             txtOutput.Text += "K";
+            MoveImage();
+        }
+        private void MoveImage()
+        {
+            pictureBox1.Image = tank.UpdateImage();
         }
     }
 

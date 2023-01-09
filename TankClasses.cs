@@ -66,20 +66,21 @@ class BaseTank : Rigidbody
     
     public void Move(char c)
     {
+        
         switch (c)
         {
-            case 'w': newForce = new Point(0, -3); MessageBox.Show(c.ToString());
+            case 'w': newForce = new Point(0, -3); //MessageBox.Show(c.ToString());
                 break;
-            case 's': newForce = new Point(0, 3); MessageBox.Show(c.ToString());
+            case 's': newForce = new Point(0, 3); //MessageBox.Show(c.ToString());
                 break;
-            case 'a': newForce = new Point(-3, 0); MessageBox.Show(c.ToString());
+            case 'a': newForce = new Point(-3, 0); //MessageBox.Show(c.ToString());
                 break;
-            case 'd': newForce = new Point(3, 0); MessageBox.Show(c.ToString());
+            case 'd': newForce = new Point(3, 0); //MessageBox.Show(c.ToString());
                 break;
             default : return;
         }
         MovementForce = new Point(MovementForce.X + newForce.X,
-            MovementForce.Y + newForce.Y);
+           MovementForce.Y + newForce.Y);
         force = MovementForce;  UpdatePos();
     }
 
@@ -93,7 +94,7 @@ class BaseTank : Rigidbody
 class SharpShooterTank : BaseTank
 {
     Image SharpShooterTankimg = null!;  //Image.FromFile("image.png");  
-    Bitmap bitmap;
+    Bitmap bitmap = new Bitmap(4000, 4000);
     Graphics g; 
 
     private int health = 100;
@@ -101,13 +102,14 @@ class SharpShooterTank : BaseTank
 
     public SharpShooterTank(Point pos, int mass, Point frce, float angl) 
 	{ 
-		position = pos; gravity = new Point(0, mass * -1);
+		position = pos; gravity = new Point(0, mass * 1);
 		force = frce; 
 		CanonAngle = angl;
 
         //bitmap = new Bitmap(SharpShooterTankimg); 
-        //g = Graphics.FromImage(bitmap);
-        //g.DrawRectangle(Pens.White, 10, 10, 100, 100);
+        g = Graphics.FromImage(bitmap);
+        g.DrawRectangle(Pens.White, pos.X, pos.Y, 10, 10);
+        g.FillRectangle(Brushes.White, pos.X, pos.Y, 10, 10);
         //Start();
     }
     public void Damage(int damage)
@@ -122,10 +124,16 @@ class SharpShooterTank : BaseTank
         destroyed = true;
     }
 
-    public Image UpdateImage()
+    public Bitmap UpdateImage()
     {
-        
-        return SharpShooterTankimg;
+        g = Graphics.FromImage(bitmap);
+        g.Clear(Color.Black);
+        //Wrywing
+        //MovementForce = new Point((int)(MovementForce.X * 0.9), (int)(MovementForce.Y * 0.9));
+        UpdatePos();
+        g.DrawRectangle(Pens.White, position.X, position.Y, 10, 10);
+        g.FillRectangle(Brushes.White, position.X, position.Y, 10, 10);
+        return bitmap;
     }
 
 	~SharpShooterTank()
