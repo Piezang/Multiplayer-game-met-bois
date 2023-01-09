@@ -88,19 +88,19 @@ class BaseTank : Rigidbody
     {  
         switch (c)
         {
-            case 'w': newForce = new Point(0, -3); //MessageBox.Show(c.ToString());
+            case 'w': newForce = new Point(0, -2); //MessageBox.Show(c.ToString());
                 break;
-            case 's': newForce = new Point(0, 3); //MessageBox.Show(c.ToString());
+            case 's': newForce = new Point(0, 2); //MessageBox.Show(c.ToString());
                 break;
-            case 'a': newForce = new Point(-3, 0); //MessageBox.Show(c.ToString());
+            case 'a': newForce = new Point(-2, 0); //MessageBox.Show(c.ToString());
                 break;
-            case 'd': newForce = new Point(3, 0); //MessageBox.Show(c.ToString());
+            case 'd': newForce = new Point(2, 0); //MessageBox.Show(c.ToString());
                 break;
             default : return;
         }
         MovementForce = new Point(MovementForce.X + newForce.X,
           MovementForce.Y + newForce.Y);
-        force = MovementForce;  UpdatePos();
+        force = MovementForce;  //UpdatePos();
     }
 
     public BaseTank() 
@@ -143,10 +143,11 @@ class SharpShooterTank : BaseTank
         destroyed = true;
     }
 
-    public Bitmap UpdateImage()
+    public Bitmap UpdateImage(Bitmap bitmap)
     {
         g = Graphics.FromImage(bitmap);
-        g.Clear(Color.Black);
+        g.DrawRectangle(Pens.Black, position.X, position.Y, 10, 10);
+        g.FillRectangle(Brushes.Black, position.X, position.Y, 10, 10);
         //Wrywing
         //MovementForce = new Point((int)(MovementForce.X * 0.9), (int)(MovementForce.Y * 0.9));
         UpdatePos();

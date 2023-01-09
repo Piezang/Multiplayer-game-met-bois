@@ -32,10 +32,10 @@ public class TerrainGen
 		}*/
 	}
 
-	public Bitmap TerrainImage()
+	public Bitmap TerrainImage(Bitmap bitmap)
 	{
-		Bitmap bmp = new Bitmap(883, 497);
-		Graphics g = Graphics.FromImage(bmp);
+		//Bitmap bmp = new Bitmap(883, 497);
+		Graphics g = Graphics.FromImage(bitmap);
 		Pen pen = new Pen(Brushes.SaddleBrown);
 
 		for (int i = 0; i < 881; i++) 
@@ -44,6 +44,6 @@ public class TerrainGen
 			Point pt2 = new Point(i, Convert.ToInt32(TerrainOutln[i]));
 			g.DrawLine(pen, pt1, pt2);
 		}
-		return bmp;
+		return bitmap;
 	}
 }
