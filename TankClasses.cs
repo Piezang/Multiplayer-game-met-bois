@@ -35,6 +35,12 @@ class BaseTank : Rigidbody
 		}
 	}
 
+
+    
+
+
+
+
     /*public void Form1_keyPress(object sender, KeyPressEventArgs e)
     {
 		MessageBox.Show(e.KeyChar.ToString());
