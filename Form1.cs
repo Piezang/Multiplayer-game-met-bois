@@ -31,7 +31,14 @@ namespace Multiplayer_game_met_bois
             //MessageBox.Show(FixedDeltaTime.ToString());
             timer1.Enabled = true;
             //timer1.Enabled = false;
-            KeyPreview = true;         
+            KeyPreview = true;
+            GreatGrid();
+        }
+
+        void GreatGrid()
+        {
+            TerrainGen terrain = new TerrainGen();
+            pictureBox1.Image = terrain.TerrainImage();
         }
 
         SharpShooterTank tank = new SharpShooterTank(new Point(100, 100), 0, new Point(0,0), 180);
@@ -177,6 +184,7 @@ namespace Multiplayer_game_met_bois
         {
             //txtOutput.Text += "K";
             MoveImage();
+            GreatGrid();
             if (Client.connected)
             {
                 //MessageBox.Show("kaas");
