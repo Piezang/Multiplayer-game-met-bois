@@ -7,16 +7,15 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Text;
 using System.CodeDom.Compiler;
+using System.Web;
 
 namespace Multiplayer_game_met_bois
 {
     public partial class Form1 : Form   //Server class
     {
         public static Form1 form1Instance;
-        //public TabPage tabPage;
         public PictureBox Pic;
-        //public TabControl tabControl;
-        
+    
         Stopwatch timer = new Stopwatch();
         static int elapsedTime = 0;
         int count = 0;
@@ -45,6 +44,9 @@ namespace Multiplayer_game_met_bois
         }  
 
         SharpShooterTank tank = new SharpShooterTank(new Point(100, 100), 0, new Point(0,0), 180);
+        SharpShooterTank ServerTank = new SharpShooterTank(new Point(-10, -10), 0, new Point(0, 0), 0);
+        //ServerTank tree eintlik net op as die ander tank in die konneksie. Nie noodwendig die server se tank nie.
+
         private void Form1_keyPress(object sender, KeyPressEventArgs e)
         {
             //MessageBox.Show(e.KeyChar.ToString());
@@ -153,41 +155,12 @@ namespace Multiplayer_game_met_bois
             txtOutput.Clear();
             //change();
         }
-        /*public void change()
-        {
-            Server server = new Server(this);
-            for (int i = 0; i < 2000; i ++)
-            {
-                txtOutput.Text += server.waarde();
-            }
-            char prev = 'K';
-            int amountInLine = 0;
-            int amountOfLines = 0;
-            foreach (char c in txtOutput.Text)
-            {      
-                if (c == 'K')
-                {
-                    amountInLine++;
-                    prev = c;
-                    continue;
-                }
-                if (c == 'n' && prev == 'K')
-                {
-                    amountOfLines++;
-                }
-                prev = c;
-            }
-            MessageBox.Show(amountInLine.ToString());
-            MessageBox.Show(amountOfLines.ToString());
-            MessageBox.Show((amountInLine/amountOfLines).ToString());
-            var FixedDeltaTime = 1/(amountInLine / amountOfLines);
-        }
-        */
-        
+
         bool generated = false;
         Bitmap bitmap = new Bitmap(883, 497);
         private void TimerUpdate(object sender, EventArgs e)   //60 keer per sekonde
         {
+            Server.ServerTankCords = tank.position;  //Message na die client
             //txtOutput.Text += "K";
             bitmap = tank.UpdateImage(bitmap);
             pictureBox1.Image = bitmap;
@@ -198,12 +171,42 @@ namespace Multiplayer_game_met_bois
                 generated = true;
             } 
             pictureBox1.Image = bitmap;
-            
+            Graphics g;
+
             if (Client.connected)
             {
-                //MessageBox.Show("kaas");
-                Client.Message(tank.position.ToString());
-            }          
+                Client.Message(tank.position.ToString());   //Message na die server
+                string t = Client.ServerCords.Trim();       //Server se response, sy tank se cords
+                int x = Convert.ToInt32(t.Substring(t.IndexOf('=')+1, t.IndexOf(',') - t.IndexOf('=')-1));
+                //MessageBox.Show(x);
+                int y = Convert.ToInt32(t.Substring(t.IndexOf('Y') + 2, t.IndexOf('}') - t.IndexOf('Y')-2));
+                //MessageBox.Show(y);
+                
+                g = Graphics.FromImage(bitmap);
+                g.DrawRectangle(Pens.Black, ServerTank.position.X, ServerTank.position.Y, 10, 10);
+                g.FillRectangle(Brushes.Black, ServerTank.position.X, ServerTank.position.Y, 10, 10);
+                ServerTank.position = new Point(x, y);
+                
+                g.DrawRectangle(Pens.White, ServerTank.position.X, ServerTank.position.Y, 10, 10);
+                g.FillRectangle(Brushes.White, ServerTank.position.X, ServerTank.position.Y, 10, 10);
+                pictureBox1.Image = bitmap;            
+            }   
+            if (Server.ClientTankCords!= "")
+            {
+                string t = Server.ClientTankCords.Trim();       //Client se response, sy tank se cords
+                int x = Convert.ToInt32(t.Substring(t.IndexOf('=') + 1, t.IndexOf(',') - t.IndexOf('=') - 1));
+                //MessageBox.Show(x);
+                int y = Convert.ToInt32(t.Substring(t.IndexOf('Y') + 2, t.IndexOf('}') - t.IndexOf('Y') - 2));
+
+                g = Graphics.FromImage(bitmap);
+                g.DrawRectangle(Pens.Black, ServerTank.position.X, ServerTank.position.Y, 10, 10);
+                g.FillRectangle(Brushes.Black, ServerTank.position.X, ServerTank.position.Y, 10, 10);
+                ServerTank.position = new Point(x, y);
+
+                g.DrawRectangle(Pens.White, ServerTank.position.X, ServerTank.position.Y, 10, 10);
+                g.FillRectangle(Brushes.White, ServerTank.position.X, ServerTank.position.Y, 10, 10);
+                pictureBox1.Image = bitmap;
+            }
         }
         
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
@@ -264,6 +267,9 @@ namespace Multiplayer_game_met_bois
 
     class Client
     {
+        //private static string prevcords;
+        //public static string ClientCords = "";
+        public static string ServerCords = "";
         public static bool connected = false;
         private static Socket ClientSocket = new Socket(AddressFamily
                 .InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -288,6 +294,13 @@ namespace Multiplayer_game_met_bois
             int size = ClientSocket.Receive(msgFromServer);
             //MessageBox.Show("Server responds: " +
                 //System.Text.Encoding.ASCII.GetString(msgFromServer, 0, size));
+            if (ServerCords == Encoding.Default.GetString(msgFromServer))
+            {
+                return;
+            }
+            ServerCords = Encoding.Default.GetString(msgFromServer);
+            //prevcords = ServerCords;
+            //MessageBox.Show(ServerCords);
         }
     }
 
