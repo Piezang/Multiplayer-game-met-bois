@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Text;
+using System.CodeDom.Compiler;
 
 namespace Multiplayer_game_met_bois
 {
@@ -32,14 +33,7 @@ namespace Multiplayer_game_met_bois
             timer1.Enabled = true;
             //timer1.Enabled = false;
             KeyPreview = true;
-            GreatGrid();
-        }
-
-        void GreatGrid()
-        {
-            TerrainGen terrain = new TerrainGen();
-            pictureBox1.Image = terrain.TerrainImage();
-        }
+        }  
 
         SharpShooterTank tank = new SharpShooterTank(new Point(100, 100), 0, new Point(0,0), 180);
         private void Form1_keyPress(object sender, KeyPressEventArgs e)
@@ -180,20 +174,32 @@ namespace Multiplayer_game_met_bois
             var FixedDeltaTime = 1/(amountInLine / amountOfLines);
         }
         */
+        
+        bool generated = false;
+        Bitmap bitmap = new Bitmap(883, 497);
         private void TimerUpdate(object sender, EventArgs e)
         {
             //txtOutput.Text += "K";
-            MoveImage();
-            GreatGrid();
+            bitmap = tank.UpdateImage(bitmap);
+            pictureBox1.Image = bitmap;
+            //Bitmap bmp = new Bitmap(pictureBox1.Image);
+            //Graphics g = Graphics.FromImage(bmp);
+            
+            if (!generated)
+            { 
+                TerrainGen terrain = new TerrainGen();
+                bitmap = terrain.TerrainImage(bitmap);
+                generated = true;
+            } 
+            //g.DrawRectangle();
+            //bmp = tank.UpdateImage();
+            pictureBox1.Image = bitmap;
+            
             if (Client.connected)
             {
                 //MessageBox.Show("kaas");
                 Client.Message(tank.position.ToString());
             }          
-        }
-        private void MoveImage()
-        {
-            pictureBox1.Image = tank.UpdateImage();
         }
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
