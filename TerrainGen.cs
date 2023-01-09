@@ -9,7 +9,7 @@ public class TerrainGen
 	{
 		for (int i = 0; i < 882; i++)
 		{
-			TerrainOutln[i] = (float)(250 + (100 * Math.Sin(i*Math.PI / 360)));
+			TerrainOutln[i] = 250 + (100 * Math.Sin(i*Math.PI / 360) + (100 * Math.Cos(Math.Pow(i * Math.PI/ 180, 2) / 20)));       
 		}
 	}
 
@@ -17,7 +17,7 @@ public class TerrainGen
 	{
 		Bitmap bmp = new Bitmap(883, 497);
 		Graphics g = Graphics.FromImage(bmp);
-		Pen pen = new Pen(Brushes.Brown);
+		Pen pen = new Pen(Brushes.SaddleBrown);
 
 		for (int i = 0; i < 882; i++) 
 		{
