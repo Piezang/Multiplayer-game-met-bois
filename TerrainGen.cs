@@ -9,7 +9,7 @@ public class TerrainGen
 	int width;
 	public TerrainGen(int Width)
 	{
-		width = Width;
+		
 		for (int i = 0; i <= 882; i ++)
 		{
 			//TerrainOutln[i] = 250 + (100 * Math.Sin(i*Math.PI / 360) + (100 * Math.Cos(Math.Pow(i * Math.PI/ 180, 2) / 20)));
@@ -21,18 +21,18 @@ public class TerrainGen
 				case 0:
                     switch (i)
                     {
-                        case <= 9: for (int p = 0; p <= i + 10; p++) 
-							{ TerrainOutln[p] = TerrainOutln[p] = TerrainOutln[p] - random.Next(200, 600) ; };break;
-                        case >= 873: for (int p = i - 10; p <= 882; p++)
-							{ TerrainOutln[p] = TerrainOutln[p] = TerrainOutln[p] - random.Next(200, 600) ; } break;
-                        default: for (int p = i - 15; p <= i + 15; p++) 
-							{ TerrainOutln[p] = TerrainOutln[p] = TerrainOutln[p] - random.Next(200, 600) ; } break;
+                        case <= 39: for (int p = 0; p <= i + 40; p++) 
+							{ TerrainOutln[p] = TerrainOutln[p] = TerrainOutln[p] - random.Next(0, 100) ; };break;
+                        case >= 843: for (int p = i - 20; p <= 882; p++)
+							{ TerrainOutln[p] = TerrainOutln[p] = TerrainOutln[p] - random.Next(0, 100) ; } break;
+                        default: for (int p = i - 40; p <= i + 40; p++) 
+							{ TerrainOutln[p] = TerrainOutln[p] = TerrainOutln[p] - random.Next(0, 100) ; } break;
                     }
                     break;
-				default: TerrainOutln[i] = TerrainOutln[i] = TerrainOutln[i] +  random.Next(0, 700); break;
+				default: TerrainOutln[i] = TerrainOutln[i] = TerrainOutln[i] +  random.Next(250, 450); break;
             }
 		}
-		for (int k = 0; k <= 50; k++)
+		for (int k = 0; k <= 20; k++)
 		{
 			for (int i = 0; i <= 882; i++)
 			{
