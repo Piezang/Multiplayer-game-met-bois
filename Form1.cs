@@ -31,7 +31,14 @@ namespace Multiplayer_game_met_bois
             //MessageBox.Show(FixedDeltaTime.ToString());
             timer1.Enabled = true;
             //timer1.Enabled = false;
-            KeyPreview = true;         
+            KeyPreview = true;
+            GreatGrid();
+        }
+
+        void GreatGrid()
+        {
+            TerrainGen terrain = new TerrainGen();
+            pictureBox1.Image = terrain.TerrainImage();
         }
 
         SharpShooterTank tank = new SharpShooterTank(new Point(100, 100), 0, new Point(0,0), 180);
@@ -62,7 +69,7 @@ namespace Multiplayer_game_met_bois
             //server.start(txtHost.Text, Convert.ToInt32(txtPort.Text));
 
             Thread ServerThread = new Thread(() =>
-            Server.start(txtHost.Text, Convert.ToInt32(txtPort.Text)));
+            Server.start(txtHost.Text, Convert.ToInt32(txtPort.Text), tank.position));
             ServerThread.Start();
 
             //asyncVoorbeeld();
@@ -175,10 +182,14 @@ namespace Multiplayer_game_met_bois
         */
         private void TimerUpdate(object sender, EventArgs e)
         {
-            txtOutput.Text += "K";
+            //txtOutput.Text += "K";
             MoveImage();
-            if (Server.counter > 0)
-            Client.Message(tank.position.ToString());         
+            GreatGrid();
+            if (Client.connected)
+            {
+                //MessageBox.Show("kaas");
+                Client.Message(tank.position.ToString());
+            }          
         }
         private void MoveImage()
         {
@@ -194,9 +205,12 @@ namespace Multiplayer_game_met_bois
 
     class Server
     {
+        public static Point ServerTankCords; 
+        public static string ClientTankCords = "";
         public static int counter = 0;
-        public static void start(string ip, int port)
+        public static void start(string ip, int port, Point cords)
         {
+            ServerTankCords = cords;
             Socket Serverlistener = new Socket(AddressFamily
                 .InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
@@ -229,9 +243,10 @@ namespace Multiplayer_game_met_bois
                 if (message[0] == 'm')
                 {
                     message = message.Substring(1);
-                    MessageBox.Show(message);
-                    MessageBox.Show("Message from client: " + message);
-                    msg = Encoding.Default.GetBytes("Server has received your message");
+                    //MessageBox.Show(message);
+                    //MessageBox.Show("Message from client: " + message);
+                    ClientTankCords = message;
+                    msg = Encoding.Default.GetBytes(ServerTankCords.ToString());    //Stuur my eie cords vir client
                     client.Send(msg);
                 }
             }
@@ -240,6 +255,7 @@ namespace Multiplayer_game_met_bois
 
     class Client
     {
+        public static bool connected = false;
         private static Socket ClientSocket = new Socket(AddressFamily
                 .InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
@@ -250,6 +266,7 @@ namespace Multiplayer_game_met_bois
             IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
             ClientSocket.Connect(ep);
             MessageBox.Show("Client is connected");
+            connected= true;
         }
 
         public static void Message(string messageFromClient)
@@ -260,8 +277,8 @@ namespace Multiplayer_game_met_bois
 
             byte[] msgFromServer = new byte[1024];
             int size = ClientSocket.Receive(msgFromServer);
-            MessageBox.Show("Server responds: " +
-                System.Text.Encoding.ASCII.GetString(msgFromServer, 0, size));
+            //MessageBox.Show("Server responds: " +
+                //System.Text.Encoding.ASCII.GetString(msgFromServer, 0, size));
         }
     }
 
