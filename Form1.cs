@@ -184,7 +184,7 @@ namespace Multiplayer_game_met_bois
         {
             //txtOutput.Text += "K";
             MoveImage();
-            //GreatGrid();
+            GreatGrid();
             if (Client.connected)
             {
                 //MessageBox.Show("kaas");
