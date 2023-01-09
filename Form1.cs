@@ -12,7 +12,11 @@ namespace Multiplayer_game_met_bois
 {
     public partial class Form1 : Form   //Server class
     {
-
+        public static Form1 form1Instance;
+        //public TabPage tabPage;
+        public PictureBox Pic;
+        //public TabControl tabControl;
+        
         Stopwatch timer = new Stopwatch();
         static int elapsedTime = 0;
         int count = 0;
@@ -21,6 +25,11 @@ namespace Multiplayer_game_met_bois
         public Form1()
         {
             InitializeComponent();
+            form1Instance = this;
+            Pic = pictureBox1;
+            //tabPage = tabPage1;
+            //tabControl = Tabs;
+
             //timer.Start();
             //while (true)
             //{
@@ -187,7 +196,7 @@ namespace Multiplayer_game_met_bois
             
             if (!generated)
             { 
-                TerrainGen terrain = new TerrainGen();
+                TerrainGen terrain = new TerrainGen(pictureBox1.Width - 1);
                 bitmap = terrain.TerrainImage(bitmap);
                 generated = true;
             } 
