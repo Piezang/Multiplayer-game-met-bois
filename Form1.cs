@@ -12,7 +12,6 @@ namespace Multiplayer_game_met_bois
 {
     public partial class Form1 : Form   //Server class
     {
-
         Stopwatch timer = new Stopwatch();
         static int elapsedTime = 0;
         int count = 0;
@@ -177,22 +176,17 @@ namespace Multiplayer_game_met_bois
         
         bool generated = false;
         Bitmap bitmap = new Bitmap(883, 497);
-        private void TimerUpdate(object sender, EventArgs e)
+        private void TimerUpdate(object sender, EventArgs e)   //60 keer per sekonde
         {
             //txtOutput.Text += "K";
             bitmap = tank.UpdateImage(bitmap);
             pictureBox1.Image = bitmap;
-            //Bitmap bmp = new Bitmap(pictureBox1.Image);
-            //Graphics g = Graphics.FromImage(bmp);
-            
             if (!generated)
             { 
                 TerrainGen terrain = new TerrainGen();
                 bitmap = terrain.TerrainImage(bitmap);
                 generated = true;
             } 
-            //g.DrawRectangle();
-            //bmp = tank.UpdateImage();
             pictureBox1.Image = bitmap;
             
             if (Client.connected)
@@ -201,11 +195,10 @@ namespace Multiplayer_game_met_bois
                 Client.Message(tank.position.ToString());
             }          
         }
+        
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
-        {
-            
-            tank.ChangeMouseCoords(e.X,e.Y);
-            
+        {         
+            tank.ChangeMouseCoords(e.X,e.Y);     
         }
     }
 
