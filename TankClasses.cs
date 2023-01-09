@@ -3,8 +3,6 @@ using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Drawing.Text;
 
-
-
 class Rigidbody
 {
 	public Point position { get; set; }
@@ -18,39 +16,26 @@ class Rigidbody
 
     protected int LocalCoordsX;
     protected int LocalCoordsY;
-    
-    
-
 
 	protected void UpdatePos()
 	{
-        
-
         position = new Point(position.X + gravity.X + force.X,
             position.Y + gravity.Y + force.Y);
 
         if (LocalCoordsX != 0)
         {
-            MessageBox.Show(LocalCoordsX.ToString());
+            //MessageBox.Show(LocalCoordsX.ToString());
         }
 
         if (LocalCoordsY != 0)
         {
-            MessageBox.Show(LocalCoordsY.ToString());
+            //MessageBox.Show(LocalCoordsY.ToString());
         }
-
-        
-
-
     }
 }
 
 class BaseTank : Rigidbody
-{
-  
-
-    
-    
+{   
 	private Point newForce;
 	public Point MovementForce { get; set; }
 	float AimAngle;
@@ -64,25 +49,11 @@ class BaseTank : Rigidbody
 		}
 	}
 
-
-
     public void ChangeMouseCoords(int XInput, int YInput)
     {
- 
         LocalCoordsX = XInput;
-        LocalCoordsY = YInput;
-        
+        LocalCoordsY = YInput;       
     }
-    
-   
-
-        
-    
-    
-
-    
-
-   
 
     /*public void Form1_keyPress(object sender, KeyPressEventArgs e)
     {
@@ -133,9 +104,7 @@ class BaseTank : Rigidbody
     }
 
     public BaseTank() 
-	{
-
-       
+	{  
         //MovementForce = new Point(MovementForce.X + newForce.X,
         //MovementForce.Y + newForce.Y);
     }	
