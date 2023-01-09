@@ -31,6 +31,29 @@ namespace Multiplayer_game_met_bois
             //MessageBox.Show(FixedDeltaTime.ToString());
             timer1.Enabled = true;
             timer1.Enabled = false;
+            KeyPreview = true;         
+        }
+
+        SharpShooterTank tank = new SharpShooterTank(new Point(), 0, new Point(), 180);
+        private void Form1_keyPress(object sender, KeyPressEventArgs e)
+        {
+            //MessageBox.Show(e.KeyChar.ToString());
+            tank.Move(e.KeyChar);
+         
+            if (e.KeyChar >= 48 && e.KeyChar <= 57)
+            {
+                MessageBox.Show($"Form.KeyPress: '{e.KeyChar}' pressed.");
+
+                switch (e.KeyChar)
+                {
+                    case (char)49:
+                    case (char)52:
+                    case (char)55:
+                        MessageBox.Show($"Form.KeyPress: '{e.KeyChar}' consumed.");
+                        e.Handled = true;
+                        break;
+                }
+            }
         }
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -116,18 +139,6 @@ namespace Multiplayer_game_met_bois
 
         private void btnSendServer_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < 10000; i++)
-            {
-                //code wat hier binne gebeur              
-            }
-
-            for (int i = 0; i < 10000; i++)
-            {
-                //code wat hier binne gebeur
-            }
-            txtOutput.Text += "Johan";
-
-
             //Server.Message(txtOutput.Text, default(Socket)!);
             txtOutput.Clear();
             //change();
@@ -167,8 +178,8 @@ namespace Multiplayer_game_met_bois
             txtOutput.Text += "K";
         }
     }
-    
-        public class Server
+
+    public class Server
         {
             public static void start(string ip, int port)
             {

@@ -291,6 +291,7 @@
             this.Controls.Add(this.Tabs);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Form1_keyPress);
             this.Tabs.ResumeLayout(false);
             this.ServerPage.ResumeLayout(false);
             this.ServerPage.PerformLayout();
