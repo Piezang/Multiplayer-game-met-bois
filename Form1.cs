@@ -186,8 +186,9 @@ namespace Multiplayer_game_met_bois
         }
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
-            string Text = String.Format("X: {0}; Y: {1}", e.X, e.Y);
-            tank.MouseCords = Text;
+            
+            tank.ChangeMouseCoords(e.X,e.Y);
+            
         }
     }
 

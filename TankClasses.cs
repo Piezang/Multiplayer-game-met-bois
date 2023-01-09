@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using System.Drawing;
+using System.Drawing.Text;
+
+
 
 class Rigidbody
 {
@@ -13,16 +16,41 @@ class Rigidbody
 
 	}
 
+    protected int LocalCoordsX;
+    protected int LocalCoordsY;
+    
+    
+
+
 	protected void UpdatePos()
 	{
+        
+
         position = new Point(position.X + gravity.X + force.X,
             position.Y + gravity.Y + force.Y);
+
+        if (LocalCoordsX != 0)
+        {
+            MessageBox.Show(LocalCoordsX.ToString());
+        }
+
+        if (LocalCoordsY != 0)
+        {
+            MessageBox.Show(LocalCoordsY.ToString());
+        }
+
+        
+
+
     }
 }
 
 class BaseTank : Rigidbody
 {
-    public string MouseCords;
+  
+
+    
+    
 	private Point newForce;
 	public Point MovementForce { get; set; }
 	float AimAngle;
@@ -37,10 +65,24 @@ class BaseTank : Rigidbody
 	}
 
 
+
+    public void ChangeMouseCoords(int XInput, int YInput)
+    {
+ 
+        LocalCoordsX = XInput;
+        LocalCoordsY = YInput;
+        
+    }
+    
+   
+
+        
+    
     
 
+    
 
-
+   
 
     /*public void Form1_keyPress(object sender, KeyPressEventArgs e)
     {
@@ -92,15 +134,17 @@ class BaseTank : Rigidbody
 
     public BaseTank() 
 	{
-		//MovementForce = new Point(MovementForce.X + newForce.X,
-            //MovementForce.Y + newForce.Y);
-	}	
+
+       
+        //MovementForce = new Point(MovementForce.X + newForce.X,
+        //MovementForce.Y + newForce.Y);
+    }	
 }
 
 class SharpShooterTank : BaseTank
 {
     Image SharpShooterTankimg = null!;  //Image.FromFile("image.png");  
-    Bitmap bitmap = new Bitmap(4000, 4000);
+    Bitmap bitmap = new Bitmap(883, 497);
     Graphics g; 
 
     private int health = 100;
@@ -147,3 +191,5 @@ class SharpShooterTank : BaseTank
 		
 	}
 }
+
+
