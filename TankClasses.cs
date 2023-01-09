@@ -4,7 +4,7 @@ using System.Drawing;
 
 class Rigidbody
 {
-	protected Point position { get; set; }
+	public Point position { get; set; }
 	protected Point gravity { get; set; }
 	protected Point force { get; set; }
 
@@ -22,6 +22,7 @@ class Rigidbody
 
 class BaseTank : Rigidbody
 {
+    public string MouseCords;
 	private Point newForce;
 	public Point MovementForce { get; set; }
 	float AimAngle;
@@ -65,8 +66,7 @@ class BaseTank : Rigidbody
     }
     
     public void Move(char c)
-    {
-        
+    {  
         switch (c)
         {
             case 'w': newForce = new Point(0, -3); //MessageBox.Show(c.ToString());

@@ -39,9 +39,7 @@ namespace Multiplayer_game_met_bois
         {
             //MessageBox.Show(e.KeyChar.ToString());
             tank.Move(e.KeyChar);
-            //pictureBox1.Image.Dispose();
             
-
             if (e.KeyChar >= 48 && e.KeyChar <= 57)
             {
                 MessageBox.Show($"Form.KeyPress: '{e.KeyChar}' pressed.");
@@ -179,82 +177,91 @@ namespace Multiplayer_game_met_bois
         {
             txtOutput.Text += "K";
             MoveImage();
+            if (Server.counter > 0)
+            Client.Message(tank.position.ToString());         
         }
         private void MoveImage()
         {
             pictureBox1.Image = tank.UpdateImage();
         }
+        private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
+        {
+            string Text = String.Format("X: {0}; Y: {1}", e.X, e.Y);
+            tank.MouseCords = Text;
+        }
     }
 
-    public class Server
+    class Server
+    {
+        public static int counter = 0;
+        public static void start(string ip, int port)
         {
-            public static void start(string ip, int port)
+            Socket Serverlistener = new Socket(AddressFamily
+                .InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
+
+            Serverlistener.Bind(ep);
+            Serverlistener.Listen(100);
+            MessageBox.Show("Server is listening");
+
+            Server s = new Server();
+            Socket ClientSocket = default(Socket)!;
+            
+            while (true)
             {
-                Socket Serverlistener = new Socket(AddressFamily
-                    .InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
-
-                Serverlistener.Bind(ep);
-                Serverlistener.Listen(100);
-                MessageBox.Show("Server is listening");
-
-                Server s = new Server();
-                Socket ClientSocket = default(Socket)!;
-                int counter = 0;
-                while (true)
-                {
-                    counter++;
-                    ClientSocket = Serverlistener.Accept();
-                    MessageBox.Show(counter.ToString() + " Clients connected");
-                    Thread UserThread = new Thread(new ThreadStart(() => s.User(ClientSocket)));  //verander
-                                                                                                  //Thread UserThread = new Thread(new ThreadStart(() => s.User(ClientSocket)));  // ou een
-                    UserThread.Start();
-                }
+                counter++;
+                ClientSocket = Serverlistener.Accept();
+                MessageBox.Show(counter.ToString() + " Clients connected");
+                Thread UserThread = new Thread(new ThreadStart(() => s.User(ClientSocket)));  //verander
+                                                                                              //Thread UserThread = new Thread(new ThreadStart(() => s.User(ClientSocket)));  // ou een
+                UserThread.Start();
             }
-            public void User(Socket client)
+        }
+        public void User(Socket client)
+        {
+            while (true)
             {
-                while (true)
+                byte[] msg = new byte[1024];
+                int size = client.Receive(msg);
+                string message = System.Text.Encoding.ASCII.GetString(msg, 0, size);
+                //MessageBox.Show(message);
+                if (message[0] == 'm')
                 {
-                    byte[] msg = new byte[1024];
-                    int size = client.Receive(msg);
-                    string message = System.Text.Encoding.ASCII.GetString(msg, 0, size);
-                    //MessageBox.Show(message);
-                    if (message[0] == 'm')
-                    {
-                        message = message.Substring(1);
-                        MessageBox.Show("Message from client: " + message);
-                        msg = Encoding.Default.GetBytes("Server has received your message");
-                        client.Send(msg);
-                    }
+                    message = message.Substring(1);
+                    MessageBox.Show(message);
+                    MessageBox.Show("Message from client: " + message);
+                    msg = Encoding.Default.GetBytes("Server has received your message");
+                    client.Send(msg);
                 }
             }
         }
-    
-        class Client
+    }
+
+    class Client
+    {
+        private static Socket ClientSocket = new Socket(AddressFamily
+                .InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+        public static void connect(string ip, int port)
         {
-            private static Socket ClientSocket = new Socket(AddressFamily
-                    .InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
-            public static void connect(string ip, int port)
-            {
-                //string ip = "127.0.0.1";//txtHostClient.Text;
-                //int port = 8910;//Convert.ToInt32(txtPort.Text);          
-                IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
-                ClientSocket.Connect(ep);
-                MessageBox.Show("Client is connected");
-            }
-
-            public static void Message(string messageFromClient)
-            {
-                messageFromClient = "m" + messageFromClient;
-                ClientSocket.Send(System.Text.Encoding.ASCII.GetBytes(messageFromClient), 0,
-                    messageFromClient.Length, SocketFlags.None);
-
-                byte[] msgFromServer = new byte[1024];
-                int size = ClientSocket.Receive(msgFromServer);
-                MessageBox.Show("Server responds: " +
-                    System.Text.Encoding.ASCII.GetString(msgFromServer, 0, size));
-            }
+            //string ip = "127.0.0.1";//txtHostClient.Text;
+            //int port = 8910;//Convert.ToInt32(txtPort.Text);          
+            IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
+            ClientSocket.Connect(ep);
+            MessageBox.Show("Client is connected");
         }
-    
+
+        public static void Message(string messageFromClient)
+        {
+            messageFromClient = "m" + messageFromClient;
+            ClientSocket.Send(System.Text.Encoding.ASCII.GetBytes(messageFromClient), 0,
+                messageFromClient.Length, SocketFlags.None);
+
+            byte[] msgFromServer = new byte[1024];
+            int size = ClientSocket.Receive(msgFromServer);
+            MessageBox.Show("Server responds: " +
+                System.Text.Encoding.ASCII.GetString(msgFromServer, 0, size));
+        }
+    }
+
 }
