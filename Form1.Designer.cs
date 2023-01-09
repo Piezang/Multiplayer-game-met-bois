@@ -272,9 +272,9 @@
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.Black;
-            this.pictureBox1.Location = new System.Drawing.Point(42, 31);
+            this.pictureBox1.Location = new System.Drawing.Point(3, 6);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(744, 432);
+            this.pictureBox1.Size = new System.Drawing.Size(883, 497);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 

@@ -80,7 +80,7 @@ class BaseTank : Rigidbody
             default : return;
         }
         MovementForce = new Point(MovementForce.X + newForce.X,
-           MovementForce.Y + newForce.Y);
+          MovementForce.Y + newForce.Y);
         force = MovementForce;  UpdatePos();
     }
 

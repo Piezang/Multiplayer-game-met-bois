@@ -34,7 +34,7 @@ namespace Multiplayer_game_met_bois
             KeyPreview = true;         
         }
 
-        SharpShooterTank tank = new SharpShooterTank(new Point(100, 100), 3, new Point(0,0), 180);
+        SharpShooterTank tank = new SharpShooterTank(new Point(100, 100), 0, new Point(0,0), 180);
         private void Form1_keyPress(object sender, KeyPressEventArgs e)
         {
             //MessageBox.Show(e.KeyChar.ToString());
