@@ -9,10 +9,9 @@ public class TerrainGen
 	{
 		for (int i = 0; i < 882; i += 1)
 		{
-			TerrainOutln[i] = (Math.Sin(i)) + 200;//50 * (2 + (-1 * Math.Sin(i))) + 150;
-			t[i] = (int)(Math.Sin(i / 40) * -40) + 100;
-        }
-    } 
+			TerrainOutln[i] = (float)(250 + (100 * Math.Sin(i*Math.PI / 360)));
+		}
+	}
 
 	public Bitmap TerrainImage()
 	{
@@ -24,10 +23,7 @@ public class TerrainGen
 		{
 			Point pt1 = new Point(i, 497);
 			Point pt2 = new Point(i, Convert.ToInt32(TerrainOutln[i]));
-			Point pt3 = new Point(i+1, Convert.ToInt32(TerrainOutln[i+1]));
-			g.DrawLine(pen, pt2, pt3);
-			//bmp.GetPixel(i, Convert.ToInt32(TerrainOutln[i]));
-			//bmp.SetPixel(i, Convert.ToInt32(TerrainOutln[i]), Color.AliceBlue);
+			g.DrawLine(pen, pt1, pt2);
 		}
 		return bmp;
 	}
