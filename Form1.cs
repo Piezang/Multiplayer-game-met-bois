@@ -152,16 +152,12 @@ namespace Multiplayer_game_met_bois
         Bitmap bitmap = new Bitmap(883, 497);
         //int[] Terrain = new int[883];
         int[] newTerrainFromServer;
-        public static int[] holder;   //Die probleem is iets met static variables
+        //Die probleem is iets met static variables
 
         private void btnConnect_Click(object sender, EventArgs e)  //Client
         {
-            //FormKaas k = new FormKaas(this);
-            //k.Start();
             Server.ServerBitmap = TerrainGen.ServerTerrain;
-            holder = TerrainGen.ServerTerrain;
             //MessageBox.Show(TerrainGen.ServerTerrain[1].ToString());
-
             Client.connect(txtHostClient.Text, Convert.ToInt32(txtPortClient.Text));
             //MessageBox.Show(Server.ServerBitmap[1].ToString());
 
@@ -173,7 +169,6 @@ namespace Multiplayer_game_met_bois
             {
                 Point pt1 = new Point(i, 497);
                 Point pt2 = new Point(i, newTerrainFromServer[i]);
-                //ServerTerrain[i] = Convert.ToInt32(TerrainOutln[i]);
                 g.DrawLine(pen, pt1, pt2);
             }
             //MessageBox.Show(newTerrainFromServer[1].ToString() + " index 1");
@@ -193,7 +188,7 @@ namespace Multiplayer_game_met_bois
 
         private void TimerUpdate(object sender, EventArgs e)   //60 keer per sekonde
         {
-            if (!Server.Active)
+            if (!Server.Active)    //As hy nie die server is nie...
             {
                 if (newTerrainFromServer == null) return;
                 if (newTerrainFromServer[pictureBox1.Width - 2] == 0) return;
@@ -204,21 +199,11 @@ namespace Multiplayer_game_met_bois
             //txtOutput.Text += "K";
             bitmap = tank.UpdateImage(bitmap);
             pictureBox1.Image = bitmap;
-            //if (!generated)
-            //{
-                //TerrainGen terrain = new TerrainGen(pictureBox1.Width - 1);
-                //bitmap = terrain.TerrainImage(bitmap);
-                //Terrain = terrain.ServerTerrain;
-               // generated = true;
-            //} 
-            //pictureBox1.Image = bitmap;
+      
             Graphics g;
 
-            if (Client.connected)
+            if (Client.connected)   //As hy die client is gebeur die
             {           
-                //if (Client.ServerCords.Length > 30) { return; }   //NB
-                //Client.
-                //Client.Message(bitmap.ToString());
                 Client.Message(tank.position.ToString());   //Message na die server
                 string t = Client.ServerCords.Trim();       //Server se response, sy tank se cords
                 int x = Convert.ToInt32(t.Substring(t.IndexOf('=')+1, t.IndexOf(',') - t.IndexOf('=')-1));
@@ -235,10 +220,8 @@ namespace Multiplayer_game_met_bois
                 g.FillRectangle(Brushes.White, ServerTank.position.X, ServerTank.position.Y, 10, 10);
                 pictureBox1.Image = bitmap;            
             } 
-            if (Server.ClientTankCords!= "")
+            if (Server.ClientTankCords!= "") //As hy die server is gebeur die
             {
-                //if (!TerrainGenerated) { Server.ServerBitmap = Terrain; TerrainGenerated = true; }
-                
                 string t = Server.ClientTankCords.Trim();       //Client se response, sy tank se cords
                 int x = Convert.ToInt32(t.Substring(t.IndexOf('=') + 1, t.IndexOf(',') - t.IndexOf('=') - 1));
                 //MessageBox.Show(x);
@@ -265,19 +248,14 @@ namespace Multiplayer_game_met_bois
 
         }
     }
-    //[Serializable]
+    
     class Server
     {
         public static int[] ServerBitmap;  //readonly en static constructors?
         static Server()
         {
-            //if (ClientTankCords != "")
-            //{
-                //ServerBitmap = new int[883];
-                ServerBitmap = TerrainGen.ServerTerrain;
-            //}       
+            ServerBitmap = TerrainGen.ServerTerrain;    
         }
-        //public static int[] ServerBitmap = new int[833];
         public static Point ServerTankCords; 
         public static string ClientTankCords = "";
         public static int counter = 0;
@@ -307,7 +285,7 @@ namespace Multiplayer_game_met_bois
                 UserThread.Start();
             }
         }
-        bool MapSynced = false;
+       
         public void User(Socket client)
         {
             while (true)
@@ -316,7 +294,7 @@ namespace Multiplayer_game_met_bois
                 int size = client.Receive(msg);
                 string message = System.Text.Encoding.ASCII.GetString(msg, 0, size);
                 //MessageBox.Show(message);
-                if (message[0] == 'm')
+                if (message[0] == 'm') //Cords message
                 {
                     message = message.Substring(1);
                     //MessageBox.Show(message);
@@ -325,25 +303,18 @@ namespace Multiplayer_game_met_bois
                     msg = Encoding.Default.GetBytes(ServerTankCords.ToString());    //Stuur my eie cords vir client
                     client.Send(msg);
                 }
-                if (message == "Ready")
+                if (message == "Ready")  //TErrain message
                 {
-                    MessageBox.Show("Map not synced");
-                    //int[] kaas = new int[1024];
-                    //int[] numbers = Server.ServerBitmap;//TerrainGen.;
-                    //ServerBitmap = Form1.holder;
-                    MessageBox.Show(ServerBitmap[1].ToString());
+                    //MessageBox.Show("Map not synced");
+                    //MessageBox.Show(ServerBitmap[1].ToString());
                     string pieceOfMap = "t";
                     for (int i = 0; i < ServerBitmap.Length; i++)
                     {
                         //MessageBox.Show(numbers[i].ToString()); 
                         pieceOfMap += ServerBitmap[i].ToString() + " ";
                     }
-                    //XmlSerializer serializer = new XmlSerializer(typeof(int[]));
-                    //Stream stream = new FileStream(Directory.GetCurrentDirectory(), FileMode.Create, FileAccess.Write);
-                    //serializer.Serialize(stream, numbers);
                     msg = Encoding.Default.GetBytes(pieceOfMap);
-                    client.Send(msg);
-                    MapSynced= true;   
+                    client.Send(msg);   
                     // Jy moet in die client maaak dat hy die map data lees en map skep
                 }
             }
@@ -352,10 +323,6 @@ namespace Multiplayer_game_met_bois
 
     class Client
     {
-        //public static Bitmap ClientBitmap
-        //private static string prevcords;
-        //public static string ClientCords = "";
-        
         public static string ServerCords = "";
         public static bool connected = false;
         private static Socket ClientSocket = new Socket(AddressFamily
@@ -393,17 +360,15 @@ namespace Multiplayer_game_met_bois
             MessageBox.Show(Server.ServerBitmap[1].ToString());
             ClientSocket.Send(System.Text.Encoding.ASCII.GetBytes(msgToServer), 0,
                 msgToServer.Length, SocketFlags.None);
-
-            //Thread.Sleep(1000);
             
             int[] ServerBitmapp = new int[883];
             byte[] msgFromServer = new byte[2048*2];   //1024  2048 * 2 = 4kilo bytes
             int size = ClientSocket.Receive(msgFromServer);
             //MessageBox.Show("Server responds: " +
-            //System.Text.Encoding.ASCII.GetString(msgFromServer, 0, size));
             string msg = Encoding.Default.GetString(msgFromServer);
-            MessageBox.Show(msg);
+            //MessageBox.Show(msg);
             int count = 0;
+
             if (msg[0] == 't')
             {
                 msg = msg.Substring(1);
