@@ -20,40 +20,38 @@ class Rigidbody
     public String Direction;
     public Point TerrainInteraction()
     {
-        Point CollisionAdjuster;
-        Point NW = new Point(position.X - 1, position.Y - 1);
-        Point SW = new Point(position.X - 1, position.Y + 11);
-        Point NE = new Point(position.X + 11, position.Y - 1);
-        Point SE = new Point(position.X + 11, position.Y + 11);
+        Point CollisionAdjuster = new Point(1,1);
+        Point NW = new Point(position.X - Math.Abs(force.X), position.Y - Math.Abs(force.Y) - gravity.Y);
+        Point SW = new Point(position.X - Math.Abs(force.X), position.Y + 10 + Math.Abs(force.Y) + gravity.Y);
+        Point NE = new Point(position.X + 1 + Math.Abs(force.X), position.Y - Math.Abs(force.Y) - gravity.Y);
+        Point SE = new Point(position.X + 1 + Math.Abs(force.X), position.Y + 1 + Math.Abs(force.Y) + gravity.Y);
 
         for (int i = SW.X; i<= SE.X; i ++)
         {
             Color c = bmp.GetPixel(i, SW.Y);
             if (c.ToString() == "Color [A=255, R=139, G=69, B=19]")
-            { if (force.Y >= 0) { { CollisionAdjuster = new Point(1, 0); } } }
+            { if (force.Y >= 0) { {  CollisionAdjuster = new Point (1, 0); } } }
         }
 
         for (int i = NW.X; i <= NE.X; i++)
         {
             Color c = bmp.GetPixel(i, NW.Y);
             if (c.ToString() == "Color [A=255, R=139, G=69, B=19]")
-            { if (force.Y <= 0) { if (Direction == "W") { CollisionAdjuster = new Point (1, 0); } } }
-
+            { if (force.Y < 0) { if (Direction == "W") { CollisionAdjuster = new Point (1, 0); } } }
         }
 
         for (int i = NE.Y + 1; i <= SE.Y - 1; i++)
         {
             Color c = bmp.GetPixel(NE.X, i);
             if (c.ToString() == "Color [A=255, R=139, G=69, B=19]")
-            { if (force.X >= 0) { if (Direction == "D") { CollisionAdjuster = new Point(0,- 1); } } }
-
+            { if (force.X > 0) { if (Direction == "D") { CollisionAdjuster = new Point(0, -1); } } }
         }
 
         for (int i = NW.Y + 1; i <= SW.Y - 1; i++)
         {
             Color c = bmp.GetPixel(NW.X, i);
             if (c.ToString() == "Color [A=255, R=139, G=69, B=19]")
-            { if (force.X <= 0) { if (Direction == "A") { CollisionAdjuster = new Point(0,- 1); } } }
+            { if (force.X < 0) { if (Direction == "A") { CollisionAdjuster = new Point(0, -1); } } }
         }
 
         return CollisionAdjuster;
