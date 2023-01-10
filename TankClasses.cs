@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using System.DirectoryServices.ActiveDirectory;
 using System.Drawing;
 using System.Drawing.Text;
 
@@ -9,10 +10,21 @@ class Rigidbody
 	protected Point gravity { get; set; }
 	protected Point force { get; set; }
 
-	public Rigidbody()
+    public Point CollisionAdjust = new Point(0,0);
+
+    public Rigidbody()
 	{
 
 	}
+    public Point TerrainInteraction()
+    {
+        Point NW = new Point(position.X - 1, position.Y - 1);
+        Point SW = new Point(position.X - 1, position.Y + 10);
+        Point NE = new Point(position.X + 10, position.Y - 1);
+        Point SE = new Point(position.X + 10, position.Y + 10);
+
+        return new Point(0,1);
+    }
 
     protected int LocalCoordsX;
     protected int LocalCoordsY;
@@ -85,21 +97,22 @@ class BaseTank : Rigidbody
     }
     
     public void Move(char c)
-    {  
-        switch (c)
+    {
+        string Direction = c.ToString().ToUpper();
+        switch (Direction)
         {
-            case 'w': newForce = new Point(0, -2); //MessageBox.Show(c.ToString());
+            case "W": newForce = new Point(0, -1); //MessageBox.Show(c.ToString());
                 break;
-            case 's': newForce = new Point(0, 2); //MessageBox.Show(c.ToString());
+            case "S": newForce = new Point(0, 1); //MessageBox.Show(c.ToString());
                 break;
-            case 'a': newForce = new Point(-2, 0); //MessageBox.Show(c.ToString());
+            case "A": newForce = new Point(-1, 0); //MessageBox.Show(c.ToString());
                 break;
-            case 'd': newForce = new Point(2, 0); //MessageBox.Show(c.ToString());
+            case "D": newForce = new Point(1, 0); //MessageBox.Show(c.ToString());
                 break;
             default : return;
         }
-        MovementForce = new Point(MovementForce.X + newForce.X,
-          MovementForce.Y + newForce.Y);
+        MovementForce = new Point(MovementForce.X + newForce.X + TerrainInteraction().X,
+          MovementForce.Y + newForce.Y + TerrainInteraction().Y);
         force = MovementForce;  //UpdatePos();
     }
 
@@ -153,6 +166,8 @@ class SharpShooterTank : BaseTank
         UpdatePos();
         g.DrawRectangle(Pens.White, position.X, position.Y, 10, 10);
         g.FillRectangle(Brushes.White, position.X, position.Y, 10, 10);
+        //MessageBox.Show(position.X.ToString(), position.Y.ToString());
+        //MessageBox.Show(MovementForce.ToString());
         return bitmap;
     }
 

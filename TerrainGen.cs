@@ -15,7 +15,7 @@ public class TerrainGen
 			//TerrainOutln[i] = 250 + (100 * Math.Sin(i*Math.PI / 360) + (100 * Math.Cos(Math.Pow(i * Math.PI/ 180, 2) / 20)));
 			Random random = new Random();
 			Random outliers = new Random();
-			int iOutliers = outliers.Next(0, 199);
+			int iOutliers = outliers.Next(0, 199); 
 			switch (iOutliers)
 			{
 				case 0:
