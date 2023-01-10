@@ -10,7 +10,7 @@ class Rigidbody
 	protected Point gravity { get; set; }
 	protected Point force { get; set; }
 
-    public Point CollisionAdjust = new Point(0,0);
+    public Bitmap bmp;
 
     public Rigidbody()
 	{
@@ -23,7 +23,14 @@ class Rigidbody
         Point NE = new Point(position.X + 10, position.Y - 1);
         Point SE = new Point(position.X + 10, position.Y + 10);
 
-        return new Point(0,1);
+        for (int i = SW.X; i<= SE.X; i ++)
+        {
+            Color c = bmp.GetPixel(i, NW.Y);
+            //MessageBox.Show(c.ToString());
+            if (c.ToString() == "Color [A=255, R=139, G=69, B=19]" ) { MessageBox.Show("haaaaaaaa"); }
+        }
+
+        return new Point(0,0);
     }
 
     protected int LocalCoordsX;
@@ -158,6 +165,7 @@ class SharpShooterTank : BaseTank
 
     public Bitmap UpdateImage(Bitmap bitmap)
     {
+        bmp = bitmap;
         g = Graphics.FromImage(bitmap);
         g.DrawRectangle(Pens.Black, position.X, position.Y, 10, 10);
         g.FillRectangle(Brushes.Black, position.X, position.Y, 10, 10);
