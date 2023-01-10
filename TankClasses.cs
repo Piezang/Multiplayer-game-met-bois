@@ -16,21 +16,48 @@ class Rigidbody
 	{
 
 	}
+
+    public String Direction;
     public Point TerrainInteraction()
     {
+        Point CollisionAdjuster = new Point(1,1);
         Point NW = new Point(position.X - 1, position.Y - 1);
-        Point SW = new Point(position.X - 1, position.Y + 10);
-        Point NE = new Point(position.X + 10, position.Y - 1);
-        Point SE = new Point(position.X + 10, position.Y + 10);
+        Point SW = new Point(position.X - 1, position.Y + 11);
+        Point NE = new Point(position.X + 11, position.Y - 1);
+        Point SE = new Point(position.X + 11, position.Y + 11);
 
         for (int i = SW.X; i<= SE.X; i ++)
         {
-            Color c = bmp.GetPixel(i, NW.Y);
-            //MessageBox.Show(c.ToString());
-            if (c.ToString() == "Color [A=255, R=139, G=69, B=19]" ) { MessageBox.Show("haaaaaaaa"); }
+            Color c = bmp.GetPixel(i, SW.Y);
+            if (c.ToString() == "Color [A=255, R=139, G=69, B=19]")
+            { if (force.Y >= 0) { { CollisionAdjuster.Y = 0; } } }
         }
 
-        return new Point(0,0);
+        for (int i = NW.X; i <= NE.X; i++)
+        {
+            Color c = bmp.GetPixel(i, NW.Y);
+            if (c.ToString() == "Color [A=255, R=139, G=69, B=19]")
+            { if (force.Y <= 0) { if (Direction == "W") { CollisionAdjuster.Y = 0; } } }
+
+        }
+
+        for (int i = NE.Y + 1; i <= SE.Y - 1; i++)
+        {
+            Color c = bmp.GetPixel(NE.X, i);
+            if (c.ToString() == "Color [A=255, R=139, G=69, B=19]")
+            { if (force.X >= 0) { if (Direction == "D") { if (gravity.Y - CollisionAdjuster.Y == 0) { CollisionAdjuster = new Point(0, -1); } } } }
+
+        }
+
+        for (int i = NW.Y + 1; i <= SW.Y - 1; i++)
+        {
+            Color c = bmp.GetPixel(NW.X, i);
+            if (c.ToString() == "Color [A=255, R=139, G=69, B=19]")
+            { if (force.X <= 0) { if (Direction == "A") { CollisionAdjuster = new Point(0,- 1); } } }
+        }
+
+        return CollisionAdjuster;
+       // CollisionAdjuster = new Point(0, 0);
     }
 
     protected int LocalCoordsX;
@@ -38,8 +65,8 @@ class Rigidbody
 
 	protected void UpdatePos()
 	{
-        position = new Point(position.X + gravity.X + force.X,
-            position.Y + gravity.Y + force.Y);
+        position = new Point(position.X + TerrainInteraction().X * (gravity.X + force.X),
+            position.Y + TerrainInteraction().Y * (gravity.Y + force.Y));
 
         if (LocalCoordsX != 0)
         {
@@ -105,7 +132,7 @@ class BaseTank : Rigidbody
     
     public void Move(char c)
     {
-        string Direction = c.ToString().ToUpper();
+        Direction = c.ToString().ToUpper();
         switch (Direction)
         {
             case "W": newForce = new Point(0, -1); //MessageBox.Show(c.ToString());
@@ -118,8 +145,8 @@ class BaseTank : Rigidbody
                 break;
             default : return;
         }
-        MovementForce = new Point(MovementForce.X + newForce.X + TerrainInteraction().X,
-          MovementForce.Y + newForce.Y + TerrainInteraction().Y);
+        MovementForce = new Point(MovementForce.X + newForce.X,
+          MovementForce.Y + newForce.Y);
         force = MovementForce;  //UpdatePos();
     }
 
@@ -141,7 +168,7 @@ class SharpShooterTank : BaseTank
 
     public SharpShooterTank(Point pos, int mass, Point frce, float angl) 
 	{ 
-		position = pos; gravity = new Point(0, mass * 1);
+		position = pos; gravity = new Point(0, 1 * 1);
 		force = frce; 
 		CanonAngle = angl;
 
