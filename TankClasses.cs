@@ -14,8 +14,6 @@ public class Rigidbody
 
     public int gravityTimer;
 
-    public int Gravity;
-
     public Rigidbody()
 	{
         gravityTimer = 0;
@@ -24,7 +22,6 @@ public class Rigidbody
     public String Direction;
     private Point TerrainInteraction(Point position, Bitmap bmp)
     {
-        Gravity = 1;
         Point CollisionAdjuster = new Point(1,1);
         Point NW = new Point(position.X - 1, position.Y - 1);
         Point SW = new Point(position.X - 1, position.Y + 11);
@@ -35,7 +32,7 @@ public class Rigidbody
         {
             Color c = bmp.GetPixel(i, SW.Y);
             if (c.ToString() == "Color [A=255, R=139, G=69, B=19]")
-            { if (force.Y >= 0) { if (Direction != "W") {  CollisionAdjuster = new Point (1, 0); Gravity = 0; } } }
+            { if (force.Y >= 0) { if (Direction != "W") {  CollisionAdjuster = new Point (1, 0); } } }
         }
 
         for (int i = NW.X; i <= NE.X; i++)
@@ -171,7 +168,7 @@ class SharpShooterTank : BaseTank
 
     public SharpShooterTank(Point pos, int mass, Point frce, float angl) 
 	{ 
-		position = pos; gravity = new Point(0, Gravity * 1);
+		position = pos; gravity = new Point(0, 1 * 1);
 		force = frce; 
 		CanonAngle = angl;
 
