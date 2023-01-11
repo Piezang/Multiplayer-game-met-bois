@@ -293,6 +293,7 @@
             this.Controls.Add(this.Tabs);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_keyDown);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Form1_keyPress);
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseClicked);
             this.Tabs.ResumeLayout(false);
