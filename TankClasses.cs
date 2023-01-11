@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using System.DirectoryServices.ActiveDirectory;
 using System.Drawing;
 using System.Drawing.Text;
 
@@ -9,18 +10,63 @@ class Rigidbody
 	protected Point gravity { get; set; }
 	protected Point force { get; set; }
 
-	public Rigidbody()
+    public Bitmap bmp;
+
+    public Rigidbody()
 	{
 
 	}
+
+    public String Direction;
+    public Point TerrainInteraction()
+    {
+        Point CollisionAdjuster = new Point(1,1);
+        Point NW = new Point(position.X - 1, position.Y - 1);
+        Point SW = new Point(position.X - 1, position.Y + 11);
+        Point NE = new Point(position.X + 11, position.Y - 1);
+        Point SE = new Point(position.X + 11, position.Y + 11);
+
+        for (int i = SW.X; i<= SE.X; i ++)
+        {
+            Color c = bmp.GetPixel(i, SW.Y);
+            if (c.ToString() == "Color [A=255, R=139, G=69, B=19]")
+            { if (force.Y >= 0) { { CollisionAdjuster.Y = 0; } } }
+        }
+
+        for (int i = NW.X; i <= NE.X; i++)
+        {
+            Color c = bmp.GetPixel(i, NW.Y);
+            if (c.ToString() == "Color [A=255, R=139, G=69, B=19]")
+            { if (force.Y <= 0) { if (Direction == "W") { CollisionAdjuster.Y = 0; } } }
+
+        }
+
+        for (int i = NE.Y + 1; i <= SE.Y - 1; i++)
+        {
+            Color c = bmp.GetPixel(NE.X, i);
+            if (c.ToString() == "Color [A=255, R=139, G=69, B=19]")
+            { if (force.X >= 0) { if (Direction == "D") { if (gravity.Y - CollisionAdjuster.Y == 0) { CollisionAdjuster = new Point(0, -1); } } } }
+
+        }
+
+        for (int i = NW.Y + 1; i <= SW.Y - 1; i++)
+        {
+            Color c = bmp.GetPixel(NW.X, i);
+            if (c.ToString() == "Color [A=255, R=139, G=69, B=19]")
+            { if (force.X <= 0) { if (Direction == "A") { CollisionAdjuster = new Point(0,- 1); } } }
+        }
+
+        return CollisionAdjuster;
+       // CollisionAdjuster = new Point(0, 0);
+    }
 
     protected int LocalCoordsX;
     protected int LocalCoordsY;
 
 	protected void UpdatePos()
 	{
-        position = new Point(position.X + gravity.X + force.X,
-            position.Y + gravity.Y + force.Y);
+        position = new Point(position.X + TerrainInteraction().X * (gravity.X + force.X),
+            position.Y + TerrainInteraction().Y * (gravity.Y + force.Y));
 
         if (LocalCoordsX != 0)
         {
@@ -85,16 +131,17 @@ class BaseTank : Rigidbody
     }
     
     public void Move(char c)
-    {  
-        switch (c)
+    {
+        Direction = c.ToString().ToUpper();
+        switch (Direction)
         {
-            case 'w': newForce = new Point(0, -2); //MessageBox.Show(c.ToString());
+            case "W": newForce = new Point(0, -1); //MessageBox.Show(c.ToString());
                 break;
-            case 's': newForce = new Point(0, 2); //MessageBox.Show(c.ToString());
+            case "S": newForce = new Point(0, 1); //MessageBox.Show(c.ToString());
                 break;
-            case 'a': newForce = new Point(-2, 0); //MessageBox.Show(c.ToString());
+            case "A": newForce = new Point(-1, 0); //MessageBox.Show(c.ToString());
                 break;
-            case 'd': newForce = new Point(2, 0); //MessageBox.Show(c.ToString());
+            case "D": newForce = new Point(1, 0); //MessageBox.Show(c.ToString());
                 break;
             default : return;
         }
@@ -121,7 +168,7 @@ class SharpShooterTank : BaseTank
 
     public SharpShooterTank(Point pos, int mass, Point frce, float angl) 
 	{ 
-		position = pos; gravity = new Point(0, mass * 1);
+		position = pos; gravity = new Point(0, 1 * 1);
 		force = frce; 
 		CanonAngle = angl;
 
@@ -145,6 +192,7 @@ class SharpShooterTank : BaseTank
 
     public Bitmap UpdateImage(Bitmap bitmap)
     {
+        bmp = bitmap;
         g = Graphics.FromImage(bitmap);
         g.DrawRectangle(Pens.Black, position.X, position.Y, 10, 10);
         g.FillRectangle(Brushes.Black, position.X, position.Y, 10, 10);
@@ -153,6 +201,8 @@ class SharpShooterTank : BaseTank
         UpdatePos();
         g.DrawRectangle(Pens.White, position.X, position.Y, 10, 10);
         g.FillRectangle(Brushes.White, position.X, position.Y, 10, 10);
+        //MessageBox.Show(position.X.ToString(), position.Y.ToString());
+        //MessageBox.Show(MovementForce.ToString());
         return bitmap;
     }
 
