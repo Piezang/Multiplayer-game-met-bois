@@ -233,14 +233,13 @@ public class UpdateImage
                 g.FillRectangle(Brushes.White, position.X, position.Y, 10, 10);
                 break;
             case Projectile p:
+                g.DrawRectangle(Pens.Black, position.X, position.Y, 7, 7);
+                g.FillRectangle(Brushes.Black, position.X, position.Y, 7, 7);
+                p.UpdatePos();
                 g.DrawRectangle(Pens.Red, position.X, position.Y, 7, 7);
                 g.FillRectangle(Brushes.Red, position.X, position.Y, 7, 7);
-                p.UpdatePos();
-                g.DrawRectangle(Pens.White, position.X, position.Y, 7, 7);
-                g.FillRectangle(Brushes.White, position.X, position.Y, 7, 7);
                 break;
-        }
-        
+        }      
         //MessageBox.Show(position.X.ToString(), position.Y.ToString());
         //MessageBox.Show(MovementForce.ToString());
         return bitmap;
