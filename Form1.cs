@@ -1,3 +1,4 @@
+
 using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
@@ -8,6 +9,9 @@ using System.Threading;
 using System.Text;
 using System.CodeDom.Compiler;
 using System.Web;
+using System.Xml.Serialization;
+using System.Runtime.CompilerServices;
+using System.Drawing;
 
 namespace Multiplayer_game_met_bois
 {
@@ -41,6 +45,11 @@ namespace Multiplayer_game_met_bois
             timer1.Enabled = true;
             //timer1.Enabled = false;
             KeyPreview = true;
+
+
+            bitmap = terrain.TerrainImage(bitmap);
+            //Terrain = terrain.ServerTerrain;
+            pictureBox1.Image = bitmap;
         }  
 
         SharpShooterTank tank = new SharpShooterTank(new Point(100, 100), 0, new Point(0,0), 180);
@@ -50,7 +59,7 @@ namespace Multiplayer_game_met_bois
         private void Form1_keyPress(object sender, KeyPressEventArgs e)
         {
             //MessageBox.Show(e.KeyChar.ToString());
-            tank.Move(e.KeyChar);
+            tank.Move(Char.ToLower(e.KeyChar));
             
             if (e.KeyChar >= 48 && e.KeyChar <= 57)
             {
@@ -137,11 +146,32 @@ namespace Multiplayer_game_met_bois
             //txtOutput.Text = output;
         }
 
-        private void btnConnect_Click(object sender, EventArgs e)
+        TerrainGen terrain = new TerrainGen(883 - 1);
+        bool TerrainGenerated = false;
+        bool generated = false;
+        Bitmap bitmap = new Bitmap(883, 497);
+        //int[] Terrain = new int[883];
+        int[] newTerrainFromServer;
+        //Die probleem is iets met static variables
+
+        private void btnConnect_Click(object sender, EventArgs e)  //Client
         {
-            //FormKaas k = new FormKaas(this);
-            //k.Start();
+            Server.ServerBitmap = TerrainGen.ServerTerrain;
+            //MessageBox.Show(TerrainGen.ServerTerrain[1].ToString());
             Client.connect(txtHostClient.Text, Convert.ToInt32(txtPortClient.Text));
+            //MessageBox.Show(Server.ServerBitmap[1].ToString());
+
+            newTerrainFromServer = Client.Ready();
+            Graphics g = Graphics.FromImage(bitmap);
+            Pen pen = new Pen(Brushes.SaddleBrown);
+            g.Clear(Color.Black);
+            for (int i = 0; i < newTerrainFromServer.Length; i++)
+            {
+                Point pt1 = new Point(i, 497);
+                Point pt2 = new Point(i, newTerrainFromServer[i]);
+                g.DrawLine(pen, pt1, pt2);
+            }
+            //MessageBox.Show(newTerrainFromServer[1].ToString() + " index 1");
         }
 
         private void btnSend_Click(object sender, EventArgs e)
@@ -156,25 +186,24 @@ namespace Multiplayer_game_met_bois
             //change();
         }
 
-        bool generated = false;
-        Bitmap bitmap = new Bitmap(883, 497);
         private void TimerUpdate(object sender, EventArgs e)   //60 keer per sekonde
         {
+            if (!Server.Active)    //As hy nie die server is nie...
+            {
+                if (newTerrainFromServer == null) return;
+                if (newTerrainFromServer[pictureBox1.Width - 2] == 0) return;
+            }
+            
+            //MessageBox.Show("Running");
             Server.ServerTankCords = tank.position;  //Message na die client
             //txtOutput.Text += "K";
             bitmap = tank.UpdateImage(bitmap);
             pictureBox1.Image = bitmap;
-            if (!generated)
-            { 
-                TerrainGen terrain = new TerrainGen(pictureBox1.Width - 1);
-                bitmap = terrain.TerrainImage(bitmap);
-                generated = true;
-            } 
-            pictureBox1.Image = bitmap;
+      
             Graphics g;
 
-            if (Client.connected)
-            {
+            if (Client.connected)   //As hy die client is gebeur die
+            {           
                 Client.Message(tank.position.ToString());   //Message na die server
                 string t = Client.ServerCords.Trim();       //Server se response, sy tank se cords
                 int x = Convert.ToInt32(t.Substring(t.IndexOf('=')+1, t.IndexOf(',') - t.IndexOf('=')-1));
@@ -190,8 +219,8 @@ namespace Multiplayer_game_met_bois
                 g.DrawRectangle(Pens.White, ServerTank.position.X, ServerTank.position.Y, 10, 10);
                 g.FillRectangle(Brushes.White, ServerTank.position.X, ServerTank.position.Y, 10, 10);
                 pictureBox1.Image = bitmap;            
-            }   
-            if (Server.ClientTankCords!= "")
+            } 
+            if (Server.ClientTankCords!= "") //As hy die server is gebeur die
             {
                 string t = Server.ClientTankCords.Trim();       //Client se response, sy tank se cords
                 int x = Convert.ToInt32(t.Substring(t.IndexOf('=') + 1, t.IndexOf(',') - t.IndexOf('=') - 1));
@@ -213,15 +242,27 @@ namespace Multiplayer_game_met_bois
         {         
             tank.ChangeMouseCoords(e.X,e.Y);     
         }
-    }
 
+        private void ServerPage_Click(object sender, EventArgs e)
+        {
+
+        }
+    }
+    
     class Server
     {
+        public static int[] ServerBitmap;  //readonly en static constructors?
+        static Server()
+        {
+            ServerBitmap = TerrainGen.ServerTerrain;    
+        }
         public static Point ServerTankCords; 
         public static string ClientTankCords = "";
         public static int counter = 0;
+        public static bool Active = false;
         public static void start(string ip, int port, Point cords)
         {
+            Active = true;
             ServerTankCords = cords;
             Socket Serverlistener = new Socket(AddressFamily
                 .InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -244,15 +285,16 @@ namespace Multiplayer_game_met_bois
                 UserThread.Start();
             }
         }
+       
         public void User(Socket client)
         {
             while (true)
             {
-                byte[] msg = new byte[1024];
+                byte[] msg = new byte[2048*2];   //1024  //2048 2048 * 2 = 4kilo bytes
                 int size = client.Receive(msg);
                 string message = System.Text.Encoding.ASCII.GetString(msg, 0, size);
                 //MessageBox.Show(message);
-                if (message[0] == 'm')
+                if (message[0] == 'm') //Cords message
                 {
                     message = message.Substring(1);
                     //MessageBox.Show(message);
@@ -261,23 +303,33 @@ namespace Multiplayer_game_met_bois
                     msg = Encoding.Default.GetBytes(ServerTankCords.ToString());    //Stuur my eie cords vir client
                     client.Send(msg);
                 }
+                if (message == "Ready")  //TErrain message
+                {
+                    //MessageBox.Show("Map not synced");
+                    //MessageBox.Show(ServerBitmap[1].ToString());
+                    string pieceOfMap = "t";
+                    for (int i = 0; i < ServerBitmap.Length; i++)
+                    {
+                        //MessageBox.Show(numbers[i].ToString()); 
+                        pieceOfMap += ServerBitmap[i].ToString() + " ";
+                    }
+                    msg = Encoding.Default.GetBytes(pieceOfMap);
+                    client.Send(msg);   
+                    // Jy moet in die client maaak dat hy die map data lees en map skep
+                }
             }
         }
     }
 
     class Client
     {
-        //private static string prevcords;
-        //public static string ClientCords = "";
         public static string ServerCords = "";
         public static bool connected = false;
         private static Socket ClientSocket = new Socket(AddressFamily
                 .InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
         public static void connect(string ip, int port)
-        {
-            //string ip = "127.0.0.1";//txtHostClient.Text;
-            //int port = 8910;//Convert.ToInt32(txtPort.Text);          
+        {        
             IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
             ClientSocket.Connect(ep);
             MessageBox.Show("Client is connected");
@@ -293,14 +345,49 @@ namespace Multiplayer_game_met_bois
             byte[] msgFromServer = new byte[1024];
             int size = ClientSocket.Receive(msgFromServer);
             //MessageBox.Show("Server responds: " +
-                //System.Text.Encoding.ASCII.GetString(msgFromServer, 0, size));
-            if (ServerCords == Encoding.Default.GetString(msgFromServer))
+            //System.Text.Encoding.ASCII.GetString(msgFromServer, 0, size));
+            string msg = Encoding.Default.GetString(msgFromServer);
+            if (ServerCords == msg)
             {
                 return;
             }
-            ServerCords = Encoding.Default.GetString(msgFromServer);
-            //prevcords = ServerCords;
+            ServerCords = msg;       
             //MessageBox.Show(ServerCords);
+        }
+        public static int[] Ready()
+        {         
+            string msgToServer = "Ready";
+            MessageBox.Show(Server.ServerBitmap[1].ToString());
+            ClientSocket.Send(System.Text.Encoding.ASCII.GetBytes(msgToServer), 0,
+                msgToServer.Length, SocketFlags.None);
+            
+            int[] ServerBitmapp = new int[883];
+            byte[] msgFromServer = new byte[2048*2];   //1024  2048 * 2 = 4kilo bytes
+            int size = ClientSocket.Receive(msgFromServer);
+            //MessageBox.Show("Server responds: " +
+            string msg = Encoding.Default.GetString(msgFromServer);
+            //MessageBox.Show(msg);
+            int count = 0;
+
+            if (msg[0] == 't')
+            {
+                msg = msg.Substring(1);
+                foreach (char c in msg)
+                {      
+                    if (c == ' ' && count < 882 && msg.IndexOf(' ') > -1)
+                    {
+                        //MessageBox.Show(msg.Substring(0, msg.IndexOf(' ') ));
+                        //MessageBox.Show(msg.Substring(0, msg.IndexOf(' ')));
+                        ServerBitmapp[count] = Convert.ToInt32(msg.Substring(0, msg.IndexOf(' ')));
+                        //MessageBox.Show(ServerBitmapp[count].ToString());
+                        msg = msg.Remove(0, msg.IndexOf(' ') + 1);
+                        //MessageBox.Show(msg);
+                        count++;
+                    }
+                }
+                MessageBox.Show(count.ToString() + " count");
+            }
+            return ServerBitmapp;
         }
     }
 

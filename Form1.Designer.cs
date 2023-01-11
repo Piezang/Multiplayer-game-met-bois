@@ -141,6 +141,7 @@
             this.ServerPage.Size = new System.Drawing.Size(886, 503);
             this.ServerPage.TabIndex = 0;
             this.ServerPage.Text = "Server";
+            this.ServerPage.Click += new System.EventHandler(this.ServerPage_Click);
             // 
             // btnSendServer
             // 
