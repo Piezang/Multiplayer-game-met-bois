@@ -57,7 +57,7 @@ namespace Multiplayer_game_met_bois
         //ServerTank tree eintlik net op as die ander tank in die konneksie. Nie noodwendig die server se tank nie.
 
         private void Form1_keyPress(object sender, KeyPressEventArgs e)
-        {
+        {    
             //MessageBox.Show(e.KeyChar.ToString());
             tank.Move(Char.ToLower(e.KeyChar));
             
@@ -197,8 +197,11 @@ namespace Multiplayer_game_met_bois
             //MessageBox.Show("Running");
             Server.ServerTankCords = tank.position;  //Message na die client
             //txtOutput.Text += "K";
-            bitmap = tank.UpdateImage(bitmap);
-            pictureBox1.Image = bitmap;
+            for (int i = 0; i < 6; i++)
+            {
+                bitmap = tank.UpdateImage(bitmap);
+                pictureBox1.Image = bitmap;
+            }
       
             Graphics g;
 
