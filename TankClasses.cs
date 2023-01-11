@@ -4,7 +4,7 @@ using System.DirectoryServices.ActiveDirectory;
 using System.Drawing;
 using System.Drawing.Text;
 
-class Rigidbody
+public class Rigidbody
 {
 	public Point position { get; set; }
 	protected Point gravity { get; set; }
@@ -21,10 +21,10 @@ class Rigidbody
     public Point TerrainInteraction()
     {
         Point CollisionAdjuster = new Point(1,1);
-        Point NW = new Point(position.X - Math.Abs(force.X), position.Y - Math.Abs(force.Y) - gravity.Y);
-        Point SW = new Point(position.X - Math.Abs(force.X), position.Y + 10 + Math.Abs(force.Y) + gravity.Y);
-        Point NE = new Point(position.X + 1 + Math.Abs(force.X), position.Y - Math.Abs(force.Y) - gravity.Y);
-        Point SE = new Point(position.X + 1 + Math.Abs(force.X), position.Y + 1 + Math.Abs(force.Y) + gravity.Y);
+        Point NW = new Point(position.X - 1, position.Y - 1);
+        Point SW = new Point(position.X - 1, position.Y + 11);
+        Point NE = new Point(position.X + 11, position.Y - 1);
+        Point SE = new Point(position.X + 11, position.Y + 11);
 
         for (int i = SW.X; i<= SE.X; i ++)
         {
@@ -133,7 +133,7 @@ class BaseTank : Rigidbody
         Direction = c.ToString().ToUpper();
         switch (Direction)
         {
-            case "W": newForce = new Point(0, -1); //MessageBox.Show(c.ToString());
+            case "W": newForce = new Point(0, -2); //MessageBox.Show(c.ToString());
                 break;
             case "S": newForce = new Point(0, 1); //MessageBox.Show(c.ToString());
                 break;
@@ -143,8 +143,8 @@ class BaseTank : Rigidbody
                 break;
             default : return;
         }
-        MovementForce = new Point(MovementForce.X + newForce.X,
-          MovementForce.Y + newForce.Y);
+        MovementForce = new Point( newForce.X,
+            newForce.Y);
         force = MovementForce;  //UpdatePos();
     }
 
