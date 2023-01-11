@@ -4,7 +4,7 @@ using System.DirectoryServices.ActiveDirectory;
 using System.Drawing;
 using System.Drawing.Text;
 
-class Rigidbody
+public class Rigidbody
 {
 	public Point position { get; set; }
 	protected Point gravity { get; set; }
@@ -63,7 +63,7 @@ class Rigidbody
     protected int LocalCoordsX;
     protected int LocalCoordsY;
 
-	protected void UpdatePos()
+	public void UpdatePos()
 	{
         position = new Point(position.X + TerrainInteraction().X * (gravity.X + force.X),
             position.Y + TerrainInteraction().Y * (gravity.Y + force.Y));
@@ -210,6 +210,37 @@ class SharpShooterTank : BaseTank
 	{
 		
 	}
+}
+
+public class UpdateImage
+{
+    static Graphics g = null!;
+    public static Bitmap updateImage(Bitmap bitmap, Point position, object caller)
+    {     
+        g = Graphics.FromImage(bitmap);       
+       
+        switch (caller)
+        {
+            case SharpShooterTank tank:
+                g.DrawRectangle(Pens.Black, position.X, position.Y, 10, 10);
+                g.FillRectangle(Brushes.Black, position.X, position.Y, 10, 10);
+                tank.UpdatePos();
+                g.DrawRectangle(Pens.White, position.X, position.Y, 10, 10);
+                g.FillRectangle(Brushes.White, position.X, position.Y, 10, 10);
+                break;
+            case Projectile p:
+                g.DrawRectangle(Pens.Red, position.X, position.Y, 7, 7);
+                g.FillRectangle(Brushes.Red, position.X, position.Y, 7, 7);
+                p.UpdatePos();
+                g.DrawRectangle(Pens.White, position.X, position.Y, 7, 7);
+                g.FillRectangle(Brushes.White, position.X, position.Y, 7, 7);
+                break;
+        }
+        
+        //MessageBox.Show(position.X.ToString(), position.Y.ToString());
+        //MessageBox.Show(MovementForce.ToString());
+        return bitmap;
+    }
 }
 
 

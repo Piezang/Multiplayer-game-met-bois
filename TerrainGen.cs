@@ -9,8 +9,8 @@ public class TerrainGen
 	int width;
 	public TerrainGen(int Width)
 	{
-		
-		for (int i = 0; i <= 882; i ++)
+		width = Width;
+		for (int i = 0; i <= width; i ++)   //882
 		{
 			//TerrainOutln[i] = 250 + (100 * Math.Sin(i*Math.PI / 360) + (100 * Math.Cos(Math.Pow(i * Math.PI/ 180, 2) / 20)));
 			Random random = new Random();
