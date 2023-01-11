@@ -18,7 +18,7 @@ public class Rigidbody
 	}
 
     public String Direction;
-    public Point TerrainInteraction()
+    private Point TerrainInteraction(Point position, Bitmap bmp)
     {
         Point CollisionAdjuster = new Point(1,1);
         Point NW = new Point(position.X - 1, position.Y - 1);
@@ -61,10 +61,10 @@ public class Rigidbody
     protected int LocalCoordsX;
     protected int LocalCoordsY;
 
-	public void UpdatePos()
+	public void UpdatePos(Point pos, Bitmap bitmap)    //
 	{
-        position = new Point(position.X + TerrainInteraction().X * (gravity.X + force.X),
-            position.Y + TerrainInteraction().Y * (gravity.Y + force.Y));
+        position = new Point(position.X + TerrainInteraction(pos, bitmap).X * (gravity.X + force.X),
+            position.Y + TerrainInteraction(pos, bitmap).Y * (gravity.Y + force.Y));
 
         if (LocalCoordsX != 0)
         {
@@ -196,7 +196,7 @@ class SharpShooterTank : BaseTank
         g.FillRectangle(Brushes.Black, position.X, position.Y, 10, 10);
         //Wrywing
         //MovementForce = new Point((int)(MovementForce.X * 0.9), (int)(MovementForce.Y * 0.9));
-        UpdatePos();
+        UpdatePos(position, bitmap);
         g.DrawRectangle(Pens.White, position.X, position.Y, 10, 10);
         g.FillRectangle(Brushes.White, position.X, position.Y, 10, 10);
         //MessageBox.Show(position.X.ToString(), position.Y.ToString());
@@ -222,16 +222,16 @@ public class UpdateImage
             case SharpShooterTank tank:
                 g.DrawRectangle(Pens.Black, position.X, position.Y, 10, 10);
                 g.FillRectangle(Brushes.Black, position.X, position.Y, 10, 10);
-                tank.UpdatePos();
+                tank.UpdatePos(position, bitmap);
                 g.DrawRectangle(Pens.White, position.X, position.Y, 10, 10);
                 g.FillRectangle(Brushes.White, position.X, position.Y, 10, 10);
                 break;
             case Projectile p:
-                g.DrawRectangle(Pens.Black, position.X, position.Y, 7, 7);
-                g.FillRectangle(Brushes.Black, position.X, position.Y, 7, 7);
-                p.UpdatePos();
-                g.DrawRectangle(Pens.Red, position.X, position.Y, 7, 7);
-                g.FillRectangle(Brushes.Red, position.X, position.Y, 7, 7);
+                g.DrawRectangle(Pens.Black, position.X, position.Y, 10, 10);
+                g.FillRectangle(Brushes.Black, position.X, position.Y, 10, 10);
+                p.UpdatePos(position, bitmap);
+                g.DrawRectangle(Pens.Red, position.X, position.Y, 10, 10);
+                g.FillRectangle(Brushes.Red, position.X, position.Y, 10, 10);
                 break;
         }      
         //MessageBox.Show(position.X.ToString(), position.Y.ToString());

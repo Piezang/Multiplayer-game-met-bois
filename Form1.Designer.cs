@@ -141,7 +141,6 @@
             this.ServerPage.Size = new System.Drawing.Size(886, 503);
             this.ServerPage.TabIndex = 0;
             this.ServerPage.Text = "Server";
-            this.ServerPage.Click += new System.EventHandler(this.ServerPage_Click);
             // 
             // btnSendServer
             // 
@@ -278,6 +277,7 @@
             this.pictureBox1.Size = new System.Drawing.Size(883, 497);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseClicked);
             this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
             // 
             // timer1
@@ -294,6 +294,7 @@
             this.Name = "Form1";
             this.Text = "Form1";
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Form1_keyPress);
+            this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseClicked);
             this.Tabs.ResumeLayout(false);
             this.ServerPage.ResumeLayout(false);
             this.ServerPage.PerformLayout();

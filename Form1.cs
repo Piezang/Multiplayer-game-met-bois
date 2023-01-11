@@ -45,7 +45,7 @@ namespace Multiplayer_game_met_bois
             timer1.Enabled = true;
             //timer1.Enabled = false;
             KeyPreview = true;
-
+            this.MouseClick += Form1_MouseClicked!;
 
             bitmap = terrain.TerrainImage(bitmap);
             //Terrain = terrain.ServerTerrain;
@@ -193,7 +193,8 @@ namespace Multiplayer_game_met_bois
                 if (newTerrainFromServer == null) return;
                 if (newTerrainFromServer[pictureBox1.Width - 2] == 0) return;
             }
-            
+            if (k != null) bitmap = k.ImageChange(bitmap);
+
             //MessageBox.Show("Running");
             Server.ServerTankCords = tank.position;  //Message na die client
             //txtOutput.Text += "K";
@@ -246,12 +247,21 @@ namespace Multiplayer_game_met_bois
             tank.ChangeMouseCoords(e.X,e.Y);     
         }
 
-        private void ServerPage_Click(object sender, EventArgs e)
+        Projectile k;
+        private void Form1_MouseClicked(object sender, MouseEventArgs e)
         {
-
+            //MessageBox.Show("kaas");
+            Projectile p = new Projectile(e.X + 10, e.Y + 10, 2, new Point(4, 0));
+            k = p;
+            //bitmap = p.ImageChange(bitmap);
+            //for (int i = 0; i < 100; i++)
+            //{
+                
+                //Thread.Sleep(10);
+            //}
         }
     }
-    
+
     class Server
     {
         public static int[] ServerBitmap;  //readonly en static constructors?

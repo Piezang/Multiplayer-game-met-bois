@@ -16,5 +16,8 @@ public class Projectile: Rigidbody
         bitmap = UpdateImage.updateImage(bitmap, position, this);
         return bitmap;
     }
-
+    ~Projectile()
+    {
+        MessageBox.Show("Destroyed");
+    }
 }
