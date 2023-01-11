@@ -52,8 +52,8 @@ namespace Multiplayer_game_met_bois
             pictureBox1.Image = bitmap;
         }  
 
-        SharpShooterTank tank = new SharpShooterTank(new Point(100, 100), 0, new Point(0,0), 180);
-        SharpShooterTank ServerTank = new SharpShooterTank(new Point(-10, -10), 0, new Point(0, 0), 0);
+        SharpShooterTank tank = new SharpShooterTank(new Point(100, 100), 1, new Point(0,0), 180);
+        SharpShooterTank ServerTank = new SharpShooterTank(new Point(-10, -10), 1, new Point(0, 0), 0);
         //ServerTank tree eintlik net op as die ander tank in die konneksie. Nie noodwendig die server se tank nie.
 
         private void Form1_keyPress(object sender, KeyPressEventArgs e)
@@ -193,7 +193,10 @@ namespace Multiplayer_game_met_bois
                 if (newTerrainFromServer == null) return;
                 if (newTerrainFromServer[pictureBox1.Width - 2] == 0) return;
             }
-            if (k != null) bitmap = k.ImageChange(bitmap);
+            if (k != null)
+            {
+                bitmap = k.ImageChange(bitmap); //MessageBox.Show("Kaas");
+            }                        
 
             //MessageBox.Show("Running");
             Server.ServerTankCords = tank.position;  //Message na die client
@@ -246,10 +249,12 @@ namespace Multiplayer_game_met_bois
         }
 
         Projectile k;
+        bool projectileCreated = false;
         private void Form1_MouseClicked(object sender, MouseEventArgs e)
         {
             //MessageBox.Show("kaas");
-            Projectile p = new Projectile(e.X + 10, e.Y + 10, 2, new Point(4, 0));
+            projectileCreated= true;
+            Projectile p = new Projectile(e.X, e.Y, 4.5, new Point(2, -5));
             k = p;
             //bitmap = p.ImageChange(bitmap);
             //for (int i = 0; i < 100; i++)

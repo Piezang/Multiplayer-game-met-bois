@@ -282,7 +282,6 @@
             // 
             // timer1
             // 
-            this.timer1.Interval = 17;
             this.timer1.Tick += new System.EventHandler(this.TimerUpdate);
             // 
             // Form1
