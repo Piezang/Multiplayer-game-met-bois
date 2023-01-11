@@ -133,7 +133,7 @@ class BaseTank : Rigidbody
         Direction = c.ToString().ToUpper();
         switch (Direction)
         {
-            case "W": newForce = new Point(0, -2); //MessageBox.Show(c.ToString());
+            case "W": newForce = new Point(0, -1); //MessageBox.Show(c.ToString());
                 break;
             case "S": newForce = new Point(0, 1); //MessageBox.Show(c.ToString());
                 break;
