@@ -197,11 +197,9 @@ namespace Multiplayer_game_met_bois
             //MessageBox.Show("Running");
             Server.ServerTankCords = tank.position;  //Message na die client
             //txtOutput.Text += "K";
-            for (int i = 0; i < 6; i++)
-            {
-                bitmap = tank.UpdateImage(bitmap);
-                pictureBox1.Image = bitmap;
-            }
+             
+            bitmap = tank.UpdateImage(bitmap);
+            pictureBox1.Image = bitmap;
       
             Graphics g;
 
@@ -250,8 +248,13 @@ namespace Multiplayer_game_met_bois
         {
 
         }
+
+        private void Form1_keyDown(object sender, KeyEventArgs e)
+        {
+
+        }
     }
-    
+
     class Server
     {
         public static int[] ServerBitmap;  //readonly en static constructors?
