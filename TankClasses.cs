@@ -34,29 +34,45 @@ public class Rigidbody
         for (int i = SW.X; i<= SE.X; i ++)
         {
             Color c = bmp.GetPixel(i, SW.Y);
-            if (c.ToString() == "Color [A=255, R=139, G=69, B=19]")
-            { if (force.Y >= 0) { if (Direction != "W") {  CollisionAdjuster = new Point (1, 0); } } }
+            switch (c.ToString())
+            {
+                case "Color [A=255, R=139, G=69, B=19]":
+                case "Color [A=255, R=0, G=100, B=0]":
+                    if (force.Y + gravity.Y >= 0) { { CollisionAdjuster = new Point(1, 0); } }break;
+            }
         }
 
         for (int i = NW.X; i <= NE.X; i++)
         {
             Color c = bmp.GetPixel(i, NW.Y);
-            if (c.ToString() == "Color [A=255, R=139, G=69, B=19]")
-            { if (force.Y < 0) { if (Direction != "s") { CollisionAdjuster = new Point (1, 0); } } }
+            switch (c.ToString())
+            {
+                case "Color [A=255, R=139, G=69, B=19]":
+                case "Color [A=255, R=0, G=100, B=0]":
+                    if (force.Y + gravity.Y < 0) { { CollisionAdjuster = new Point(1, 0); } }break;
+            }
         }
 
         for (int i = NE.Y + 1; i <= SE.Y - 1; i++)
         {
             Color c = bmp.GetPixel(NE.X, i);
-            if (c.ToString() == "Color [A=255, R=139, G=69, B=19]")
-            { if (force.X > 0) { if (Direction != "A") { CollisionAdjuster = new Point(0, -1); } } }
+            switch (c.ToString())
+            {
+                case "Color [A=255, R=139, G=69, B=19]":
+                case "Color [A=255, R=0, G=100, B=0]":
+                    if (force.X >= 0) { { CollisionAdjuster = new Point(0, -1); } } break;
+            }
         }
 
         for (int i = NW.Y + 1; i <= SW.Y - 1; i++)
         {
             Color c = bmp.GetPixel(NW.X, i);
-            if (c.ToString() == "Color [A=255, R=139, G=69, B=19]")
-            { if (force.X < 0) { if (Direction != "Ds") { CollisionAdjuster = new Point(0, -1); } } }
+            switch (c.ToString())
+            {
+                case "Color [A=255, R=139, G=69, B=19]":
+                case "Color [A=255, R=0, G=100, B=0]":
+                    if (force.X <= 0) { { CollisionAdjuster = new Point(0, -1); } }break;
+            }
         }
 
         return CollisionAdjuster;
