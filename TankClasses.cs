@@ -161,6 +161,10 @@ class BaseTank : Rigidbody
 	private Point newForce;
 	public Point MovementForce { get; set; }
 	float AimAngle;
+    protected float CanonCentreX;
+    protected float CanonCentreY;
+    protected float CanonMouseDiffX;
+    protected float CanonMouseDiffY;
 	protected float CanonAngle
 	{
 		get { return AimAngle; }
@@ -171,10 +175,40 @@ class BaseTank : Rigidbody
 		}
 	}
 
-    public void ChangeMouseCoords(int XInput, int YInput)
+    public void ChangeMouseCoords(int XInput, int YInput, Bitmap bitmap)
     {
+        DrawCannon(bitmap,true);
         LocalCoordsX = XInput;
-        LocalCoordsY = YInput;       
+        LocalCoordsY = YInput;
+        DrawCannon(bitmap,false);
+
+    }
+
+
+    //Hieronder sal jy bron vind van "nee andor jou mors van suurstof en spasie jou harlekyn van die dieretuin wat maak jy daai moet nie so werk nie
+
+    public void DrawCannon(Bitmap bitmap, bool DeleteLine)
+    {
+        Graphics g = Graphics.FromImage(bitmap);
+
+        CanonMouseDiffX = (LocalCoordsX - CanonCentreX)/4;
+        CanonMouseDiffY = (LocalCoordsY - CanonCentreY)/4;
+
+        if (DeleteLine)
+        {
+            g.DrawLine(new Pen(Brushes.Black), CanonCentreX, CanonCentreY, (CanonCentreX + CanonMouseDiffX) , (CanonCentreY + CanonMouseDiffY) );
+            return;
+        }
+
+        CanonCentreX = position.X + 5;
+        CanonCentreY = position.Y + 5;
+
+        
+        //nee andor jou stuk nonsens
+       // Pen goldPen = new Pen(Color.Gold, 1);
+
+        g.DrawLine(new Pen(Brushes.Gold),CanonCentreX,CanonCentreY, (CanonCentreX + CanonMouseDiffX), (CanonCentreY + CanonMouseDiffY) );
+
     }
 
     /*public void Form1_keyPress(object sender, KeyPressEventArgs e)
