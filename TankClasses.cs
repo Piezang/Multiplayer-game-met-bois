@@ -26,6 +26,10 @@ public class Rigidbody
     public String Direction;
     private Point TerrainInteraction(Bitmap bmp)
     {
+        Boolean bNorth = true;
+        Boolean bSouth = true;
+        Boolean bEast = true;
+        Boolean bWest = true;
         Point CollisionAdjuster = new Point(1,1);
         Point NW = new Point(position.X - 1, position.Y - 1);
         Point SW = new Point(position.X - 1, position.Y + 11);
@@ -35,29 +39,57 @@ public class Rigidbody
         for (int i = SW.X; i<= SE.X; i ++)
         {
             Color c = bmp.GetPixel(i, SW.Y);
-            if (c.ToString() == "Color [A=255, R=139, G=69, B=19]")
-            { if (force.Y >= 0) { if (Direction != "W") {  CollisionAdjuster = new Point (1, 0); } } }
+            switch (c.ToString())
+            {
+                case "Color [A=255, R=139, G=69, B=19]":
+                case "Color [A=255, R=0, G=100, B=0]":
+                    if (force.Y + gravity.Y >= 0) { { CollisionAdjuster = new Point(1, 0); bSouth = false; } }break;
+            }
         }
 
         for (int i = NW.X; i <= NE.X; i++)
         {
             Color c = bmp.GetPixel(i, NW.Y);
-            if (c.ToString() == "Color [A=255, R=139, G=69, B=19]")
-            { if (force.Y < 0) { if (Direction != "s") { CollisionAdjuster = new Point (1, 0); } } }
+            switch (c.ToString())
+            {
+                case "Color [A=255, R=139, G=69, B=19]":
+                case "Color [A=255, R=0, G=100, B=0]":
+                    if (force.Y + gravity.Y < 0) { { CollisionAdjuster = new Point(1, 0); bNorth = false; } }break;
+            }
         }
 
         for (int i = NE.Y + 1; i <= SE.Y - 1; i++)
         {
             Color c = bmp.GetPixel(NE.X, i);
-            if (c.ToString() == "Color [A=255, R=139, G=69, B=19]")
-            { if (force.X > 0) { if (Direction != "A") { CollisionAdjuster = new Point(0, -1); } } }
+            switch (c.ToString())
+            {
+                case "Color [A=255, R=139, G=69, B=19]":
+                case "Color [A=255, R=0, G=100, B=0]":
+                    if (force.X >= 0)
+                    {
+                        if (force.Y + gravity.Y < 0)
+                        { CollisionAdjuster = new Point(0, 1); }
+                        else { CollisionAdjuster = new Point(0, 0); }
+                    }
+                    break;
+            }
         }
 
         for (int i = NW.Y + 1; i <= SW.Y - 1; i++)
         {
             Color c = bmp.GetPixel(NW.X, i);
-            if (c.ToString() == "Color [A=255, R=139, G=69, B=19]")
-            { if (force.X < 0) { if (Direction != "Ds") { CollisionAdjuster = new Point(0, -1); } } }
+            switch (c.ToString())
+            {
+                case "Color [A=255, R=139, G=69, B=19]":
+                case "Color [A=255, R=0, G=100, B=0]":
+                    if (force.X <= 0)
+                    { 
+                        if (force.Y + gravity.Y < 0)
+                        { CollisionAdjuster = new Point(0, 1); }
+                        else { CollisionAdjuster = new Point(0, 0); }
+                    }
+                    break;
+            }
         }
 
         return CollisionAdjuster;
@@ -70,13 +102,14 @@ public class Rigidbody
     int impactForce = 0;
 
     public void UpdatePos(Bitmap bitmap)    //
-	{
+    {
         grav += (mass * 0.03);
-        if (gravity.Y < 8) 
+        if (gravity.Y < 8)
         {
-            gravity = new Point(0, 
+            gravity = new Point(0,
                 Convert.ToInt32(grav));
         }
+
         if (TerrainInteraction(bitmap).Y == 0) { gravity = new Point(0, 0); grav = 0; } 
         /*for (int i = 0; i <= gravity.Y + mass; i++)   //1 of 0 by begin???
         {
