@@ -45,7 +45,7 @@ public class Rigidbody
             {
                 case "Color [A=255, R=139, G=69, B=19]":
                 case "Color [A=255, R=0, G=100, B=0]":
-                    if (Force.Y + gravity.Y >= 0) { { CollisionAdjuster = new Point(1, 0); } }break;
+                    if (force.Y + gravity.Y >= 0) { { CollisionAdjuster = new Point(1, 0); } }break;
             }
         }
 
@@ -56,13 +56,13 @@ public class Rigidbody
             {
                 case "Color [A=255, R=139, G=69, B=19]":
                 case "Color [A=255, R=0, G=100, B=0]":
-                    if (Force.Y + gravity.Y < 0) { { CollisionAdjuster = new Point(1, 0); } }break;
+                    if (force.Y + gravity.Y < 0) { { CollisionAdjuster = new Point(1, 0); } }break;
             }
         }
 
         if (colided == true)
         {
-            Force.Y = Force.Y + 1;
+            force = new Point(force.X, force.Y + 1);
             colided = false;
         }
 
@@ -77,9 +77,9 @@ public class Rigidbody
                     {
                         //if (Force.Y + gravity.Y < 0)
                          CollisionAdjuster = new Point(0, 1); 
-                        if (Force.Y + gravity.Y == 0)
-                        { CollisionAdjuster = new Point(0, 1); Force.Y = Force.Y - 1; colided = true; }
-                        if (Force.Y + gravity.Y > 0)
+                        if (force.Y + gravity.Y == 0)
+                        { CollisionAdjuster = new Point(0, 1); force = new Point(force.X, force.Y - 1);  colided = true; }
+                        if (force.Y + gravity.Y > 0)
                         { CollisionAdjuster = new Point(0, 0); }
                     }
                     break;
@@ -97,9 +97,9 @@ public class Rigidbody
                     {
                         //if (Force.Y + gravity.Y < 0)
                          CollisionAdjuster = new Point(0, 1); 
-                        if (Force.Y + gravity.Y == 0)
-                        { CollisionAdjuster = new Point(0, 1); Force.Y = Force.Y - 1; colided = true; }
-                        if (Force.Y + gravity.Y > 0)
+                        if (force.Y + gravity.Y == 0)
+                        { CollisionAdjuster = new Point(0, 1); force = new Point(force.X, force.Y - 1); colided = true; }
+                        if (force.Y + gravity.Y > 0)
                         { CollisionAdjuster = new Point(0, 0); }
                     }
                     break;
@@ -137,8 +137,8 @@ public class Rigidbody
         }*/
         //for (double i = 0; i <= grav; i += 0.1)
         //{
-            cPosition = new Coordinate(cPosition.x + TerrainInteraction(bitmap).X * (Force.X)
-                , cPosition.y + TerrainInteraction(bitmap).Y * (grav + Force.Y));
+            cPosition = new Coordinate(cPosition.x + TerrainInteraction(bitmap).X * (force.X)
+                , cPosition.y + TerrainInteraction(bitmap).Y * (grav + force.Y));
             //if (TerrainInteraction(bitmap).Y == 0) break;
         //}
         //MessageBox.Show(force.ToString());
@@ -223,7 +223,7 @@ class BaseTank : Rigidbody
         MovementForce = new Point( MovementForce.X + newForce.X,
             MovementForce.Y + newForce.Y);
         force = MovementForce;
-        Force = force;//UpdatePos();
+        //UpdatePos();
     }
 
     public BaseTank() 
