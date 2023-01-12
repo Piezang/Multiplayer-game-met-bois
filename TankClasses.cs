@@ -26,10 +26,10 @@ public class Rigidbody
     public String Direction;
     private Point TerrainInteraction(Bitmap bmp)
     {
-        Boolean bNorth = true;
-        Boolean bSouth = true;
-        Boolean bEast = true;
-        Boolean bWest = true;
+        bool bNorth = true;
+        bool bSouth = true;
+        bool bEast = true;
+        bool bWest = true;
         Point CollisionAdjuster = new Point(1,1);
         Point NW = new Point(position.X - 1, position.Y - 1);
         Point SW = new Point(position.X - 1, position.Y + 11);
@@ -100,9 +100,10 @@ public class Rigidbody
     protected int LocalCoordsY;
     double grav;
     int impactForce = 0;
+    bool called = false;
 
     public void UpdatePos(Bitmap bitmap)    //
-    {
+    {     
         grav += (mass * 0.03);
         if (gravity.Y < 8)
         {
@@ -110,7 +111,16 @@ public class Rigidbody
                 Convert.ToInt32(grav));
         }
 
-        if (TerrainInteraction(bitmap).Y == 0) { gravity = new Point(0, 0); grav = 0; } 
+        if (TerrainInteraction(bitmap).Y == 0) 
+        { 
+            gravity = new Point(0, 0); grav = 0; 
+            //if (!called)
+            //{
+                //force = new Point(force.X, force.Y + 1);
+                //called = true;
+            //}   
+        }
+        if (TerrainInteraction(bitmap).Y == 1) called = false;
         /*for (int i = 0; i <= gravity.Y + mass; i++)   //1 of 0 by begin???
         {
             impactForce = (i) - (TerrainInteraction(bitmap).Y * i);
