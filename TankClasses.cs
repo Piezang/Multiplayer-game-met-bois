@@ -18,10 +18,14 @@ public class Rigidbody
 
     public Point Force;
 
+    public bool colided;
+
+
     public Rigidbody()
 	{
         gravityTimer = 0;
         grav = 0;
+        colided = false;
         //mass = gravity.Y;
     }
 
@@ -56,6 +60,12 @@ public class Rigidbody
             }
         }
 
+        if (colided == true)
+        {
+            Force.Y = Force.Y + 1;
+            colided = false;
+        }
+
         for (int i = NE.Y + 1; i <= SE.Y - 1; i++)
         {
             Color c = bmp.GetPixel(NE.X, i);
@@ -65,10 +75,10 @@ public class Rigidbody
                 case "Color [A=255, R=0, G=100, B=0]":
                     if (force.X > 0)
                     {
-                        if (Force.Y + gravity.Y < 0)
-                        { CollisionAdjuster = new Point(0, 1); }
+                        //if (Force.Y + gravity.Y < 0)
+                         CollisionAdjuster = new Point(0, 1); 
                         if (Force.Y + gravity.Y == 0)
-                        { CollisionAdjuster = new Point(0, 1); Force.Y = Force.Y - 1; }
+                        { CollisionAdjuster = new Point(0, 1); Force.Y = Force.Y - 1; colided = true; }
                         if (Force.Y + gravity.Y > 0)
                         { CollisionAdjuster = new Point(0, 0); }
                     }
@@ -85,10 +95,10 @@ public class Rigidbody
                 case "Color [A=255, R=0, G=100, B=0]":
                     if (force.X < 0)
                     {
-                        if (Force.Y + gravity.Y < 0)
-                        { CollisionAdjuster = new Point(0, 1); }
+                        //if (Force.Y + gravity.Y < 0)
+                         CollisionAdjuster = new Point(0, 1); 
                         if (Force.Y + gravity.Y == 0)
-                        { CollisionAdjuster = new Point(0, 1); Force.Y = Force.Y - 1; }
+                        { CollisionAdjuster = new Point(0, 1); Force.Y = Force.Y - 1; colided = true; }
                         if (Force.Y + gravity.Y > 0)
                         { CollisionAdjuster = new Point(0, 0); }
                     }

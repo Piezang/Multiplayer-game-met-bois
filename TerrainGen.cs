@@ -4,8 +4,8 @@ using System.Security.Cryptography;
 
 public class TerrainGen
 {
-	double[] TerrainOutln = new double[4000];
-	double[] TerrainOutln1 = new double[4000];
+	double[] TerrainOutln = new double[883];
+	double[] TerrainOutln1 = new double[883];
 	int width;
 	public TerrainGen(int Width)
 	{
@@ -23,7 +23,7 @@ public class TerrainGen
                     {
                         case <= 149: for (int p = 0; p <= i + 150; p++) 
 							{ TerrainOutln[p] = TerrainOutln[p] = TerrainOutln[p] - random.Next(25, 100) ; };break;
-                        case >= 3850: for (int p = i - 150; p <= 3999; p++)
+                        case >= 733: for (int p = i - 150; p <= 882; p++)
 							{ TerrainOutln[p] = TerrainOutln[p] = TerrainOutln[p] - random.Next(25, 100) ; } break;
                         default: for (int p = i - 150; p <= i + 150; p++) 
 							{ TerrainOutln[p] = TerrainOutln[p] = TerrainOutln[p] - random.Next(25, 100) ; } break;
@@ -34,22 +34,22 @@ public class TerrainGen
 		}
 		for (int k = 0; k <= 20; k++)
 		{
-			for (int i = 0; i <= 3999; i++)
+			for (int i = 0; i <= 882; i++)
 			{
 				double iNew = new double();
 				double iSum = 0;
 				switch (i)
 				{
-					case <= 4: for (int p = 0; p <= i + 5; p++) { iSum = iSum + TerrainOutln[p]; } iNew = iSum / (i + 6); break;
-					case >= 3995: for (int p = i - 5; p <= 3999; p++) { iSum = iSum + TerrainOutln[p]; } iNew = iSum / (3999 - i + 3); break;
+					case <= 4: for (int p = 0; p <= i + 5; p++) { iSum = iSum + TerrainOutln[p]; } iNew = iSum / (i + 5); break;
+					case >= 878: for (int p = i - 5; p <= 882; p++) { iSum = iSum + TerrainOutln[p]; } iNew = iSum / (882 - i + 5); break;
 					default: for (int p = i - 5; p <= i + 5; p++) { iSum = iSum + TerrainOutln[p]; } iNew = iSum / 11; break;
 				}
 				TerrainOutln1[i] = (float)iNew;
-				if (i == 3999) { TerrainOutln = TerrainOutln1; }
+				if (i == 882) { TerrainOutln = TerrainOutln1; }
 			}
 		}
 	}
-	public static int[] ServerTerrain = new int[4000];
+	public static int[] ServerTerrain = new int[883];
 	public Bitmap TerrainImage(Bitmap bitmap)
 	{
 		//Bitmap bmp = new Bitmap(883, 497);
@@ -57,7 +57,7 @@ public class TerrainGen
 		Pen penDirt = new Pen(Brushes.SaddleBrown);
 		Pen penGrass = new Pen(Brushes.DarkGreen);
 
-		for (int i = 0; i <= 3999; i++) 
+		for (int i = 0; i <= 882; i++) 
 		{
 			Point pt1 = new Point(i, 497);
 			Point pt3 = new Point(i, Convert.ToInt32(TerrainOutln[i]) - 10);
