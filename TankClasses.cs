@@ -60,7 +60,13 @@ public class Rigidbody
             {
                 case "Color [A=255, R=139, G=69, B=19]":
                 case "Color [A=255, R=0, G=100, B=0]":
-                    if (force.X >= 0) { { CollisionAdjuster = new Point(0, -1); } } break;
+                    if (force.X >= 0)
+                    {
+                        if (force.Y + gravity.Y < 0)
+                        { CollisionAdjuster = new Point(0, 1); }
+                        else { CollisionAdjuster = new Point(0, 0); }
+                    }
+                    break;
             }
         }
 
@@ -71,7 +77,13 @@ public class Rigidbody
             {
                 case "Color [A=255, R=139, G=69, B=19]":
                 case "Color [A=255, R=0, G=100, B=0]":
-                    if (force.X <= 0) { { CollisionAdjuster = new Point(0, -1); } }break;
+                    if (force.X <= 0)
+                    { 
+                        if (force.Y + gravity.Y < 0)
+                        { CollisionAdjuster = new Point(0, 1); }
+                        else { CollisionAdjuster = new Point(0, 0); }
+                    }
+                    break;
             }
         }
 
@@ -85,12 +97,17 @@ public class Rigidbody
     int impactForce = 0;
 
     public void UpdatePos(Bitmap bitmap)    //
-	{
+    {
         grav += (mass * 0.03);
-        if (gravity.Y < 8) 
+        if (gravity.Y < 8)
         {
-            gravity = new Point(0, 
+            gravity = new Point(0,
                 Convert.ToInt32(grav));
+        }
+
+        if (TerrainInteraction(bitmap).X == 0)
+        {
+            //force.Y = 1;
         }
         if (TerrainInteraction(bitmap).Y == 0) { gravity = new Point(0, 0); grav = 0; } 
         for (int i = 1; i <= gravity.Y + mass; i++)
