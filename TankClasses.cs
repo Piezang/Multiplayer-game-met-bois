@@ -137,6 +137,7 @@ public class Rigidbody
         }*/
         //for (double i = 0; i <= grav; i += 0.1)
         //{
+        //if ()
             cPosition = new Coordinate(cPosition.x + TerrainInteraction(bitmap).X * (Force.X)
                 , cPosition.y + TerrainInteraction(bitmap).Y * (grav + Force.Y));
             //if (TerrainInteraction(bitmap).Y == 0) break;
