@@ -25,6 +25,10 @@ public class Rigidbody
     public String Direction;
     private Point TerrainInteraction(Bitmap bmp)
     {
+        Boolean bNorth = true;
+        Boolean bSouth = true;
+        Boolean bEast = true;
+        Boolean bWest = true;
         Point CollisionAdjuster = new Point(1,1);
         Point NW = new Point(position.X - 1, position.Y - 1);
         Point SW = new Point(position.X - 1, position.Y + 11);
@@ -38,7 +42,7 @@ public class Rigidbody
             {
                 case "Color [A=255, R=139, G=69, B=19]":
                 case "Color [A=255, R=0, G=100, B=0]":
-                    if (force.Y + gravity.Y >= 0) { { CollisionAdjuster = new Point(1, 0); } }break;
+                    if (force.Y + gravity.Y >= 0) { { CollisionAdjuster = new Point(1, 0); bSouth = false; } }break;
             }
         }
 
@@ -49,7 +53,7 @@ public class Rigidbody
             {
                 case "Color [A=255, R=139, G=69, B=19]":
                 case "Color [A=255, R=0, G=100, B=0]":
-                    if (force.Y + gravity.Y < 0) { { CollisionAdjuster = new Point(1, 0); } }break;
+                    if (force.Y + gravity.Y < 0) { { CollisionAdjuster = new Point(1, 0); bNorth = false; } }break;
             }
         }
 
@@ -105,10 +109,6 @@ public class Rigidbody
                 Convert.ToInt32(grav));
         }
 
-        if (TerrainInteraction(bitmap).X == 0)
-        {
-            //force.Y = 1;
-        }
         if (TerrainInteraction(bitmap).Y == 0) { gravity = new Point(0, 0); grav = 0; } 
         for (int i = 1; i <= gravity.Y + mass; i++)
         {
