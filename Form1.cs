@@ -246,7 +246,7 @@ namespace Multiplayer_game_met_bois
         
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {         
-            tank.ChangeMouseCoords(e.X,e.Y);     
+            tank.ChangeMouseCoords(e.X,e.Y,bitmap);     
         }
 
         Projectile k;
