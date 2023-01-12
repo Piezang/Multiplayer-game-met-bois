@@ -6,9 +6,10 @@ using System.Drawing.Text;
 
 public class Rigidbody
 {
-	public Point position { get; set; }
-	protected Point gravity { get; set; }
-	protected Point force { get; set; }
+    public Point position { get; set; }
+    protected Point gravity { get; set; }
+    public Point force { get; set; }
+    public Coordinate cPosition { get; set; }
     protected double mass;
 
     public Bitmap bmp;
@@ -106,17 +107,25 @@ public class Rigidbody
         }
 
         if (TerrainInteraction(bitmap).Y == 0) { gravity = new Point(0, 0); grav = 0; } 
-        for (int i = 1; i <= gravity.Y + mass; i++)
+        /*for (int i = 0; i <= gravity.Y + mass; i++)   //1 of 0 by begin???
         {
             impactForce = (i) - (TerrainInteraction(bitmap).Y * i);
 
             position = new Point(position.X + TerrainInteraction(bitmap).X * (0 + force.X),
-            position.Y + TerrainInteraction(bitmap).Y * (i + force.Y));
+            position.Y + TerrainInteraction(bitmap).Y * (i + force.Y));       
+
             gravity = new Point(0, gravity.Y * TerrainInteraction(bitmap).Y);
             if (TerrainInteraction(bitmap).Y == 0) break;
-        }
+        }*/
+        //for (double i = 0; i <= grav; i += 0.1)
+        //{
+            cPosition = new Coordinate(cPosition.x + TerrainInteraction(bitmap).X * (force.X)
+                , cPosition.y + TerrainInteraction(bitmap).Y * (grav + force.Y));
+            //if (TerrainInteraction(bitmap).Y == 0) break;
+        //}
+        //MessageBox.Show(force.ToString());
     
-        if (LocalCoordsX != 0)
+        if (LocalCoordsX != 0) 
         {
             //MessageBox.Show(LocalCoordsX.ToString());
         }
@@ -218,7 +227,7 @@ class SharpShooterTank : BaseTank
 	{ 
 		position = pos; gravity = new Point(0, _mass * 1);
 		force = frce;   mass = _mass;
-		CanonAngle = angl;
+		CanonAngle = angl; cPosition = new Coordinate(position.X, position.Y);
 
         //bitmap = new Bitmap(SharpShooterTankimg); 
         g = Graphics.FromImage(bitmap);
@@ -242,12 +251,17 @@ class SharpShooterTank : BaseTank
     {
         for (int i = 0; i < 6; i++)
         {
+            position = new Point((int)cPosition.x, (int)cPosition.y);
+
             g = Graphics.FromImage(bitmap);
             g.DrawRectangle(Pens.Black, position.X, position.Y, 10, 10);
             g.FillRectangle(Brushes.Black, position.X, position.Y, 10, 10);
             //Wrywing
             //MovementForce = new Point((int)(MovementForce.X * 0.9), (int)(MovementForce.Y * 0.9));
             UpdatePos(bitmap);
+
+            position = new Point((int)cPosition.x, (int)cPosition.y);
+
             g.DrawRectangle(Pens.White, position.X, position.Y, 10, 10);
             g.FillRectangle(Brushes.White, position.X, position.Y, 10, 10);
             //MessageBox.Show(position.X.ToString(), position.Y.ToString());
@@ -265,7 +279,7 @@ class SharpShooterTank : BaseTank
 public class UpdateImage
 {
     static Graphics g = null!;
-    public static Bitmap updateImage(Bitmap bitmap, Point position, object caller)
+    public static Bitmap updateImage(Bitmap bitmap, Point position, object caller, Coordinate cPosition)
     {     
         g = Graphics.FromImage(bitmap);       
        
@@ -280,10 +294,17 @@ public class UpdateImage
                 break;
             case Projectile p:
                 //MessageBox.Show(p.position.ToString());
-                //g.DrawRectangle(Pens.Black, position.X, position.Y, 10, 10);
-                //g.FillRectangle(Brushes.Black, position.X, position.Y, 10, 10);
+                position = new Point((int)cPosition.x, (int)cPosition.y);
+
+                g.DrawRectangle(Pens.Black, position.X, position.Y, 10, 10);
+                g.FillRectangle(Brushes.Black, position.X, position.Y, 10, 10);
                 p.UpdatePos(bitmap);
-                g.DrawRectangle(Pens.Red, position.X, position.Y, 10, 10);
+
+                // position.X = (int)(cPosition.x);
+                //position.Y = (int)(cPosition.y);
+                position = new Point((int)cPosition.x, (int)cPosition.y);   //Convert.ToInt32
+
+                g.DrawRectangle(Pens.Red, position.X, position.Y, 10, 10);    //position
                 g.FillRectangle(Brushes.Red, position.X, position.Y, 10, 10);
                 break;
         }      
