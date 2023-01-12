@@ -196,6 +196,7 @@ namespace Multiplayer_game_met_bois
             if (k != null)
             {
                 bitmap = k.ImageChange(bitmap); //MessageBox.Show("Kaas");
+                //MessageBox.Show(k.force.ToString());
             }                        
 
             //MessageBox.Show("Running");
@@ -254,7 +255,7 @@ namespace Multiplayer_game_met_bois
         {
             //MessageBox.Show("kaas");
             projectileCreated= true;
-            Projectile p = new Projectile(e.X, e.Y, 4.5, new Point(2, -5));
+            Projectile p = new Projectile(e.X, e.Y, 3.5, new Point(5, -6));
             k = p;
             //bitmap = p.ImageChange(bitmap);
             //for (int i = 0; i < 100; i++)
