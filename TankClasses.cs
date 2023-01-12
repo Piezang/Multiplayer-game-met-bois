@@ -68,7 +68,7 @@ public class Rigidbody
                         if (Force.Y + gravity.Y < 0)
                         { CollisionAdjuster = new Point(0, 1); }
                         if (Force.Y + gravity.Y == 0)
-                        { CollisionAdjuster = new Point(0, 1); Force.Y = Force.Y - 1; }
+                        { CollisionAdjuster = new Point(0, 1);  }
                         if (Force.Y + gravity.Y > 0)
                         { CollisionAdjuster = new Point(0, 0); }
                     }
