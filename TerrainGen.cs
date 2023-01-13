@@ -53,6 +53,8 @@ public class TerrainGen
 			}
 		}
 	}
+
+
 	public static int[] ServerTerrain = new int[4000];
 	public Bitmap TerrainImage(Bitmap bitmap)
 	{
