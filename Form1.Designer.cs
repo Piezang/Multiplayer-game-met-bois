@@ -138,7 +138,7 @@
             this.ServerPage.Location = new System.Drawing.Point(4, 24);
             this.ServerPage.Name = "ServerPage";
             this.ServerPage.Padding = new System.Windows.Forms.Padding(3);
-            this.ServerPage.Size = new System.Drawing.Size(886, 503);
+            this.ServerPage.Size = new System.Drawing.Size(1422, 503);
             this.ServerPage.TabIndex = 0;
             this.ServerPage.Text = "Server";
             // 
@@ -183,7 +183,7 @@
             this.ClientPage.Location = new System.Drawing.Point(4, 24);
             this.ClientPage.Name = "ClientPage";
             this.ClientPage.Padding = new System.Windows.Forms.Padding(3);
-            this.ClientPage.Size = new System.Drawing.Size(886, 503);
+            this.ClientPage.Size = new System.Drawing.Size(1422, 503);
             this.ClientPage.TabIndex = 1;
             this.ClientPage.Text = "Client";
             // 
