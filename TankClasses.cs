@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Multiplayer_game_met_bois;
+using System;
 using System.Diagnostics.Contracts;
 using System.DirectoryServices.ActiveDirectory;
 using System.Drawing;
@@ -110,13 +111,12 @@ public class Rigidbody
        // CollisionAdjuster = new Point(0, 0);
     }
 
-    protected int LocalCoordsX;
-    protected int LocalCoordsY;
     double grav;
     int impactForce = 0;
+    bool called = false;
 
     public void UpdatePos(Bitmap bitmap)    //
-    {
+    {     
         grav += (mass * 0.03);
         if (gravity.Y < 8)
         {
@@ -142,16 +142,6 @@ public class Rigidbody
             //if (TerrainInteraction(bitmap).Y == 0) break;
         //}
         //MessageBox.Show(force.ToString());
-    
-        if (LocalCoordsX != 0) 
-        {
-            //MessageBox.Show(LocalCoordsX.ToString());
-        }
-
-        if (LocalCoordsY != 0)
-        {
-            //MessageBox.Show(LocalCoordsY.ToString());
-        }
     }
 }
 
@@ -160,10 +150,8 @@ class BaseTank : Rigidbody
 	private Point newForce;
 	public Point MovementForce { get; set; }
 	float AimAngle;
-    protected float CanonCentreX;
-    protected float CanonCentreY;
-    protected float CanonMouseDiffX;
-    protected float CanonMouseDiffY;
+    public int LocalCoordsX = 3;
+    public int LocalCoordsY = 3;
 	protected float CanonAngle
 	{
 		get { return AimAngle; }
@@ -174,60 +162,44 @@ class BaseTank : Rigidbody
 		}
 	}
 
-    public void ChangeMouseCoords(int XInput, int YInput, Bitmap bitmap)
+    public void ChangeMouseCoords(int XInput, int YInput, Bitmap bitmap, Point oldPos)
     {
-        DrawCannon(bitmap,true);
+        DrawCannon(bitmap,true, oldPos);  //oldPos   
         LocalCoordsX = XInput;
         LocalCoordsY = YInput;
-        DrawCannon(bitmap,false);
-
+        DrawCannon(bitmap,false, position);
     }
-
-
     //Hieronder sal jy bron vind van "nee andor jou mors van suurstof en spasie jou harlekyn van die dieretuin wat maak jy daai moet nie so werk nie
 
-    public void DrawCannon(Bitmap bitmap, bool DeleteLine)
+    protected void DrawCannon(Bitmap bitmap, bool DeleteLine, Point position)
     {
+        float CanonCentreX = position.X + 5;
+        float CanonCentreY = position.Y + 5;
+        int val = 1;
+        float CanonMouseDiffX = (LocalCoordsX - CanonCentreX);
+        float CanonMouseDiffY = (LocalCoordsY - CanonCentreY);
+        if (CanonMouseDiffX < 0) val = -1; 
+
+        double canonLength = 60;
+        double Difference = ((CanonMouseDiffY))/((CanonMouseDiffX));
+        //MessageBox.Show(Difference.ToString());
+        double angle = Math.Atan(Difference); //- Math.PI/2; /// Math.PI * 180;
+        //MessageBox.Show(angle.ToString());
+        double x = canonLength * Math.Cos(angle) * val; 
+        double y = canonLength * Math.Sin(angle) * val;
+
         Graphics g = Graphics.FromImage(bitmap);
-
-        CanonMouseDiffX = (LocalCoordsX - CanonCentreX)/4;
-        CanonMouseDiffY = (LocalCoordsY - CanonCentreY)/4;
-
+        
         if (DeleteLine)
         {
-            g.DrawLine(new Pen(Brushes.Black), CanonCentreX, CanonCentreY, (CanonCentreX + CanonMouseDiffX) , (CanonCentreY + CanonMouseDiffY) );
+            g.DrawLine(new Pen(Brushes.Black), CanonCentreX, CanonCentreY, (CanonCentreX + (float)x) , (CanonCentreY + (float)y) );
             return;
         }
-
-        CanonCentreX = position.X + 5;
-        CanonCentreY = position.Y + 5;
-
         
         //nee andor jou stuk nonsens
-       // Pen goldPen = new Pen(Color.Gold, 1);
-
-        g.DrawLine(new Pen(Brushes.Gold),CanonCentreX,CanonCentreY, (CanonCentreX + CanonMouseDiffX), (CanonCentreY + CanonMouseDiffY) );
-
+        //Pen goldPen = new Pen(Color.Gold, 1);
+        g.DrawLine(new Pen(Brushes.Gold),CanonCentreX,CanonCentreY, (CanonCentreX + (float)x), (CanonCentreY + (float)y));
     }
-
-    /*public void Form1_keyPress(object sender, KeyPressEventArgs e)
-    {
-		MessageBox.Show(e.KeyChar.ToString());
-        if (e.KeyChar >= 48 && e.KeyChar <= 57)
-        {
-            MessageBox.Show($"Form.KeyPress: '{e.KeyChar}' pressed.");
-
-            switch (e.KeyChar)
-            {
-                case (char)49:
-                case (char)52:
-                case (char)55:
-                    MessageBox.Show($"Form.KeyPress: '{e.KeyChar}' consumed.");
-                    e.Handled = true;
-                    break;
-            }
-        }
-    }*/
 
     protected int TakeDamage(int damage, int health)
     {
@@ -299,21 +271,25 @@ class SharpShooterTank : BaseTank
 		SharpShooterTankimg.Dispose();   //Ek wil he dit moet clear
         destroyed = true;
     }
-
+    public bool MouseMoved = false;
+    Point oldPos;
     public Bitmap UpdateImage(Bitmap bitmap)
     {
         for (int i = 0; i < 6; i++)
         {
             position = new Point((int)cPosition.x, (int)cPosition.y);
-
             g = Graphics.FromImage(bitmap);
             g.DrawRectangle(Pens.Black, position.X, position.Y, 10, 10);
             g.FillRectangle(Brushes.Black, position.X, position.Y, 10, 10);
+           
             //Wrywing
             //MovementForce = new Point((int)(MovementForce.X * 0.9), (int)(MovementForce.Y * 0.9));
+            oldPos = new Point (position.X, position.Y);
+   
             UpdatePos(bitmap);
-
             position = new Point((int)cPosition.x, (int)cPosition.y);
+            ChangeMouseCoords(Form1.X, Form1.Y, bitmap, oldPos);
+            MouseMoved = false;
 
             g.DrawRectangle(Pens.White, position.X, position.Y, 10, 10);
             g.FillRectangle(Brushes.White, position.X, position.Y, 10, 10);
