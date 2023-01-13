@@ -146,10 +146,10 @@ namespace Multiplayer_game_met_bois
             //txtOutput.Text = output;
         }
 
-        TerrainGen terrain = new TerrainGen(883 - 1);
+        TerrainGen terrain = new TerrainGen(4000 - 1);
         bool TerrainGenerated = false;
         bool generated = false;
-        Bitmap bitmap = new Bitmap(883, 497);
+        Bitmap bitmap = new Bitmap(4000, 497);
         //int[] Terrain = new int[883];
         int[] newTerrainFromServer;
         //Die probleem is iets met static variables
@@ -383,7 +383,7 @@ namespace Multiplayer_game_met_bois
             ClientSocket.Send(System.Text.Encoding.ASCII.GetBytes(msgToServer), 0,
                 msgToServer.Length, SocketFlags.None);
             
-            int[] ServerBitmapp = new int[883];
+            int[] ServerBitmapp = new int[4000];
             byte[] msgFromServer = new byte[2048*2];   //1024  2048 * 2 = 4kilo bytes
             int size = ClientSocket.Receive(msgFromServer);
             //MessageBox.Show("Server responds: " +

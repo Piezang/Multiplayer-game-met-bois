@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 public class TerrainGen
 {
 	double[] TerrainOutln = new double[4000];
-	double[] TerrainOutln1 = new double[4000];
+	double[] TerrainOutln1 = new double [4000];
 	int width;
 	public TerrainGen(int Width)
 	{
@@ -40,8 +40,8 @@ public class TerrainGen
 				double iSum = 0;
 				switch (i)
 				{
-					case <= 4: for (int p = 0; p <= i + 5; p++) { iSum = iSum + TerrainOutln[p]; } iNew = iSum / (i + 6); break;
-					case >= 3995: for (int p = i - 5; p <= 3999; p++) { iSum = iSum + TerrainOutln[p]; } iNew = iSum / (3999 - i + 3); break;
+					case <= 4: for (int p = 0; p <= i + 5; p++) { iSum = iSum + TerrainOutln[p]; } iNew = iSum / (i + 5); break;
+					case >= 3995: for (int p = i - 5; p <= 3999; p++) { iSum = iSum + TerrainOutln[p]; } iNew = iSum / (3999 - i + 5); break;
 					default: for (int p = i - 5; p <= i + 5; p++) { iSum = iSum + TerrainOutln[p]; } iNew = iSum / 11; break;
 				}
 				TerrainOutln1[i] = (float)iNew;

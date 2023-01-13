@@ -120,7 +120,7 @@
             this.Tabs.Location = new System.Drawing.Point(12, 12);
             this.Tabs.Name = "Tabs";
             this.Tabs.SelectedIndex = 0;
-            this.Tabs.Size = new System.Drawing.Size(894, 531);
+            this.Tabs.Size = new System.Drawing.Size(1430, 531);
             this.Tabs.TabIndex = 6;
             // 
             // ServerPage
@@ -264,7 +264,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 24);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(886, 503);
+            this.tabPage1.Size = new System.Drawing.Size(1422, 503);
             this.tabPage1.TabIndex = 2;
             this.tabPage1.Text = "tabPage1";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -274,7 +274,7 @@
             this.pictureBox1.BackColor = System.Drawing.Color.Black;
             this.pictureBox1.Location = new System.Drawing.Point(3, 6);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(883, 497);
+            this.pictureBox1.Size = new System.Drawing.Size(1416, 497);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseClicked);
@@ -289,7 +289,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(929, 555);
+            this.ClientSize = new System.Drawing.Size(1454, 555);
             this.Controls.Add(this.Tabs);
             this.Name = "Form1";
             this.Text = "Form1";
