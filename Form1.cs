@@ -12,6 +12,7 @@ using System.Web;
 using System.Xml.Serialization;
 using System.Runtime.CompilerServices;
 using System.Drawing;
+using Microsoft.VisualBasic.Devices;
 
 namespace Multiplayer_game_met_bois
 {
@@ -209,6 +210,11 @@ namespace Multiplayer_game_met_bois
 
         private void TimerUpdate(object sender, EventArgs e)   //60 keer per sekonde
         {
+            //tank.Move(Char.ToLower('M'));
+
+           
+
+
             if (!Server.Active)    //As hy nie die server is nie...
             {
                 if (newTerrainFromServer == null) return;

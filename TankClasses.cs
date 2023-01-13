@@ -4,6 +4,7 @@ using System.Diagnostics.Contracts;
 using System.DirectoryServices.ActiveDirectory;
 using System.Drawing;
 using System.Drawing.Text;
+using System.Windows.Input;
 
 public class Rigidbody
 {
@@ -214,6 +215,7 @@ class BaseTank : Rigidbody
     public void Move(char c)
     {
         Direction = c.ToString().ToUpper();
+        
         switch (Direction)
         {
             case "W": newForce = new Point(0, -1); //MessageBox.Show(c.ToString());
@@ -224,10 +226,59 @@ class BaseTank : Rigidbody
                 break;
             case "D": newForce = new Point(1, 0); //MessageBox.Show(c.ToString());
                 break;
-            default : return;
+            default : newForce = new Point(0,0);
+                break;
+
+
+                MovementForce = newForce;
+                
         }
-        MovementForce = new Point( MovementForce.X + newForce.X,
-            MovementForce.Y + newForce.Y);
+
+
+        /* while (Direction == "W")
+         {
+            newForce = new Point(0, -1); //MessageBox.Show(c.ToString());            
+         }
+         while (Direction == "A")
+         {
+             newForce = new Point(-1, 0); //MessageBox.Show(c.ToString());            
+         }
+         while (Direction == "S")
+         {
+             newForce = new Point(0, 1); //MessageBox.Show(c.ToString());            
+         }
+         while (Direction == "D")
+         {
+             newForce = new Point(1, 0); //MessageBox.Show(c.ToString());           
+         }
+        */
+
+        if (MovementForce.X > 3)
+        {
+            MovementForce = new Point(3, MovementForce.Y);
+        }
+        if (MovementForce.X < -3)
+        {
+            MovementForce = new Point(-3, MovementForce.Y);
+        }
+        if (MovementForce.Y > 2)
+        {
+            MovementForce = new Point(MovementForce.X, 2);
+        }
+        if (MovementForce.Y < -2)
+        {
+            MovementForce = new Point(MovementForce.X, -2);
+        }
+
+        MovementForce = new Point(newForce.X + MovementForce.X ,
+            newForce.Y + MovementForce.Y );
+
+        
+
+       
+        
+       
+
         force = MovementForce;
         //UpdatePos();
     }
@@ -275,7 +326,7 @@ class SharpShooterTank : BaseTank
     Point oldPos;
     public Bitmap UpdateImage(Bitmap bitmap)
     {
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < 2; i++)
         {
             position = new Point((int)cPosition.x, (int)cPosition.y);
             g = Graphics.FromImage(bitmap);
