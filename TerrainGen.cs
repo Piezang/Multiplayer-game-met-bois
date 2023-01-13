@@ -58,19 +58,19 @@ public class TerrainGen
 	public static int[] ServerTerrain = new int[4000];
 	public Bitmap TerrainImage(Bitmap bitmap)
 	{
-		Image basepng = Image.FromFile("base.png");
+		//Image basepng = Image.FromFile("base.png");
 		Point p = new Point(20, 250);
 		//Bitmap bmp = new Bitmap(883, 497);
 		Graphics g = Graphics.FromImage(bitmap);
 		Pen penDirt = new Pen(Brushes.SaddleBrown);
 		Pen penGrass = new Pen(Brushes.DarkGreen);
-
+		
 		for (int i = 0; i <= 3999; i++) 
 		{
 			Point pt1 = new Point(i, 497);
 			Point pt3 = new Point(i, Convert.ToInt32(TerrainOutln[i]) - 10);
 			Point pt2 = new Point(i, Convert.ToInt32(TerrainOutln[i]));
-			ServerTerrain[i] = Convert.ToInt32(TerrainOutln[i]);
+			ServerTerrain[i] = Convert.ToInt32(TerrainOutln[i] - 10);
             g.DrawLine(penDirt, pt1, pt2);
 			g.DrawLine(penGrass, pt2, pt3);
 			g.DrawImage(basepng, p);

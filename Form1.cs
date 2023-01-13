@@ -75,8 +75,26 @@ namespace Multiplayer_game_met_bois
                         break;
                 }
             }
+            if (Char.ToLower(e.KeyChar) == 'd')
+            {
+                //MoveRight();
+            }
         }
-
+        private void MoveRight()
+        {
+            Bitmap kaas = new Bitmap(bitmap.Width, bitmap.Height + 1);
+            Graphics g = Graphics.FromImage(bitmap);
+            //g.;
+            Color[] colorarr = new Color[bitmap.Height];
+            for (int i = 0; i < bitmap.Height; i++)
+            {
+                colorarr[i] = bitmap.GetPixel(0, i);
+                kaas.SetPixel(pictureBox1.Width,i, colorarr[i]);
+                //kaas.
+                //g.DrawLines();
+                //bitmap.m
+            }   
+        }
         private void btnStart_Click(object sender, EventArgs e)
         {
             //Server server = new Server();
@@ -164,12 +182,15 @@ namespace Multiplayer_game_met_bois
             newTerrainFromServer = Client.Ready();
             Graphics g = Graphics.FromImage(bitmap);
             Pen pen = new Pen(Brushes.SaddleBrown);
+            Pen pen2 = new Pen(Brushes.DarkGreen);
             g.Clear(Color.Black);
             for (int i = 0; i < newTerrainFromServer.Length; i++)
             {
                 Point pt1 = new Point(i, 497);
-                Point pt2 = new Point(i, newTerrainFromServer[i]);
+                Point pt2 = new Point(i, newTerrainFromServer[i]-10);
+                Point pt3 = new Point(i, newTerrainFromServer[i]);
                 g.DrawLine(pen, pt1, pt2);
+                g.DrawLine(pen2, pt2, pt3);
             }
             //MessageBox.Show(newTerrainFromServer[1].ToString() + " index 1");
         }
@@ -194,15 +215,16 @@ namespace Multiplayer_game_met_bois
             if (!Server.Active)    //As hy nie die server is nie...
             {
                 if (newTerrainFromServer == null) return;
-                if (newTerrainFromServer[pictureBox1.Width - 2] == 0) return;
-            }
+                if (newTerrainFromServer[200 -2] == 0) return;
+            }                           //pictureBox1.Width //nuut
             if (k != null)
             {
                 bitmap = k.ImageChange(bitmap); //MessageBox.Show("Kaas");
                 //MessageBox.Show(k.force.ToString());
-            }                        
+            }
 
             //MessageBox.Show("Running");
+            tank.position = new Point((int)tank.cPosition.x, (int)tank.cPosition.y);  //nuut
             Server.ServerTankCords = tank.position;  //Message na die client
             //txtOutput.Text += "K";
              
@@ -212,7 +234,8 @@ namespace Multiplayer_game_met_bois
             Graphics g;
 
             if (Client.connected)   //As hy die client is gebeur die
-            {           
+            {
+                tank.position = new Point((int)tank.cPosition.x, (int)tank.cPosition.y);  //nuut
                 Client.Message(tank.position.ToString());   //Message na die server
                 string t = Client.ServerCords.Trim();       //Server se response, sy tank se cords
                 int x = Convert.ToInt32(t.Substring(t.IndexOf('=')+1, t.IndexOf(',') - t.IndexOf('=')-1));
@@ -240,16 +263,21 @@ namespace Multiplayer_game_met_bois
                 g.DrawRectangle(Pens.Black, ServerTank.position.X, ServerTank.position.Y, 10, 10);
                 g.FillRectangle(Brushes.Black, ServerTank.position.X, ServerTank.position.Y, 10, 10);
                 ServerTank.position = new Point(x, y);
+                ServerTank.cPosition = new Coordinate(x, y);  //nuut
 
                 g.DrawRectangle(Pens.White, ServerTank.position.X, ServerTank.position.Y, 10, 10);
                 g.FillRectangle(Brushes.White, ServerTank.position.X, ServerTank.position.Y, 10, 10);
                 pictureBox1.Image = bitmap;
             }
         }
-        
+
+        public static int X, Y;
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
-        {         
-            tank.ChangeMouseCoords(e.X,e.Y,bitmap);     
+        {            
+            tank.MouseMoved = true;
+            //tank.UpdateImage(bitmap);
+            //tank.ChangeMouseCoords(e.X, e.Y, bitmap, new Point());
+            X = e.X; Y = e.Y;
         }
 
         Projectile k;
@@ -315,7 +343,7 @@ namespace Multiplayer_game_met_bois
         {
             while (true)
             {
-                byte[] msg = new byte[2048*2];   //1024  //2048 2048 * 2 = 4kilo bytes
+                byte[] msg = new byte[2048*7];   //1024  //2048 2048 * 2 = 4kilo bytes
                 int size = client.Receive(msg);
                 string message = System.Text.Encoding.ASCII.GetString(msg, 0, size);
                 //MessageBox.Show(message);
@@ -352,6 +380,7 @@ namespace Multiplayer_game_met_bois
         public static bool connected = false;
         private static Socket ClientSocket = new Socket(AddressFamily
                 .InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        private static string _ip, _port;
 
         public static void connect(string ip, int port)
         {        
@@ -359,16 +388,27 @@ namespace Multiplayer_game_met_bois
             ClientSocket.Connect(ep);
             MessageBox.Show("Client is connected");
             connected= true;
+            _ip = ip; _port = port.ToString();
         }
 
         public static void Message(string messageFromClient)
         {
+            //ClientSocket.Close();                       //nuut
+            //Client.connect(_ip, Convert.ToInt32(_port));//nuut
+                                                        //Message van server is so groot dat daar oorstaande is wat cords data aanstuur besoedel
+
             messageFromClient = "m" + messageFromClient;
             ClientSocket.Send(System.Text.Encoding.ASCII.GetBytes(messageFromClient), 0,
                 messageFromClient.Length, SocketFlags.None);
 
-            byte[] msgFromServer = new byte[1024];
+            byte[] msgFromServer = new byte[2048 * 2];
             int size = ClientSocket.Receive(msgFromServer);
+            
+            if (Encoding.Default.GetString(msgFromServer).IndexOf('}') < 0)   //As die boodskap nie '=' bevat nie stuur weer 'n message om die socket te clear
+            {
+                Message(messageFromClient.Substring(1));
+            }
+
             //MessageBox.Show("Server responds: " +
             //System.Text.Encoding.ASCII.GetString(msgFromServer, 0, size));
             string msg = Encoding.Default.GetString(msgFromServer);
@@ -387,7 +427,8 @@ namespace Multiplayer_game_met_bois
                 msgToServer.Length, SocketFlags.None);
             
             int[] ServerBitmapp = new int[4000];
-            byte[] msgFromServer = new byte[2048*2];   //1024  2048 * 2 = 4kilo bytes
+            byte[] msgFromServer = new byte[2048*7];   //1024  2048 * 2 = 4kilo bytes
+
             int size = ClientSocket.Receive(msgFromServer);
             //MessageBox.Show("Server responds: " +
             string msg = Encoding.Default.GetString(msgFromServer);
@@ -398,8 +439,8 @@ namespace Multiplayer_game_met_bois
             {
                 msg = msg.Substring(1);
                 foreach (char c in msg)
-                {      
-                    if (c == ' ' && count < 882 && msg.IndexOf(' ') > -1)
+                {                       //Hierdie moet groter wees
+                    if (c == ' ' && count < 4000  && msg.IndexOf(' ') > -1)
                     {
                         //MessageBox.Show(msg.Substring(0, msg.IndexOf(' ') ));
                         //MessageBox.Show(msg.Substring(0, msg.IndexOf(' ')));
