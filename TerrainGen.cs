@@ -56,7 +56,7 @@ public class TerrainGen
 	public static int[] ServerTerrain = new int[4000];
 	public Bitmap TerrainImage(Bitmap bitmap)
 	{
-		Image basepng = Image.FromFile("base.png");
+		//Image basepng = Image.FromFile("base.png");
 		Point p = new Point(20, 250);
 		//Bitmap bmp = new Bitmap(883, 497);
 		Graphics g = Graphics.FromImage(bitmap);
