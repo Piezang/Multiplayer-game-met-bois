@@ -257,7 +257,7 @@ namespace Multiplayer_game_met_bois
                 int y = Convert.ToInt32(t.Substring(t.IndexOf('Y') + 2, t.IndexOf('}') - t.IndexOf('Y') - 2));
 
                 g = Graphics.FromImage(bitmap);
-                g.DrawRectangle(Pens.Black, ServerTank.position.X, ServerTank.position.Y, 10, 10);
+                //g.DrawRectangle(Pens.Black, ServerTank.position.X, ServerTank.position.Y, 10, 10);
                 g.FillRectangle(Brushes.Black, ServerTank.position.X, ServerTank.position.Y, 10, 10);
                 ServerTank.position = new Point(x, y);
                 ServerTank.cPosition = new Coordinate(x, y);  //nuut

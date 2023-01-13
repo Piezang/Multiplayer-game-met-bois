@@ -31,13 +31,13 @@ public class Rigidbody
     }
 
     public string Direction;
-    private Point TerrainInteraction(Bitmap bmp)
+    private Point TerrainInteraction(Bitmap bmp, int length, int height)
     {
         Point CollisionAdjuster = new Point(1,1);
         Point NW = new Point(position.X - 1, position.Y - 1);
-        Point SW = new Point(position.X - 1, position.Y + 11);
-        Point NE = new Point(position.X + 11, position.Y - 1);
-        Point SE = new Point(position.X + 11, position.Y + 11);
+        Point SW = new Point(position.X - 1, position.Y + 1 + height);
+        Point NE = new Point(position.X + 1 + length, position.Y - 1);
+        Point SE = new Point(position.X + 1 + length, position.Y + 1 + height);
 
         for (int i = SW.X; i<= SE.X; i ++)
         {
@@ -124,16 +124,7 @@ public class Rigidbody
                 Convert.ToInt32(grav));
         }
 
-        if (TerrainInteraction(bitmap).Y == 0) 
-        { 
-            gravity = new Point(0, 0); grav = 0; 
-            //if (!called)
-            //{
-                //force = new Point(force.X, force.Y + 1);
-                //called = true;
-            //}   
-        }
-        if (TerrainInteraction(bitmap).Y == 1) called = false;
+        if (TerrainInteraction(bitmap, 10, 10).Y == 0) { gravity = new Point(0, 0); grav = 0; } 
         /*for (int i = 0; i <= gravity.Y + mass; i++)   //1 of 0 by begin???
         {
             impactForce = (i) - (TerrainInteraction(bitmap).Y * i);
@@ -146,8 +137,8 @@ public class Rigidbody
         }*/
         //for (double i = 0; i <= grav; i += 0.1)
         //{
-            cPosition = new Coordinate(cPosition.x + TerrainInteraction(bitmap).X * (force.X)
-                , cPosition.y + TerrainInteraction(bitmap).Y * (grav + force.Y));
+            cPosition = new Coordinate(cPosition.x + TerrainInteraction(bitmap, 10, 10).X * (force.X)
+                , cPosition.y + TerrainInteraction(bitmap, 10, 10).Y * (grav + force.Y));
             //if (TerrainInteraction(bitmap).Y == 0) break;
         //}
         //MessageBox.Show(force.ToString());
