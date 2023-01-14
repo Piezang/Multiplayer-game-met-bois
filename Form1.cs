@@ -12,6 +12,7 @@ using System.Web;
 using System.Xml.Serialization;
 using System.Runtime.CompilerServices;
 using System.Drawing;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Multiplayer_game_met_bois
 {
@@ -19,7 +20,7 @@ namespace Multiplayer_game_met_bois
     {
         public static Form1 form1Instance;
         public PictureBox Pic;
-    
+        bool DontUpdate = true;
         Stopwatch timer = new Stopwatch();
         static int elapsedTime = 0;
         int count = 0;
@@ -48,6 +49,7 @@ namespace Multiplayer_game_met_bois
             this.MouseClick += Form1_MouseClicked!;
 
             bitmap = terrain.TerrainImage(bitmap);
+            //bitmap = terrain.TerrainImage(bitmap);
             //Terrain = terrain.ServerTerrain;
             pictureBox1.Image = bitmap;
         }  
@@ -57,7 +59,12 @@ namespace Multiplayer_game_met_bois
         //ServerTank tree eintlik net op as die ander tank in die konneksie. Nie noodwendig die server se tank nie.
 
         private void Form1_keyPress(object sender, KeyPressEventArgs e)
-        {    
+        {
+            if (Char.ToLower(e.KeyChar) == 'g')
+            {
+                DontUpdate = true; MoveRight(new Point(30,0)); return;
+            }
+            DontUpdate = false;
             //MessageBox.Show(e.KeyChar.ToString());
             tank.Move(Char.ToLower(e.KeyChar));
             
@@ -74,27 +81,41 @@ namespace Multiplayer_game_met_bois
                         e.Handled = true;
                         break;
                 }
-            }
-            if (Char.ToLower(e.KeyChar) == 'd')
-            {
-                //MoveRight();
-            }
+            }        
         }
-        private void MoveRight()
+        int lengthMoved = 0;
+        private void MoveRight(Point pos)
         {
-            Bitmap kaas = new Bitmap(bitmap.Width, bitmap.Height + 1);
-            Graphics g = Graphics.FromImage(bitmap);
-            //g.;
-            Color[] colorarr = new Color[bitmap.Height];
-            for (int i = 0; i < bitmap.Height; i++)
-            {
-                colorarr[i] = bitmap.GetPixel(0, i);
-                kaas.SetPixel(pictureBox1.Width,i, colorarr[i]);
-                //kaas.
-                //g.DrawLines();
-                //bitmap.m
-            }   
+            Graphics graphics = Graphics.FromImage(bitmap);
+            graphics.GdiDrawImage
+            (
+                bitmap,
+                new Rectangle(
+                    (int)0,
+                    (int)0,
+                    (int)4000,
+            (int)497
+            ),
+                pos.X * 4 + lengthMoved, pos.Y, bitmap.Width, bitmap.Height
+            );
+            lengthMoved+= pos.X * 4;   //onseker oor die * 4 ding moet eintlik iets anders wees
+            //pictureBox1_Paint();
+            //e.Graphics.DrawImage(bitmap, x, 0);
         }
+        private void pictureBox1_Paint(object sender, PaintEventArgs e)
+        {
+            //using (Bitmap bitmapp = new Bitmap(bitmap))
+            //{          
+            //e.Graphics.DrawImage(bitmapp, 10, 0);   //Layers in terrain
+            //bitmap.Dispose();
+            //}
+            //bitmap = new Bitmap(pictureBox1.Image);
+            //Bitmap newbitmap = new Bitmap(bitmap);
+
+            //e.Graphics.DrawImage(newbitmap, new Rectangle(10, 0, bitmap.Width, bitmap.Height));
+            //new Rectangle(10, 0, bitmap.Width, bitmap.Height);
+        }
+
         private void btnStart_Click(object sender, EventArgs e)
         {
             //Server server = new Server();
@@ -207,8 +228,13 @@ namespace Multiplayer_game_met_bois
             //change();
         }
 
+        bool ran = false;
+        Bitmap ter;
         private void TimerUpdate(object sender, EventArgs e)   //60 keer per sekonde
         {
+            if (DontUpdate) return;
+            //pictureBox1.Invalidate();
+            // pictureBox1.Image = bitmap;
             if (!Server.Active)    //As hy nie die server is nie...
             {
                 if (newTerrainFromServer == null) return;
@@ -219,16 +245,28 @@ namespace Multiplayer_game_met_bois
                 bitmap = k.ImageChange(bitmap); //MessageBox.Show("Kaas");
                 //MessageBox.Show(k.force.ToString());
             }
-
+            Graphics g;
             //MessageBox.Show("Running");
             tank.position = new Point((int)tank.cPosition.x, (int)tank.cPosition.y);  //nuut
             Server.ServerTankCords = tank.position;  //Message na die client
-            //txtOutput.Text += "K";
-             
+                                                     //txtOutput.Text += "K";      
+            //bitmap = tank.UpdateImage(bitmap);
+            //MoveRight(new Point(tank.MovementForce.X,0));
+            //pictureBox1.Image = bitmap;
+
+            //nuwe code
+            //g = Graphics.FromImage(bitmap);
+            //g.Clear(Color.Black);
+            //g = Graphics.FromImage(TerrainGen.terrain);
+            //pictureBox1.Image.Dispose();
+            //MessageBox.Show(TerrainGen.terrain.GetPixel(100, 400).ToArgb().ToString());
+            //if (!ran) 
+            //{ ter = terrain.TerrainImage(bitmap); ran = true; }   //Baie unoptimized
+
+            //pictureBox1.Image = new Bitmap(ter);//new Bitmap(g);
+            //MoveRight(new Point(tank.MovementForce.X,0));
             bitmap = tank.UpdateImage(bitmap);
             pictureBox1.Image = bitmap;
-      
-            Graphics g;
 
             if (Client.connected)   //As hy die client is gebeur die
             {
@@ -453,5 +491,4 @@ namespace Multiplayer_game_met_bois
             return ServerBitmapp;
         }
     }
-
 }

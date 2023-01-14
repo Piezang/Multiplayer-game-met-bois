@@ -53,11 +53,16 @@ public class TerrainGen
 			}
 		}
 	}
+	public static Bitmap terrain = null!;
 	public static int[] ServerTerrain = new int[4000];
 	public Bitmap TerrainImage(Bitmap bitmap)
 	{
-		Image basepng = Image.FromFile("base.png");
-		Point p = new Point(20, 250);
+        //bitmap.GetPixel(400, 400).ToString() == "Color [A=0, R=0, G=0, B=0]" &&
+        //if ( terrain != null)
+		//{  return terrain; }  //bitmap.GetPixel(400, 400).ToString() == "Color [A=0, R=0, G=0, B=0]" &&
+
+        //Image basepng = Image.FromFile("base.png");
+        Point p = new Point(20, 250);
 		//Bitmap bmp = new Bitmap(883, 497);
 		Graphics g = Graphics.FromImage(bitmap);
 		Pen penDirt = new Pen(Brushes.SaddleBrown);
@@ -71,9 +76,10 @@ public class TerrainGen
 			ServerTerrain[i] = Convert.ToInt32(TerrainOutln[i] - 10);
             g.DrawLine(penDirt, pt1, pt2);
 			g.DrawLine(penGrass, pt2, pt3);
-			g.DrawImage(basepng, p);
+			//g.DrawImage(basepng, p);
 			//MessageBox.Show(Color.DarkGreen.ToArgb().ToString());
 		}
+		terrain = bitmap;
 		return bitmap;
 	}
 }
