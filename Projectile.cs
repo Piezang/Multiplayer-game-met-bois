@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 public class Projectile: Rigidbody
 {
     int x; int y; //int mass; //Point inititalForce;
-    public Projectile(int _x, int _y, double _mass, Point _inititalForce)
+    public Projectile(int _x, int _y, double _mass, Coordinate _inititalForce)
 	{
         x = _x;
         y = _y;

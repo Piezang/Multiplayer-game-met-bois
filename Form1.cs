@@ -54,8 +54,8 @@ namespace Multiplayer_game_met_bois
             pictureBox1.Image = bitmap;
         }  
 
-        SharpShooterTank tank = new SharpShooterTank(new Point(200, 100), 1, new Point(0,0), 180);
-        SharpShooterTank ServerTank = new SharpShooterTank(new Point(-10, -10), 1, new Point(0, 0), 0);
+        SharpShooterTank tank = new SharpShooterTank(new Point(200, 100), 1, new Coordinate(0,0), 180);
+        SharpShooterTank ServerTank = new SharpShooterTank(new Point(-10, -10), 1, new Coordinate(0, 0), 0);
         //ServerTank tree eintlik net op as die ander tank in die konneksie. Nie noodwendig die server se tank nie.
 
         private void Form1_keyPress(object sender, KeyPressEventArgs e)
@@ -96,9 +96,9 @@ namespace Multiplayer_game_met_bois
                     (int)4000,
             (int)497
             ),
-                pos.X * 4 + lengthMoved, pos.Y, bitmap.Width, bitmap.Height
+                pos.X + lengthMoved, pos.Y, bitmap.Width, bitmap.Height
             );
-            lengthMoved+= pos.X * 4;  //onseker oor die * 4 ding moet eintlik iets anders wees
+            lengthMoved+= pos.X;  //onseker oor die * 4 ding moet eintlik iets anders wees
         }
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
@@ -233,6 +233,7 @@ namespace Multiplayer_game_met_bois
 
         //bool ran = false;
         //Bitmap ter;
+        int tankX = 200;
         private void TimerUpdate(object sender, EventArgs e)   //60 keer per sekonde
         {
             if (DontUpdate) return;
@@ -257,13 +258,14 @@ namespace Multiplayer_game_met_bois
                                                      //MoveRight(new Point(tank.MovementForce.X,0));
                                                      //pictureBox1.Image = bitmap;
             //nuwe code
-            if (tank.MovementForce.X != 0 && 400<tank.position.X && tank.position.X<3600)
+            if (tank.force.x != 0 ) //&& 400 < tank.position.X && tank.position.X < 3600
             {
                 g = Graphics.FromImage(bitmap);
                 g.Clear(Color.Black); 
                 bitmap = terrain.TerrainImage(bitmap);
 
-                //MoveRight(new Point(tank.MovementForce.X, 0));   //Baie Resource hungry (10% cpu)
+                MoveRight(new Point((int)tank.force.x * 6, 0));   //Baie Resource hungry (10% cpu)
+                tankX = tank.position.X;
                 //pictureBox1.Invalidate();
                 //pictureBox1.Hide(); pictureBox1.Show();
             }
@@ -323,7 +325,7 @@ namespace Multiplayer_game_met_bois
         {
             //MessageBox.Show("kaas");
             projectileCreated= true;
-            Projectile p = new Projectile(e.X, e.Y, 3.5, new Point(5, -6));
+            Projectile p = new Projectile(e.X, e.Y, 3.5, new Coordinate(5, -6));
             k = p;
             //bitmap = p.ImageChange(bitmap);
             //for (int i = 0; i < 100; i++)
