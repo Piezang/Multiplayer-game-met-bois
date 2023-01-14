@@ -98,16 +98,19 @@ namespace Multiplayer_game_met_bois
             ),
                 pos.X * 4 + lengthMoved, pos.Y, bitmap.Width, bitmap.Height
             );
-            lengthMoved+= pos.X * 4;   //onseker oor die * 4 ding moet eintlik iets anders wees
-            //pictureBox1_Paint();
-            //e.Graphics.DrawImage(bitmap, x, 0);
+            lengthMoved+= pos.X * 4;  //onseker oor die * 4 ding moet eintlik iets anders wees
         }
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
+            MessageBox.Show("gecall");
+            //if (hoeveelheidGecall < 3000) return;
             //using (Bitmap bitmapp = new Bitmap(bitmap))
             //{          
-            //e.Graphics.DrawImage(bitmapp, 10, 0);   //Layers in terrain
-            //bitmap.Dispose();
+            //e.Graphics.DrawImage
+                Bitmap bitmapp = new Bitmap(pictureBox1.Image);
+                e.Graphics.DrawImage(bitmapp, new Point(-100, 0));   //Kan Layers in terrain maak as daar baie is
+                //pictureBox1.Image= bitmap;
+                //bitmap.Dispose();
             //}
             //bitmap = new Bitmap(pictureBox1.Image);
             //Bitmap newbitmap = new Bitmap(bitmap);
@@ -228,8 +231,8 @@ namespace Multiplayer_game_met_bois
             //change();
         }
 
-        bool ran = false;
-        Bitmap ter;
+        //bool ran = false;
+        //Bitmap ter;
         private void TimerUpdate(object sender, EventArgs e)   //60 keer per sekonde
         {
             if (DontUpdate) return;
@@ -250,21 +253,20 @@ namespace Multiplayer_game_met_bois
             tank.position = new Point((int)tank.cPosition.x, (int)tank.cPosition.y);  //nuut
             Server.ServerTankCords = tank.position;  //Message na die client
                                                      //txtOutput.Text += "K";      
-            //bitmap = tank.UpdateImage(bitmap);
-            //MoveRight(new Point(tank.MovementForce.X,0));
-            //pictureBox1.Image = bitmap;
-
+                                                     //bitmap = tank.UpdateImage(bitmap);
+                                                     //MoveRight(new Point(tank.MovementForce.X,0));
+                                                     //pictureBox1.Image = bitmap;
             //nuwe code
-            //g = Graphics.FromImage(bitmap);
-            //g.Clear(Color.Black);
-            //g = Graphics.FromImage(TerrainGen.terrain);
-            //pictureBox1.Image.Dispose();
-            //MessageBox.Show(TerrainGen.terrain.GetPixel(100, 400).ToArgb().ToString());
-            //if (!ran) 
-            //{ ter = terrain.TerrainImage(bitmap); ran = true; }   //Baie unoptimized
+            if (tank.MovementForce.X != 0 && 400<tank.position.X && tank.position.X<3600)
+            {
+                g = Graphics.FromImage(bitmap);
+                g.Clear(Color.Black); 
+                bitmap = terrain.TerrainImage(bitmap);
 
-            //pictureBox1.Image = new Bitmap(ter);//new Bitmap(g);
-            //MoveRight(new Point(tank.MovementForce.X,0));
+                //MoveRight(new Point(tank.MovementForce.X, 0));   //Baie Resource hungry (10% cpu)
+                //pictureBox1.Invalidate();
+                //pictureBox1.Hide(); pictureBox1.Show();
+            }
             bitmap = tank.UpdateImage(bitmap);
             pictureBox1.Image = bitmap;
 
