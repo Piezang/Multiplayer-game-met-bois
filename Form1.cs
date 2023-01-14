@@ -54,7 +54,7 @@ namespace Multiplayer_game_met_bois
             pictureBox1.Image = bitmap;
         }  
 
-        SharpShooterTank tank = new SharpShooterTank(new Point(100, 100), 1, new Point(0,0), 180);
+        SharpShooterTank tank = new SharpShooterTank(new Point(200, 100), 1, new Point(0,0), 180);
         SharpShooterTank ServerTank = new SharpShooterTank(new Point(-10, -10), 1, new Point(0, 0), 0);
         //ServerTank tree eintlik net op as die ander tank in die konneksie. Nie noodwendig die server se tank nie.
 
@@ -297,7 +297,7 @@ namespace Multiplayer_game_met_bois
                 int y = Convert.ToInt32(t.Substring(t.IndexOf('Y') + 2, t.IndexOf('}') - t.IndexOf('Y') - 2));
 
                 g = Graphics.FromImage(bitmap);
-                //g.DrawRectangle(Pens.Black, ServerTank.position.X, ServerTank.position.Y, 10, 10);
+                g.DrawRectangle(Pens.Black, ServerTank.position.X, ServerTank.position.Y, 10, 10);
                 g.FillRectangle(Brushes.Black, ServerTank.position.X, ServerTank.position.Y, 10, 10);
                 ServerTank.position = new Point(x, y);
                 ServerTank.cPosition = new Coordinate(x, y);  //nuut

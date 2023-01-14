@@ -4,6 +4,7 @@ using System.Diagnostics.Contracts;
 using System.DirectoryServices.ActiveDirectory;
 using System.Drawing;
 using System.Drawing.Text;
+using System.Windows.Input;
 
 public class Rigidbody
 {
@@ -23,7 +24,7 @@ public class Rigidbody
 
 
     public Rigidbody()
-	{
+    {
         gravityTimer = 0;
         grav = 0;
         colided = false;
@@ -31,22 +32,34 @@ public class Rigidbody
     }
 
     public string Direction;
+
+    public Point[] GetPixelCoords(Point position, int length, int height) 
+    {
+        for (int x = 0; x <= length; x++) 
+        {
+            for (int y = 0; y <= height; y ++)
+            {
+
+            }
+        }
+        return new Point[0];
+    }
     private Point TerrainInteraction(Bitmap bmp, int length, int height)
     {
-        Point CollisionAdjuster = new Point(1,1);
+        Point CollisionAdjuster = new Point(1, 1);
         Point NW = new Point(position.X - 1, position.Y - 1);
         Point SW = new Point(position.X - 1, position.Y + 1 + height);
         Point NE = new Point(position.X + 1 + length, position.Y - 1);
         Point SE = new Point(position.X + 1 + length, position.Y + 1 + height);
 
-        for (int i = SW.X; i<= SE.X; i ++)
+        for (int i = SW.X; i <= SE.X; i++)
         {
             Color c = bmp.GetPixel(i, SW.Y);
             switch (c.ToString())
             {
                 case "Color [A=255, R=139, G=69, B=19]":
                 case "Color [A=255, R=0, G=100, B=0]":
-                    if (force.Y + gravity.Y >= 0) { { CollisionAdjuster = new Point(1, 0); } }break;
+                    if (force.Y + gravity.Y >= 0) { { CollisionAdjuster = new Point(1, 0); } } break;
             }
         }
 
@@ -57,7 +70,7 @@ public class Rigidbody
             {
                 case "Color [A=255, R=139, G=69, B=19]":
                 case "Color [A=255, R=0, G=100, B=0]":
-                    if (force.Y + gravity.Y < 0) { { CollisionAdjuster = new Point(1, 0); } }break;
+                    if (force.Y + gravity.Y < 0) { { CollisionAdjuster = new Point(1, 0); } } break;
             }
         }
 
@@ -77,9 +90,9 @@ public class Rigidbody
                     if (force.X > 0)
                     {
                         //if (Force.Y + gravity.Y < 0)
-                         CollisionAdjuster = new Point(0, 1); 
+                        CollisionAdjuster = new Point(0, 1);
                         if (force.Y + gravity.Y == 0)
-                        { CollisionAdjuster = new Point(0, 1); force = new Point(force.X, force.Y - 1);  colided = true; }
+                        { CollisionAdjuster = new Point(0, 1); force = new Point(force.X, force.Y - 1); colided = true; }
                         if (force.Y + gravity.Y > 0)
                         { CollisionAdjuster = new Point(0, 0); }
                     }
@@ -97,7 +110,7 @@ public class Rigidbody
                     if (force.X < 0)
                     {
                         //if (Force.Y + gravity.Y < 0)
-                         CollisionAdjuster = new Point(0, 1); 
+                        CollisionAdjuster = new Point(0, 1);
                         if (force.Y + gravity.Y == 0)
                         { CollisionAdjuster = new Point(0, 1); force = new Point(force.X, force.Y - 1); colided = true; }
                         if (force.Y + gravity.Y > 0)
@@ -108,7 +121,7 @@ public class Rigidbody
         }
 
         return CollisionAdjuster;
-       // CollisionAdjuster = new Point(0, 0);
+        // CollisionAdjuster = new Point(0, 0);
     }
 
     double grav;
@@ -124,7 +137,7 @@ public class Rigidbody
                 Convert.ToInt32(grav));
         }
 
-        if (TerrainInteraction(bitmap, 10, 10).Y == 0) { gravity = new Point(0, 0); grav = 0; } 
+        if (TerrainInteraction(bitmap, 10, 10).Y == 0) { gravity = new Point(0, 0); grav = 0; }
         /*for (int i = 0; i <= gravity.Y + mass; i++)   //1 of 0 by begin???
         {
             impactForce = (i) - (TerrainInteraction(bitmap).Y * i);
@@ -137,9 +150,9 @@ public class Rigidbody
         }*/
         //for (double i = 0; i <= grav; i += 0.1)
         //{
-            cPosition = new Coordinate(cPosition.x + TerrainInteraction(bitmap, 10, 10).X * (force.X)
-                , cPosition.y + TerrainInteraction(bitmap, 10, 10).Y * (grav + force.Y));
-            //if (TerrainInteraction(bitmap).Y == 0) break;
+        cPosition = new Coordinate(cPosition.x + TerrainInteraction(bitmap, 10, 10).X * (force.X)
+            , cPosition.y + TerrainInteraction(bitmap, 10, 10).Y * (grav + force.Y));
+        //if (TerrainInteraction(bitmap).Y == 0) break;
         //}
         //MessageBox.Show(force.ToString());
     }
@@ -214,6 +227,7 @@ class BaseTank : Rigidbody
     public void Move(char c)
     {
         Direction = c.ToString().ToUpper();
+        
         switch (Direction)
         {
             case "W": newForce = new Point(0, -1); //MessageBox.Show(c.ToString());
@@ -224,10 +238,59 @@ class BaseTank : Rigidbody
                 break;
             case "D": newForce = new Point(1, 0); //MessageBox.Show(c.ToString());
                 break;
-            default : return;
+            default : newForce = new Point(0,0);
+                break;
+
+
+                MovementForce = newForce;
+                
         }
-        MovementForce = new Point( MovementForce.X + newForce.X,
-            MovementForce.Y + newForce.Y);
+
+
+        /* while (Direction == "W")
+         {
+            newForce = new Point(0, -1); //MessageBox.Show(c.ToString());            
+         }
+         while (Direction == "A")
+         {
+             newForce = new Point(-1, 0); //MessageBox.Show(c.ToString());            
+         }
+         while (Direction == "S")
+         {
+             newForce = new Point(0, 1); //MessageBox.Show(c.ToString());            
+         }
+         while (Direction == "D")
+         {
+             newForce = new Point(1, 0); //MessageBox.Show(c.ToString());           
+         }
+        */
+
+        if (MovementForce.X > 3)
+        {
+            MovementForce = new Point(3, MovementForce.Y);
+        }
+        if (MovementForce.X < -3)
+        {
+            MovementForce = new Point(-3, MovementForce.Y);
+        }
+        if (MovementForce.Y > 2)
+        {
+            MovementForce = new Point(MovementForce.X, 2);
+        }
+        if (MovementForce.Y < -2)
+        {
+            MovementForce = new Point(MovementForce.X, -2);
+        }
+
+        MovementForce = new Point(newForce.X + MovementForce.X ,
+            newForce.Y + MovementForce.Y );
+
+        
+
+       
+        
+       
+
         force = MovementForce;
         //UpdatePos();
     }
@@ -275,7 +338,7 @@ class SharpShooterTank : BaseTank
     Point oldPos;
     public Bitmap UpdateImage(Bitmap bitmap)
     {
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < 2; i++)
         {
             position = new Point((int)cPosition.x, (int)cPosition.y);
             g = Graphics.FromImage(bitmap);
