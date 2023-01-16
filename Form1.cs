@@ -60,10 +60,6 @@ namespace Multiplayer_game_met_bois
 
         private void Form1_keyPress(object sender, KeyPressEventArgs e)
         {
-            if (Char.ToLower(e.KeyChar) == 'g')
-            {
-                DontUpdate = true; MoveRight(new Point(30,0)); return;
-            }
             DontUpdate = false;
             //MessageBox.Show(e.KeyChar.ToString());
             tank.Move(Char.ToLower(e.KeyChar));
@@ -84,9 +80,11 @@ namespace Multiplayer_game_met_bois
             }        
         }
         int lengthMoved = 0;
-        private void MoveRight(Point pos)
+        int actualMoved = 0;
+        private void MoveCameraView(Point pos, Graphics g)
         {
-            Graphics graphics = Graphics.FromImage(bitmap);
+            g.DrawImage(bitmap, new Rectangle(0, 0, 4000, 497), new Rectangle(pos.X + lengthMoved, 0, 4000, 497), GraphicsUnit.Pixel);
+            /*Graphics graphics = Graphics.FromImage(bitmap);
             graphics.GdiDrawImage
             (
                 bitmap,
@@ -97,7 +95,8 @@ namespace Multiplayer_game_met_bois
             (int)497
             ),
                 pos.X + lengthMoved, pos.Y, bitmap.Width, bitmap.Height
-            );
+            );*/
+            actualMoved += pos.X / 6;
             lengthMoved+= pos.X;  //onseker oor die * 4 ding moet eintlik iets anders wees
         }
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
@@ -231,9 +230,6 @@ namespace Multiplayer_game_met_bois
             //change();
         }
 
-        //bool ran = false;
-        //Bitmap ter;
-        int tankX = 200;
         private void TimerUpdate(object sender, EventArgs e)   //60 keer per sekonde
         {
             if (DontUpdate) return;
@@ -258,16 +254,13 @@ namespace Multiplayer_game_met_bois
                                                      //MoveRight(new Point(tank.MovementForce.X,0));
                                                      //pictureBox1.Image = bitmap;
             //nuwe code
-            if (tank.force.x != 0 ) //&& 400 < tank.position.X && tank.position.X < 3600
+            if ((int)(tank.force.x * 6) != 0) //&& 400 < tank.position.X && tank.position.X < 3600
             {
                 g = Graphics.FromImage(bitmap);
                 g.Clear(Color.Black); 
                 bitmap = terrain.TerrainImage(bitmap);
-
-                MoveRight(new Point((int)tank.force.x * 6, 0));   //Baie Resource hungry (10% cpu)
-                tankX = tank.position.X;
-                //pictureBox1.Invalidate();
-                //pictureBox1.Hide(); pictureBox1.Show();
+    
+                MoveCameraView(new Point((int)(tank.force.x * 6), 0), g);   //Baie Resource hungry (10% cpu)
             }
             bitmap = tank.UpdateImage(bitmap);
             pictureBox1.Image = bitmap;

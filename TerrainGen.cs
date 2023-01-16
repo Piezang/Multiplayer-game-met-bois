@@ -87,7 +87,6 @@ public class TerrainGen
 			ServerTerrain[i] = Convert.ToInt32(TerrainOutln[i] - 10);
             g.DrawLine(penDirt, pt1, pt2);
 			g.DrawLine(penGrass, pt2, pt3);
-			//g.DrawImage(basepng, p);
 			//MessageBox.Show(Color.DarkGreen.ToArgb().ToString());
 		}
 		terrain = new Bitmap(bitmap);
