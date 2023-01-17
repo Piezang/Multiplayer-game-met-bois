@@ -162,6 +162,7 @@ class BaseTank : Rigidbody
 {   
 	private Coordinate newForce;
 	public Coordinate MovementForce { get; set; }
+    public Point MousePoint;
 	float AimAngle;
     public int LocalCoordsX = 3;
     public int LocalCoordsY = 3;
@@ -200,6 +201,7 @@ class BaseTank : Rigidbody
         //MessageBox.Show(angle.ToString());
         double x = canonLength * Math.Cos(angle) * val; 
         double y = canonLength * Math.Sin(angle) * val;
+        MousePoint = new Point((int)(x + CanonCentreX), (int)(y + CanonCentreY));
 
         Graphics g = Graphics.FromImage(bitmap);
         
@@ -232,7 +234,9 @@ class BaseTank : Rigidbody
         {
             case "W": newForce = new Coordinate(0, -0.8); //MessageBox.Show(c.ToString());
                 break;
-            case "S": newForce = new Coordinate(0, 0.3); //MessageBox.Show(c.ToString());
+            case "S": 
+                newForce = new Coordinate(0, 0.3); //MessageBox.Show(c.ToString());
+                if (force.y > -0.5) { newForce = new Coordinate(0, -force.y); }
                 break;
             case "A": newForce = new Coordinate(-0.3, 0); //MessageBox.Show(c.ToString());
                 break;

@@ -82,7 +82,7 @@ namespace Multiplayer_game_met_bois
         int lengthMoved = 0;
         int actualMoved = 0;
         private void MoveCameraView(Point pos, Graphics g)
-        {
+        {                                           //4000                                                  //4000
             g.DrawImage(bitmap, new Rectangle(0, 0, 4000, 497), new Rectangle(pos.X + lengthMoved, 0, 4000, 497), GraphicsUnit.Pixel);
             /*Graphics graphics = Graphics.FromImage(bitmap);
             graphics.GdiDrawImage
@@ -317,8 +317,11 @@ namespace Multiplayer_game_met_bois
         private void Form1_MouseClicked(object sender, MouseEventArgs e)
         {
             //MessageBox.Show("kaas");
-            projectileCreated= true;
-            Projectile p = new Projectile(e.X, e.Y, 3.5, new Coordinate(5, -6));
+            projectileCreated= true;            //tank.MousePoint.X       //e.Y 
+            ///MessageBox.Show(tank.MousePoint.ToString());                                         //5   -6
+            Projectile p = new Projectile(tank.MousePoint.X, tank.MousePoint.Y,
+            3.5, new Coordinate((tank.MousePoint.X - tank.position.X)/6,
+            (tank.MousePoint.Y - tank.position.Y)/6));
             k = p;
             //bitmap = p.ImageChange(bitmap);
             //for (int i = 0; i < 100; i++)
