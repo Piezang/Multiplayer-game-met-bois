@@ -53,7 +53,7 @@ public class TerrainGen
 			}
 		}
 	}
-	private Bitmap terrain = null!;
+	public Bitmap terrain = null!;
 	public static int[] ServerTerrain = new int[4000];
 	private Rectangle srcRegion = new Rectangle(0, 0, 4000,497);
 	private Rectangle destRegion = new Rectangle(0, 0, 4000, 497);
