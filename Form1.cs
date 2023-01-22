@@ -83,7 +83,7 @@ namespace Multiplayer_game_met_bois
         private void MoveCameraView(Point pos, Graphics g)
         {                                           //4000                                                  //4000
             //g.DrawImage(bitmap, new Rectangle(0, 0, 4000, 497), new Rectangle(pos.X + lengthMoved, 0, 4000, 497), GraphicsUnit.Pixel);
-            pictureBox1.Location = new Point(pictureBox1.Location.X + lengthMoved, pictureBox1.Location.Y); 
+            pictureBox1.Location = new Point(pictureBox1.Location.X - lengthMoved, pictureBox1.Location.Y); 
             /*Graphics graphics = Graphics.FromImage(bitmap);
             graphics.GdiDrawImage
             (

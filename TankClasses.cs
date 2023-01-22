@@ -361,7 +361,7 @@ class SharpShooterTank : BaseTank
     Point oldPos;
     public Bitmap UpdateImage(Bitmap bitmap)
     {
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 6; i++)
         {
             position = new Point((int)cPosition.x, (int)cPosition.y);
             g = Graphics.FromImage(bitmap);

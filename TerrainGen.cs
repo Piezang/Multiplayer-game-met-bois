@@ -15,7 +15,7 @@ public class TerrainGen
 			//TerrainOutln[i] = 250 + (100 * Math.Sin(i*Math.PI / 360) + (100 * Math.Cos(Math.Pow(i * Math.PI/ 180, 2) / 20)));
 			Random random = new Random();
 			Random outliers = new Random();
-			int iOutliers = outliers.Next(0, 199); 
+			int iOutliers = outliers.Next(0, 249); 
 			switch (iOutliers)
 			{
 				case 0:
@@ -52,6 +52,7 @@ public class TerrainGen
 				if (i == 3999) { TerrainOutln = TerrainOutln1; }
 			}
 		}
+		for (int i = 0; i <= 3999; i++) { if (TerrainOutln[i] < 0) { TerrainOutln[i] = 0; } }
 	}
 	private Bitmap terrain = null!;
 	public static int[] ServerTerrain = new int[4000];
