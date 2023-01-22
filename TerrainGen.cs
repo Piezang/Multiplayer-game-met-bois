@@ -15,18 +15,18 @@ public class TerrainGen
 			//TerrainOutln[i] = 250 + (100 * Math.Sin(i*Math.PI / 360) + (100 * Math.Cos(Math.Pow(i * Math.PI/ 180, 2) / 20)));
 			Random random = new Random();
 			Random outliers = new Random();
-			int iOutliers = outliers.Next(0, 249); 
+			int iOutliers = outliers.Next(0, 149); 
 			switch (iOutliers)
 			{
 				case 0:
                     switch (i)
                     {
 						case <= 349: for (int p = 0; p <= i + 150; p++)
-                            { TerrainOutln[p] = TerrainOutln[p] = TerrainOutln[p] - random.Next(25, 100); }; break;   
+                            { int t = random.Next(25, 100);  if (TerrainOutln[p] - t! < 0) { TerrainOutln[p] = TerrainOutln[p] - t; } }; break;   
                         case >= 3850: for (int p = i - 150; p <= 3999; p++)
-							{ TerrainOutln[p] = TerrainOutln[p] = TerrainOutln[p] - random.Next(25, 100) ; } break;
+							{ int t = random.Next(25, 100); if (TerrainOutln[p] - t! < 0) { TerrainOutln[p] = TerrainOutln[p] - t; } } break;
                         default: for (int p = i - 150; p <= i + 150; p++) 
-							{ TerrainOutln[p] = TerrainOutln[p] = TerrainOutln[p] - random.Next(25, 100) ; } break;
+							{ int t = random.Next(25, 100); if (TerrainOutln[p] - t! < 0) { TerrainOutln[p] = TerrainOutln[p] - t; } } break;
                     }
                     break;
 				default: TerrainOutln[i] = TerrainOutln[i] = TerrainOutln[i] +  random.Next(300, 450); break;
@@ -44,15 +44,14 @@ public class TerrainGen
 				double iSum = 0;
 				switch (i)
 				{
-                    case <= 4: for (int p = 0; p <= i + 5; p++) { iSum = iSum + TerrainOutln[p]; } iNew = iSum / (i + 6); break;
-                    case >= 3995: for (int p = i - 5; p <= 3999; p++) { iSum = iSum + TerrainOutln[p]; } iNew = iSum / (3999 - i + 6); break;
+					case <= 4: for (int p = 0; p <= i + 5; p++) { iSum = iSum + TerrainOutln[p]; } iNew = iSum / (i + 6); break;
+					case >= 3995: for (int p = i - 5; p <= 3999; p++) { iSum = iSum + TerrainOutln[p]; } iNew = iSum / (3999 - i + 6); break;
 					default: for (int p = i - 5; p <= i + 5; p++) { iSum = iSum + TerrainOutln[p]; } iNew = iSum / 11; break;
 				}
 				TerrainOutln1[i] = (float)iNew;
 				if (i == 3999) { TerrainOutln = TerrainOutln1; }
 			}
 		}
-		for (int i = 0; i <= 3999; i++) { if (TerrainOutln[i] < 0) { TerrainOutln[i] = 0; } }
 	}
 	private Bitmap terrain = null!;
 	public static int[] ServerTerrain = new int[4000];
