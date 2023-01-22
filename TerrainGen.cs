@@ -53,13 +53,27 @@ public class TerrainGen
 			}
 		}
 	}
-
-
+	private Bitmap terrain = null!;
 	public static int[] ServerTerrain = new int[4000];
-	public Bitmap TerrainImage(Bitmap bitmap)
+	private Rectangle srcRegion = new Rectangle(0, 0, 4000,497);
+	private Rectangle destRegion = new Rectangle(0, 0, 4000, 497);
+	int count = 0;
+    public Bitmap TerrainImage(Bitmap bitmap)
 	{
-		//Image basepng = Image.FromFile("base.png");
-		Point p = new Point(20, 250);
+        //bitmap.GetPixel(400, 400).ToString() == "Color [A=0, R=0, G=0, B=0]" &&
+        if ( terrain != null)
+		{
+            //count++;
+            //MessageBox.Show(terrain.GetPixel(1000, 450).ToString());
+            //MessageBox.Show(count.ToString());
+            bitmap = CopyRegionIntoImage(terrain,srcRegion, ref bitmap,destRegion);
+			//MessageBox.Show(bitmap.GetPixel(0,0).ToString());
+			//MessageBox.Show(bitmap.GetPixel(1000, 450).ToString());
+			return bitmap;//new Bitmap(terrain);
+		}  //bitmap.GetPixel(400, 400).ToString() == "Color [A=0, R=0, G=0, B=0]" &&
+		MessageBox.Show("Null");
+        //Image basepng = Image.FromFile("base.png");
+        Point p = new Point(20, 250);
 		//Bitmap bmp = new Bitmap(883, 497);
 		Graphics g = Graphics.FromImage(bitmap);
 		Pen penDirt = new Pen(Brushes.SaddleBrown);
@@ -73,9 +87,17 @@ public class TerrainGen
 			ServerTerrain[i] = Convert.ToInt32(TerrainOutln[i] - 10);
             g.DrawLine(penDirt, pt1, pt2);
 			g.DrawLine(penGrass, pt2, pt3);
-			//g.DrawImage(basepng, p);
 			//MessageBox.Show(Color.DarkGreen.ToArgb().ToString());
 		}
-		return bitmap;
+		terrain = new Bitmap(bitmap);
+        return bitmap;
 	}
+    Bitmap CopyRegionIntoImage(Bitmap srcBitmap, Rectangle srcRegion, ref Bitmap destBitmap, Rectangle destRegion)
+    {
+        using (Graphics grD = Graphics.FromImage(destBitmap))
+        {
+            grD.DrawImage(srcBitmap, destRegion, srcRegion, GraphicsUnit.Pixel);
+			return destBitmap;
+        }
+    }
 }

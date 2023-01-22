@@ -4,12 +4,13 @@ using System.Diagnostics.Contracts;
 using System.DirectoryServices.ActiveDirectory;
 using System.Drawing;
 using System.Drawing.Text;
+using System.Windows.Input;
 
 public class Rigidbody
 {
     public Point position { get; set; }
     protected Point gravity { get; set; }
-    public Point force { get; set; }
+    public Coordinate force { get; set; }
     public Coordinate cPosition { get; set; }
     protected double mass;
 
@@ -73,7 +74,7 @@ public class Rigidbody
             {
                 case "Color [A=255, R=139, G=69, B=19]":
                 case "Color [A=255, R=0, G=100, B=0]":
-                    if (force.Y + gravity.Y >= 0) { { CollisionAdjuster = new Point(1, 0); } } break;
+                    if (force.y + gravity.Y >= 0) { { CollisionAdjuster = new Point(1, 0); } } break;
             }
         }
 
@@ -84,13 +85,13 @@ public class Rigidbody
             {
                 case "Color [A=255, R=139, G=69, B=19]":
                 case "Color [A=255, R=0, G=100, B=0]":
-                    if (force.Y + gravity.Y < 0) { { CollisionAdjuster = new Point(1, 0); } } break;
+                    if (force.y + gravity.Y < 0) { { CollisionAdjuster = new Point(1, 0); } } break;
             }
         }
 
         if (colided == true)
         {
-            force = new Point(force.X, force.Y + 1);
+            force = new Coordinate(force.x, force.y + 1);
             colided = false;
         }
 
@@ -101,13 +102,13 @@ public class Rigidbody
             {
                 case "Color [A=255, R=139, G=69, B=19]":
                 case "Color [A=255, R=0, G=100, B=0]":
-                    if (force.X > 0)
+                    if (force.x > 0)
                     {
                         //if (Force.Y + gravity.Y < 0)
                         CollisionAdjuster = new Point(0, 1);
-                        if (force.Y + gravity.Y == 0)
-                        { CollisionAdjuster = new Point(0, 1); force = new Point(force.X, force.Y - 1); colided = true; }
-                        if (force.Y + gravity.Y > 0)
+                        if (force.y + gravity.Y == 0)
+                        { CollisionAdjuster = new Point(0, 1); force = new Coordinate(force.x, force.y - 1); colided = true; }
+                        if (force.y + gravity.Y > 0)
                         { CollisionAdjuster = new Point(0, 0); }
                     }
                     break;
@@ -121,13 +122,13 @@ public class Rigidbody
             {
                 case "Color [A=255, R=139, G=69, B=19]":
                 case "Color [A=255, R=0, G=100, B=0]":
-                    if (force.X < 0)
+                    if (force.x < 0)
                     {
                         //if (Force.Y + gravity.Y < 0)
                         CollisionAdjuster = new Point(0, 1);
-                        if (force.Y + gravity.Y == 0)
-                        { CollisionAdjuster = new Point(0, 1); force = new Point(force.X, force.Y - 1); colided = true; }
-                        if (force.Y + gravity.Y > 0)
+                        if (force.y + gravity.Y == 0)
+                        { CollisionAdjuster = new Point(0, 1); force = new Coordinate(force.x, force.y- 1); colided = true; }
+                        if (force.y + gravity.Y > 0)
                         { CollisionAdjuster = new Point(0, 0); }
                     }
                     break;
@@ -164,8 +165,8 @@ public class Rigidbody
         }*/
         //for (double i = 0; i <= grav; i += 0.1)
         //{
-        cPosition = new Coordinate(cPosition.x + TerrainInteraction(bitmap, 10, 10).X * (force.X)
-            , cPosition.y + TerrainInteraction(bitmap, 10, 10).Y * (grav + force.Y));
+        cPosition = new Coordinate(cPosition.x + TerrainInteraction(bitmap, 10, 10).X * (force.x)
+            , cPosition.y + TerrainInteraction(bitmap, 10, 10).Y * (grav + force.y));
         //if (TerrainInteraction(bitmap).Y == 0) break;
         //}
         //MessageBox.Show(force.ToString());
@@ -174,8 +175,9 @@ public class Rigidbody
 
 class BaseTank : Rigidbody
 {   
-	private Point newForce;
-	public Point MovementForce { get; set; }
+	private Coordinate newForce;
+	public Coordinate MovementForce { get; set; }
+    public Point MousePoint;
 	float AimAngle;
     public int LocalCoordsX = 3;
     public int LocalCoordsY = 3;
@@ -214,6 +216,7 @@ class BaseTank : Rigidbody
         //MessageBox.Show(angle.ToString());
         double x = canonLength * Math.Cos(angle) * val; 
         double y = canonLength * Math.Sin(angle) * val;
+        MousePoint = new Point((int)(x + CanonCentreX), (int)(y + CanonCentreY));
 
         Graphics g = Graphics.FromImage(bitmap);
         
@@ -241,21 +244,63 @@ class BaseTank : Rigidbody
     public void Move(char c)
     {
         Direction = c.ToString().ToUpper();
+        
         switch (Direction)
         {
-            case "W": newForce = new Point(0, -1); //MessageBox.Show(c.ToString());
+            case "W": newForce = new Coordinate(0, -0.8); //MessageBox.Show(c.ToString());
                 break;
-            case "S": newForce = new Point(0, 1); //MessageBox.Show(c.ToString());
+            case "S": 
+                newForce = new Coordinate(0, 0.3); //MessageBox.Show(c.ToString());
+                if (force.y > -0.5) { newForce = new Coordinate(0, -force.y); }
                 break;
-            case "A": newForce = new Point(-1, 0); //MessageBox.Show(c.ToString());
+            case "A": newForce = new Coordinate(-0.3, 0); //MessageBox.Show(c.ToString());
                 break;
-            case "D": newForce = new Point(1, 0); //MessageBox.Show(c.ToString());
+            case "D": newForce = new Coordinate(0.3, 0); //MessageBox.Show(c.ToString());
                 break;
-            default : return;
+            //default : newForce = new Coordinate(0,0);
+                //break;
+            //MovementForce = newForce;                
         }
-        MovementForce = new Point( MovementForce.X + newForce.X,
-            MovementForce.Y + newForce.Y);
-        force = MovementForce;
+
+        /* while (Direction == "W")
+         {
+            newForce = new Point(0, -1); //MessageBox.Show(c.ToString());            
+         }
+         while (Direction == "A")
+         {
+             newForce = new Point(-1, 0); //MessageBox.Show(c.ToString());            
+         }
+         while (Direction == "S")
+         {
+             newForce = new Point(0, 1); //MessageBox.Show(c.ToString());            
+         }
+         while (Direction == "D")
+         {
+             newForce = new Point(1, 0); //MessageBox.Show(c.ToString());           
+         }
+        */
+
+        if (MovementForce.x > 2)
+        {
+            MovementForce = new Coordinate(3, MovementForce.y);
+        }
+        if (MovementForce.x < -2)
+        {
+            MovementForce = new Coordinate(-3, MovementForce.y);
+        }
+        if (MovementForce.y > 3)
+        {
+            MovementForce = new Coordinate(MovementForce.x, 3);
+        }
+        if (MovementForce.y < -2)
+        {
+            MovementForce = new Coordinate(MovementForce.x, -2);
+        }
+
+        MovementForce = new Coordinate(newForce.x + MovementForce.x ,
+            newForce.y + MovementForce.y);
+
+        force = new Coordinate(MovementForce.x, MovementForce.y);
         //UpdatePos();
     }
 
@@ -277,7 +322,7 @@ class SharpShooterTank : BaseTank
     public Point[] PixelCoords = new Point[100];
     public Color[] PixelColor = new Color[100];
 
-    public SharpShooterTank(Point pos, int _mass, Point frce, float angl) 
+    public SharpShooterTank(Point pos, int _mass, Coordinate frce, float angl) 
 	{ 
 		position = pos; gravity = new Point(0, _mass * 1);
 		force = frce;   mass = _mass;
