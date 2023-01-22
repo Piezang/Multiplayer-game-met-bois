@@ -34,22 +34,37 @@ public class Rigidbody
 
     public Point[] GetPixelCoords(Point position, int length, int height) 
     {
-        for (int x = 0; x <= length; x++) 
+        Point[] PixelCoords = new Point[length * height];
+        int count = 0;
+        for (int x = position.X; x < position.X + length; x++)
         {
-            for (int y = 0; y <= height; y ++)
+            for (int y = position.Y; y < position.Y + height; y++)
             {
-
+                PixelCoords[count] = new Point(x, y);
+                count ++;
             }
         }
-        return new Point[0];
+        return PixelCoords;
+    }
+
+    public Color[] GetPixelColor(Point[] pixelcoords, Bitmap bmp)
+    {
+        Color[] c = new Color[pixelcoords.Length];
+
+        for (int i = 0; i < c.Length; i ++)
+        {
+            c[i] = bmp.GetPixel(pixelcoords[i].X, pixelcoords[i].Y);
+           // c[i] = Color.Red;
+        }
+        return c;
     }
     private Point TerrainInteraction(Bitmap bmp, int length, int height)
     {
         Point CollisionAdjuster = new Point(1, 1);
         Point NW = new Point(position.X - 1, position.Y - 1);
-        Point SW = new Point(position.X - 1, position.Y + 1 + height);
-        Point NE = new Point(position.X + 1 + length, position.Y - 1);
-        Point SE = new Point(position.X + 1 + length, position.Y + 1 + height);
+        Point SW = new Point(position.X - 1, position.Y + height);
+        Point NE = new Point(position.X + length, position.Y - 1);
+        Point SE = new Point(position.X + length, position.Y + height);
 
         for (int i = SW.X; i <= SE.X; i++)
         {
@@ -259,6 +274,8 @@ class SharpShooterTank : BaseTank
 
     private int health = 100;
     public bool destroyed = false;
+    public Point[] PixelCoords = new Point[100];
+    public Color[] PixelColor = new Color[100];
 
     public SharpShooterTank(Point pos, int _mass, Point frce, float angl) 
 	{ 
@@ -266,11 +283,23 @@ class SharpShooterTank : BaseTank
 		force = frce;   mass = _mass;
 		CanonAngle = angl; cPosition = new Coordinate(position.X, position.Y);
 
-        //bitmap = new Bitmap(SharpShooterTankimg); 
+        //bitmap = new Bitmap(SharpShooterTankimg);
+        int count = 0;
+        for (int x = pos.X; x < pos.X + 10; x++)
+        {
+            for (int y = pos.Y; y < pos.Y + 10; y++)
+            {
+                PixelCoords[count] = new Point(x, y);
+                PixelColor[count] = Color.Black;  
+                count++;
+            }
+        }
+
         g = Graphics.FromImage(bitmap);
-        g.DrawRectangle(Pens.White, pos.X, pos.Y, 10, 10);
+       // g.DrawRectangle(Pens.White, pos.X, pos.Y, 10, 10);
         g.FillRectangle(Brushes.White, pos.X, pos.Y, 10, 10);
         //Start();
+
     }
     public void Damage(int damage)
     {
@@ -291,9 +320,13 @@ class SharpShooterTank : BaseTank
         {
             position = new Point((int)cPosition.x, (int)cPosition.y);
             g = Graphics.FromImage(bitmap);
-            g.DrawRectangle(Pens.Black, position.X, position.Y, 10, 10);
-            g.FillRectangle(Brushes.Black, position.X, position.Y, 10, 10);
-           
+            for (int l = 0; l < 100; l++)
+            {
+                bitmap.SetPixel(PixelCoords[l].X ,PixelCoords[l].Y, PixelColor[l]);
+            }
+
+            
+
             //Wrywing
             //MovementForce = new Point((int)(MovementForce.X * 0.9), (int)(MovementForce.Y * 0.9));
             oldPos = new Point (position.X, position.Y);
@@ -303,7 +336,11 @@ class SharpShooterTank : BaseTank
             ChangeMouseCoords(Form1.X, Form1.Y, bitmap, oldPos);
             MouseMoved = false;
 
-            g.DrawRectangle(Pens.White, position.X, position.Y, 10, 10);
+
+            PixelCoords = GetPixelCoords(position, 10, 10);
+            PixelColor = GetPixelColor(PixelCoords, bitmap);
+
+            //g.DrawRectangle(Pens.White, position.X, position.Y, 10, 10);
             g.FillRectangle(Brushes.White, position.X, position.Y, 10, 10);
             //MessageBox.Show(position.X.ToString(), position.Y.ToString());
             //MessageBox.Show(MovementForce.ToString());

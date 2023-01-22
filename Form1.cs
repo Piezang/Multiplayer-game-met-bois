@@ -52,7 +52,7 @@ namespace Multiplayer_game_met_bois
             pictureBox1.Image = bitmap;
         }  
 
-        SharpShooterTank tank = new SharpShooterTank(new Point(200, 100), 1, new Point(0,0), 180);
+        SharpShooterTank tank = new SharpShooterTank(new Point(200, 299), 1, new Point(0,0), 180);
         SharpShooterTank ServerTank = new SharpShooterTank(new Point(-10, -10), 1, new Point(0, 0), 0);
         //ServerTank tree eintlik net op as die ander tank in die konneksie. Nie noodwendig die server se tank nie.
 
