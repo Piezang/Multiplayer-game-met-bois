@@ -51,11 +51,10 @@ namespace Multiplayer_game_met_bois
             bitmap = terrain.TerrainImage(bitmap);
             //bitmap = terrain.TerrainImage(bitmap);
             //Terrain = terrain.ServerTerrain;
-            pictureBox1.Image = bitmap;
         }  
 
-        SharpShooterTank tank = new SharpShooterTank(new Point(200, 299), 1, new Point(0,0), 180);
-        SharpShooterTank ServerTank = new SharpShooterTank(new Point(-10, -10), 1, new Point(0, 0), 0);
+        SharpShooterTank tank = new SharpShooterTank(new Point(200, 299), 1, new Coordinate(0,0), 180);
+        SharpShooterTank ServerTank = new SharpShooterTank(new Point(-10, -10), 1, new Coordinate(0, 0), 0);
         //ServerTank tree eintlik net op as die ander tank in die konneksie. Nie noodwendig die server se tank nie.
 
         private void Form1_keyPress(object sender, KeyPressEventArgs e)
@@ -83,7 +82,8 @@ namespace Multiplayer_game_met_bois
         int actualMoved = 0;
         private void MoveCameraView(Point pos, Graphics g)
         {                                           //4000                                                  //4000
-            g.DrawImage(bitmap, new Rectangle(0, 0, 4000, 497), new Rectangle(pos.X + lengthMoved, 0, 4000, 497), GraphicsUnit.Pixel);
+            //g.DrawImage(bitmap, new Rectangle(0, 0, 4000, 497), new Rectangle(pos.X + lengthMoved, 0, 4000, 497), GraphicsUnit.Pixel);
+            pictureBox1.Location = new Point(pictureBox1.Location.X + lengthMoved, pictureBox1.Location.Y); 
             /*Graphics graphics = Graphics.FromImage(bitmap);
             graphics.GdiDrawImage
             (
@@ -257,7 +257,7 @@ namespace Multiplayer_game_met_bois
             if ((int)(tank.force.x * 6) != 0) //&& 400 < tank.position.X && tank.position.X < 3600
             {
                 g = Graphics.FromImage(bitmap);
-                g.Clear(Color.Black); 
+                //g.Clear(Color.Black); 
                 bitmap = terrain.TerrainImage(bitmap);
     
                 MoveCameraView(new Point((int)(tank.force.x * 6), 0), g);   //Baie Resource hungry (10% cpu)
