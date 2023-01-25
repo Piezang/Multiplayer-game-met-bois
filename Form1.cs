@@ -57,32 +57,85 @@ namespace Multiplayer_game_met_bois
         SharpShooterTank ServerTank = new SharpShooterTank(new Point(-10, -10), 1, new Coordinate(0, 0), 0);
         //ServerTank tree eintlik net op as die ander tank in die konneksie. Nie noodwendig die server se tank nie.
 
-        private void Form1_keyPress(object sender, KeyPressEventArgs e)
+        private void Form1_keyDown(object sender, KeyEventArgs e)
         {
             DontUpdate = false;
-            //MessageBox.Show(e.KeyChar.ToString());
-            tank.Move(Char.ToLower(e.KeyChar));
             
-            if (e.KeyChar == ' ')
+            //MessageBox.Show(e.KeyChar.ToString());
+            tank.Move(Char.ToLower((char)e.KeyCode));
+            
+          //  if (e.KeyCode == ' ')
+          //  {
+          //      tank.Damage(10);
+          //  }
+        
+            if (e.KeyCode is >= (Keys)48 and <= (Keys)57)
             {
-                tank.Damage(10);
-            }
+                MessageBox.Show($"Form.KeyPress: '{e.KeyCode}' pressed.");
 
-            if (e.KeyChar >= 48 && e.KeyChar <= 57)
-            {
-                MessageBox.Show($"Form.KeyPress: '{e.KeyChar}' pressed.");
-
-                switch (e.KeyChar)
+                switch (e.KeyCode)
                 {
-                    case (char)49:
-                    case (char)52:
-                    case (char)55:
-                        MessageBox.Show($"Form.KeyPress: '{e.KeyChar}' consumed.");
+                    case (Keys)(char)49:
+                    case (Keys)(char)52:
+                    case (Keys)(char)55:
+                        MessageBox.Show($"Form.KeyPress: '{e.KeyCode}' consumed.");
                         e.Handled = true;
                         break;
                 }
             }        
         }
+
+        private void Form1_KeyUp(object sender, KeyEventArgs e)
+        {
+            DontUpdate = false;
+
+            //MessageBox.Show(e.KeyChar.ToString());
+            tank.UnMove(Char.ToLower((char)e.KeyCode));
+
+            Thread.Sleep(500);
+
+            tank.UnMove(Char.ToLower((char)e.KeyCode));
+
+            Thread.Sleep(500);
+
+            tank.UnMove(Char.ToLower((char)e.KeyCode));
+            /*   if (e.KeyCode == ' ')
+               {
+                   tank.Damage(10);
+               }
+           */
+
+        }
+
+        /* private void Form1_KeyUp(object sender, KeyPressEventArgs e)
+          {
+              DontUpdate = false;
+              //MessageBox.Show(e.KeyChar.ToString());
+              tank.Move(Char.ToLower(e.KeyChar));
+
+              if (e.KeyChar == ' ')
+              {
+                  tank.Damage(10);
+              }
+
+              if (e.KeyChar >= 48 && e.KeyChar <= 57)
+              {
+                  MessageBox.Show($"Form.KeyPress: '{e.KeyChar}' pressed.");
+
+                  switch (e.KeyChar)
+                  {
+                      case (char)49:
+                      case (char)52:
+                      case (char)55:
+                          MessageBox.Show($"Form.KeyPress: '{e.KeyChar}' consumed.");
+                          e.Handled = true;
+                          break;
+                  }
+              }
+
+          }
+        */
+
         int lengthMoved = 0;
         int actualMoved = 0;
         private void MoveCameraView(Point pos, Graphics g)
@@ -226,6 +279,9 @@ namespace Multiplayer_game_met_bois
 
         private void TimerUpdate(object sender, EventArgs e)   //60 keer per sekonde
         {
+
+            
+
             if (DontUpdate) return;
             if (!Server.Active)    //As hy nie die server is nie...
             {
@@ -308,10 +364,7 @@ namespace Multiplayer_game_met_bois
             projectileList.Add(p);
         }
 
-        private void Form1_keyDown(object sender, KeyEventArgs e)
-        {
-
-        }
+       
     }
 
     class Server
