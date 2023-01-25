@@ -234,7 +234,7 @@ class BaseTank : Rigidbody
         health -= damage;
         if (health <= 0)
         {
-            return -100;
+            return 0; //was -100
         }
         return health;
     }
@@ -302,6 +302,73 @@ class BaseTank : Rigidbody
         //UpdatePos();
     }
 
+    public void UnMove(char c)
+    {
+        Direction = c.ToString().ToUpper();
+
+        switch (Direction)
+        {
+            case "W":
+                newForce = new Coordinate(0, 0.8); //MessageBox.Show(c.ToString());
+                break;
+            case "S":
+                newForce = new Coordinate(0, -0.6); //MessageBox.Show(c.ToString());
+                if (force.y > -1) { newForce = new Coordinate(0, -force.y); }
+                break;
+            case "A":
+                newForce = new Coordinate(0.3, 0); //MessageBox.Show(c.ToString());
+                break;
+            case "D":
+                newForce = new Coordinate(-0.3, 0); //MessageBox.Show(c.ToString());
+                break;
+                //default : newForce = new Coordinate(0,0);
+                //break;
+                //MovementForce = newForce;                
+        }
+
+        /* while (Direction == "W")
+         {
+            newForce = new Point(0, -1); //MessageBox.Show(c.ToString());            
+         }
+         while (Direction == "A")
+         {
+             newForce = new Point(-1, 0); //MessageBox.Show(c.ToString());            
+         }
+         while (Direction == "S")
+         {
+             newForce = new Point(0, 1); //MessageBox.Show(c.ToString());            
+         }
+         while (Direction == "D")
+         {
+             newForce = new Point(1, 0); //MessageBox.Show(c.ToString());           
+         }
+        */
+
+        if (MovementForce.x > 2.5)
+        {
+            MovementForce = new Coordinate(2.5, MovementForce.y);
+        }
+        if (MovementForce.x < -2.5)
+        {
+            MovementForce = new Coordinate(-2.5, MovementForce.y);
+        }
+        if (MovementForce.y > 3)
+        {
+            MovementForce = new Coordinate(MovementForce.x, 3);
+        }
+        if (MovementForce.y < -2)
+        {
+            MovementForce = new Coordinate(MovementForce.x, -2);
+        }
+
+        MovementForce = new Coordinate(newForce.x + MovementForce.x,
+            newForce.y + MovementForce.y);
+
+        force = new Coordinate(MovementForce.x, MovementForce.y);
+        //UpdatePos();
+    }
+
+
     public BaseTank() 
 	{  
         //MovementForce = new Point(MovementForce.X + newForce.X,
@@ -347,13 +414,19 @@ class SharpShooterTank : BaseTank
     public void Damage(int damage)
     {
         health = TakeDamage(damage, health);
-        if (health == -100) Destroy();
+        if (health <= 0) Destroy(); //was -100
+        
+        
     }
    
+    //private void GiveDamage(object sender, KeyPressEventArgs)
+
 	private void Destroy()
 	{
-		SharpShooterTankimg.Dispose();   //Ek wil he dit moet clear
+        //SharpShooterTankimg.Dispose(); //Ek wil he dit moet clear
+        MessageBox.Show("Its destroyed (Source: trust me bro)");
         destroyed = true;
+       
     }
     public bool MouseMoved = false;
     Point oldPos;

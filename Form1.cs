@@ -229,6 +229,9 @@ namespace Multiplayer_game_met_bois
 
         private void TimerUpdate(object sender, EventArgs e)   //60 keer per sekonde
         {
+
+            
+
             if (DontUpdate) return;
             if (!Server.Active)    //As hy nie die server is nie...
             {
@@ -338,10 +341,7 @@ namespace Multiplayer_game_met_bois
             await Task.Delay(200);
         }
 
-        private void Form1_keyDown(object sender, KeyEventArgs e)
-        {
-
-        }
+       
     }
 
     class Server
