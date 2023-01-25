@@ -15,7 +15,7 @@ public class Projectile: Rigidbody
 	}
     public Bitmap ImageChange(Bitmap bitmap)
     {
-        bitmap = UpdateImage.updateImage(bitmap, position, this, cPosition);
+        bitmap = UpdateImage.updateImage(bitmap, position, this, cPosition, 1, 1);
         return bitmap;
     }
     ~Projectile()

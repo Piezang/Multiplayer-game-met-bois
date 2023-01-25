@@ -53,7 +53,7 @@ namespace Multiplayer_game_met_bois
             //Terrain = terrain.ServerTerrain;
         }  
 
-        SharpShooterTank tank = new SharpShooterTank(new Point(200, 299), 1, new Coordinate(0,0), 180);
+        SharpShooterTank tank = new SharpShooterTank(new Point(200, 350), 1, new Coordinate(0,0), 180);
         SharpShooterTank ServerTank = new SharpShooterTank(new Point(-10, -10), 1, new Coordinate(0, 0), 0);
         //ServerTank tree eintlik net op as die ander tank in die konneksie. Nie noodwendig die server se tank nie.
 
@@ -178,7 +178,7 @@ namespace Multiplayer_game_met_bois
         TerrainGen terrain = new TerrainGen(4000 - 1);  
         bool TerrainGenerated = false;
         bool generated = false;
-        Bitmap bitmap = new Bitmap(4000, 497);
+        Bitmap bitmap = new Bitmap(4000, 800);
         //int[] Terrain = new int[883];
         int[] newTerrainFromServer;
         //Die probleem is iets met static variables
@@ -247,7 +247,7 @@ namespace Multiplayer_game_met_bois
     
                 MoveCameraView(new Point(PanForce, 0), g);   //Baie Resource hungry (7% cpu)
             }
-            bitmap = tank.UpdateImage(bitmap);
+            bitmap = tank.UpdateImage(bitmap, 50, 25);
             pictureBox1.Image = bitmap;
 
             if (Client.connected)   //As hy die client is gebeur die

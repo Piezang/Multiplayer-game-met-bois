@@ -21,20 +21,20 @@ public class TerrainGen
 				case 0:
                     switch (i)
                     {
-						case <= 349: for (int p = 0; p <= i + 150; p++)
+						case <= 699: for (int p = 0; p <= i + 300; p++)
                             { int t = random.Next(25, 100);  if (TerrainOutln[p] - t! < 0) { TerrainOutln[p] = TerrainOutln[p] - t; } }; break;   
-                        case >= 3850: for (int p = i - 150; p <= 3999; p++)
+                        case >= 3500: for (int p = i - 300; p <= 3999; p++)
 							{ int t = random.Next(25, 100); if (TerrainOutln[p] - t! < 0) { TerrainOutln[p] = TerrainOutln[p] - t; } } break;
-                        default: for (int p = i - 150; p <= i + 150; p++) 
+                        default: for (int p = i - 300; p <= i + 300; p++) 
 							{ int t = random.Next(25, 100); if (TerrainOutln[p] - t! < 0) { TerrainOutln[p] = TerrainOutln[p] - t; } } break;
                     }
                     break;
-				default: TerrainOutln[i] = TerrainOutln[i] = TerrainOutln[i] +  random.Next(300, 450); break;
+				default: TerrainOutln[i] = TerrainOutln[i] = TerrainOutln[i] +  random.Next(450, 800); break;
             }
 		}
 
-		for (int i = 0; i <= 400; i ++) { TerrainOutln[i] = 400; }
-		for (int i = 3599; i <= 3999; i++) { TerrainOutln[i] = 400; }
+		for (int i = 0; i <= 400; i ++) { TerrainOutln[i] = 600; }
+		for (int i = 3599; i <= 3999; i++) { TerrainOutln[i] = 600; }
 
 		for (int k = 0; k <= 20; k++)
 		{
@@ -55,8 +55,8 @@ public class TerrainGen
 	}
 	public Bitmap terrain = null!;
 	public static int[] ServerTerrain = new int[4000];
-	private Rectangle srcRegion = new Rectangle(0, 0, 4000,497);
-	private Rectangle destRegion = new Rectangle(0, 0, 4000, 497);
+	private Rectangle srcRegion = new Rectangle(0, 0, 4000,800);
+	private Rectangle destRegion = new Rectangle(0, 0, 4000, 800);
 	int count = 0;
     public Bitmap TerrainImage(Bitmap bitmap)
 	{
@@ -81,10 +81,10 @@ public class TerrainGen
 		
 		for (int i = 0; i <= 3999; i++) 
 		{
-			Point pt1 = new Point(i, 497);
-			Point pt3 = new Point(i, Convert.ToInt32(TerrainOutln[i]) - 10);
+			Point pt1 = new Point(i, 800);
+			Point pt3 = new Point(i, Convert.ToInt32(TerrainOutln[i]) - 20);
 			Point pt2 = new Point(i, Convert.ToInt32(TerrainOutln[i]));
-			ServerTerrain[i] = Convert.ToInt32(TerrainOutln[i] - 10);
+			ServerTerrain[i] = Convert.ToInt32(TerrainOutln[i] - 20);
             g.DrawLine(penDirt, pt1, pt2);
 			g.DrawLine(penGrass, pt2, pt3);
 			//MessageBox.Show(Color.DarkGreen.ToArgb().ToString());

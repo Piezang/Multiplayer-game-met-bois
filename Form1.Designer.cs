@@ -120,7 +120,7 @@
             this.Tabs.Location = new System.Drawing.Point(12, 12);
             this.Tabs.Name = "Tabs";
             this.Tabs.SelectedIndex = 0;
-            this.Tabs.Size = new System.Drawing.Size(1816, 531);
+            this.Tabs.Size = new System.Drawing.Size(1427, 837);
             this.Tabs.TabIndex = 6;
             // 
             // ServerPage
@@ -138,7 +138,7 @@
             this.ServerPage.Location = new System.Drawing.Point(4, 24);
             this.ServerPage.Name = "ServerPage";
             this.ServerPage.Padding = new System.Windows.Forms.Padding(3);
-            this.ServerPage.Size = new System.Drawing.Size(1808, 503);
+            this.ServerPage.Size = new System.Drawing.Size(952, 809);
             this.ServerPage.TabIndex = 0;
             this.ServerPage.Text = "Server";
             // 
@@ -183,7 +183,7 @@
             this.ClientPage.Location = new System.Drawing.Point(4, 24);
             this.ClientPage.Name = "ClientPage";
             this.ClientPage.Padding = new System.Windows.Forms.Padding(3);
-            this.ClientPage.Size = new System.Drawing.Size(1808, 503);
+            this.ClientPage.Size = new System.Drawing.Size(952, 809);
             this.ClientPage.TabIndex = 1;
             this.ClientPage.Text = "Client";
             // 
@@ -264,17 +264,17 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 24);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1808, 503);
+            this.tabPage1.Size = new System.Drawing.Size(1419, 809);
             this.tabPage1.TabIndex = 2;
             this.tabPage1.Text = "tabPage1";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // pictureBox1
             // 
-            this.pictureBox1.BackColor = System.Drawing.Color.Black;
+            this.pictureBox1.BackColor = System.Drawing.Color.Pink;
             this.pictureBox1.Location = new System.Drawing.Point(3, 6);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(4000, 497);
+            this.pictureBox1.Size = new System.Drawing.Size(4000, 800);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseClicked);
@@ -289,7 +289,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1840, 555);
+            this.ClientSize = new System.Drawing.Size(1444, 861);
             this.Controls.Add(this.Tabs);
             this.Name = "Form1";
             this.Text = "Form1";
