@@ -64,6 +64,11 @@ namespace Multiplayer_game_met_bois
             //MessageBox.Show(e.KeyChar.ToString());
             tank.Move(Char.ToLower(e.KeyChar));
             
+            if (e.KeyChar == ' ')
+            {
+                tank.Damage(10);
+            }
+
             if (e.KeyChar >= 48 && e.KeyChar <= 57)
             {
                 MessageBox.Show($"Form.KeyPress: '{e.KeyChar}' pressed.");

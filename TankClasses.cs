@@ -221,7 +221,7 @@ class BaseTank : Rigidbody
         health -= damage;
         if (health <= 0)
         {
-            return -100;
+            return 0; //was -100
         }
         return health;
     }
@@ -316,17 +316,24 @@ class SharpShooterTank : BaseTank
         g.DrawRectangle(Pens.White, pos.X, pos.Y, 10, 10);
         g.FillRectangle(Brushes.White, pos.X, pos.Y, 10, 10);
         //Start();
+        
     }
     public void Damage(int damage)
     {
         health = TakeDamage(damage, health);
-        if (health == -100) Destroy();
+        if (health <= 0) Destroy(); //was -100
+        
+        
     }
    
+    //private void GiveDamage(object sender, KeyPressEventArgs)
+
 	private void Destroy()
 	{
-		SharpShooterTankimg.Dispose();   //Ek wil he dit moet clear
+        //SharpShooterTankimg.Dispose(); //Ek wil he dit moet clear
+        MessageBox.Show("Its destroyed (Source: trust me bro)");
         destroyed = true;
+       
     }
     public bool MouseMoved = false;
     Point oldPos;
