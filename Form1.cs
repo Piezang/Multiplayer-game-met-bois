@@ -247,10 +247,9 @@ namespace Multiplayer_game_met_bois
             g = Graphics.FromImage(bitmap);
             //g.Clear(Color.Black); 
             bitmap = terrain.TerrainImage(bitmap);
-            if (((pictureBox1.Location.X < 0 && PanForce < 0) //pictureBox1.Location.X;
+            if (((pictureBox1.Location.X < 0 && PanForce < 0) 
             || ( PanForce > 0)) &&
-
-            ((pictureBox1.Location.X > -2200 && PanForce > 0) //pictureBox1.Location.X;
+            ((pictureBox1.Location.X > -2200 && PanForce > 0) 
             || (PanForce < 0)))
             MoveCameraView(new Point(PanForce, 0), g);
             bitmap = tank.UpdateImage(bitmap);  //probeer om die ander een te gebruik
