@@ -60,15 +60,9 @@ public class TerrainGen
 	int count = 0;
     public Bitmap TerrainImage(Bitmap bitmap)
 	{
-        //bitmap.GetPixel(400, 400).ToString() == "Color [A=0, R=0, G=0, B=0]" &&
         if ( terrain != null)
-		{
-            //count++;
-            //MessageBox.Show(terrain.GetPixel(1000, 450).ToString());
-            //MessageBox.Show(count.ToString());
-            bitmap = CopyRegionIntoImage(terrain,srcRegion, ref bitmap,destRegion);
-			//MessageBox.Show(bitmap.GetPixel(0,0).ToString());
-			//MessageBox.Show(bitmap.GetPixel(1000, 450).ToString());
+		{  
+            bitmap = CopyRegionIntoImage(terrain,srcRegion, ref bitmap,destRegion);	
 			return bitmap;//new Bitmap(terrain);
 		}  //bitmap.GetPixel(400, 400).ToString() == "Color [A=0, R=0, G=0, B=0]" &&
 		MessageBox.Show("Null");
@@ -87,7 +81,6 @@ public class TerrainGen
 			ServerTerrain[i] = Convert.ToInt32(TerrainOutln[i] - 10);
             g.DrawLine(penDirt, pt1, pt2);
 			g.DrawLine(penGrass, pt2, pt3);
-			//MessageBox.Show(Color.DarkGreen.ToArgb().ToString());
 		}
 		terrain = new Bitmap(bitmap);
         return bitmap;

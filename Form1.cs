@@ -13,6 +13,7 @@ using System.Xml.Serialization;
 using System.Runtime.CompilerServices;
 using System.Drawing;
 using static System.Net.Mime.MediaTypeNames;
+using System.Media;
 
 namespace Multiplayer_game_met_bois
 {
@@ -61,7 +62,7 @@ namespace Multiplayer_game_met_bois
         {
             DontUpdate = false;
             //MessageBox.Show(e.KeyChar.ToString());
-            tank.Move(Char.ToLower(e.KeyChar));
+            if (e.KeyChar != 'z') tank.Move(Char.ToLower(e.KeyChar));
             
             if (e.KeyChar >= 48 && e.KeyChar <= 57)
             {
@@ -78,7 +79,12 @@ namespace Multiplayer_game_met_bois
                 }
             }
             if (e.KeyChar == 'z') 
-            { bitmap = tank.ShootUlt(bitmap); pictureBox1.Image = bitmap; }
+            {
+                player.SoundLocation = path + "boom.wav";
+                //@"c:\mywavfile.wav"
+                player.Play();  //"C:\Users\Alexander\Desk
+                bitmap = tank.ShootUlt(bitmap); pictureBox1.Image = bitmap; 
+            }
         }
         int lengthMoved = 0;
         int actualMoved = 0;
@@ -305,6 +311,8 @@ namespace Multiplayer_game_met_bois
         }
 
         bool stop = false;
+        static string path = "C:/Users/Alexander/Desktop/Programming/2022/Desember/Multiplayer game met bois/assets/klanke/";
+        SoundPlayer player = new SoundPlayer(path);
         private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
         {
             stop = true;
@@ -314,11 +322,15 @@ namespace Multiplayer_game_met_bois
             while (e.Button == MouseButtons.Left)
             {
                 await SpawnProjectile();
-                if (stop) { stop = false;  return; }
+                if (stop || e.Clicks > 2) { stop = false;  return; }
             }     
         }
         private async Task SpawnProjectile()
-        {  
+        {
+            player.Stop();
+            player.SoundLocation = path + "woosh.wav";
+            //@"c:\mywavfile.wav"
+            player.Play();  //"C:\Users\Alexander\Desktop\Programming\2022\Desember\Multiplayer game met bois\assets\klanke\woosh.mp3"
             Projectile p = new Projectile(tank.MousePoint.X, tank.MousePoint.Y,
             3.5, new Coordinate((tank.MousePoint.X - tank.position.X) / 6,
             (tank.MousePoint.Y - tank.position.Y) / 6));
