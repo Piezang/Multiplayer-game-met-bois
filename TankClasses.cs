@@ -384,6 +384,17 @@ class SharpShooterTank : BaseTank
         return bitmap;
     }
 
+    public Bitmap ShootUlt(Bitmap bitmap)
+    {
+        Graphics g = Graphics.FromImage(bitmap);
+        g.DrawLine(new Pen(Brushes.DarkBlue),position, new Point(Form1.X+1, Form1.Y));
+        g.DrawLine(new Pen(Brushes.LightBlue), position, new Point(Form1.X, Form1.Y+1));
+        g.DrawLine(new Pen(Brushes.White), position, new Point(Form1.X, Form1.Y));
+        g.DrawLine(new Pen(Brushes.LightBlue), position, new Point(Form1.X-1, Form1.Y));
+        g.DrawLine(new Pen(Brushes.DarkBlue), position, new Point(Form1.X, Form1.Y-1));
+        return bitmap;
+    }
+
 	~SharpShooterTank()
 	{
 		

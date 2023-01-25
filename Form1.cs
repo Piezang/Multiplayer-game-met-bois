@@ -76,7 +76,9 @@ namespace Multiplayer_game_met_bois
                         e.Handled = true;
                         break;
                 }
-            }        
+            }
+            if (e.KeyChar == 'z') 
+            { bitmap = tank.ShootUlt(bitmap); pictureBox1.Image = bitmap; }
         }
         int lengthMoved = 0;
         int actualMoved = 0;
@@ -245,7 +247,12 @@ namespace Multiplayer_game_met_bois
             g = Graphics.FromImage(bitmap);
             //g.Clear(Color.Black); 
             bitmap = terrain.TerrainImage(bitmap);
-            if (tank.position.X > 400 && tank.position.X < 3600) MoveCameraView(new Point(PanForce, 0), g);
+            if (((pictureBox1.Location.X < 0 && PanForce < 0) //pictureBox1.Location.X;
+            || ( PanForce > 0)) &&
+
+            ((pictureBox1.Location.X > -2200 && PanForce > 0) //pictureBox1.Location.X;
+            || (PanForce < 0)))
+            MoveCameraView(new Point(PanForce, 0), g);
             bitmap = tank.UpdateImage(bitmap);  //probeer om die ander een te gebruik
             pictureBox1.Image = bitmap;  //UpdateImage.updateImage(bitmap, tank, tank.cPosition); 
 
@@ -293,14 +300,31 @@ namespace Multiplayer_game_met_bois
         }
 
         List<Projectile> projectileList = new List<Projectile>();
-        bool projectileCreated = false;
         private void Form1_MouseClicked(object sender, MouseEventArgs e)
         {
-            projectileCreated= true;            
+            
+        }
+
+        bool stop = false;
+        private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
+        {
+            stop = true;
+        }
+        private async void Form1_MouseDown(object sender, MouseEventArgs e)
+        {
+            while (e.Button == MouseButtons.Left)
+            {
+                await SpawnProjectile();
+                if (stop) { stop = false;  return; }
+            }     
+        }
+        private async Task SpawnProjectile()
+        {  
             Projectile p = new Projectile(tank.MousePoint.X, tank.MousePoint.Y,
-            3.5, new Coordinate((tank.MousePoint.X - tank.position.X)/6,
-            (tank.MousePoint.Y - tank.position.Y)/6));
+            3.5, new Coordinate((tank.MousePoint.X - tank.position.X) / 6,
+            (tank.MousePoint.Y - tank.position.Y) / 6));
             projectileList.Add(p);
+            await Task.Delay(200);
         }
 
         private void Form1_keyDown(object sender, KeyEventArgs e)
