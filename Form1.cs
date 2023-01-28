@@ -247,7 +247,7 @@ namespace Multiplayer_game_met_bois
     
                 MoveCameraView(new Point(PanForce, 0), g);   //Baie Resource hungry (7% cpu)
             }
-            bitmap = tank.UpdateImage(bitmap, 50, 25);
+            bitmap = tank.UpdateImage(bitmap, 100, 50);
             pictureBox1.Image = bitmap;
 
             if (Client.connected)   //As hy die client is gebeur die

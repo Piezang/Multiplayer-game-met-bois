@@ -313,7 +313,7 @@ class BaseTank : Rigidbody
 
 class SharpShooterTank : BaseTank
 {
-    Image SharpShooterTankimg = Image.FromFile("SharpShooterTank2.png");
+    Image SharpShooterTankimg = Image.FromFile("SharpShooterTank.png");
     Bitmap SharpShooterTankbmp = new Bitmap(100,50);  //Image.FromFile("image.png");  
     Bitmap bitmap = new Bitmap(4000, 800);
     Graphics g;
@@ -321,8 +321,8 @@ class SharpShooterTank : BaseTank
 
     private int health = 100;
     public bool destroyed = false;
-    public Point[] PixelCoords = new Point[1250];
-    public Color[] PixelColor = new Color[1250];
+    public Point[] PixelCoords = new Point[5000];
+    public Color[] PixelColor = new Color[5000];
 
     public SharpShooterTank(Point pos, int _mass, Coordinate frce, float angl) 
 	{ 
@@ -332,9 +332,9 @@ class SharpShooterTank : BaseTank
 
         //bitmap = new Bitmap(SharpShooterTankimg);
         int count = 0;
-        for (int x = pos.X; x < pos.X + 50; x++)
+        for (int x = pos.X; x < pos.X + 100; x++)
         {
-            for (int y = pos.Y; y < pos.Y + 25; y++)
+            for (int y = pos.Y; y < pos.Y + 50; y++)
             {
                 PixelCoords[count] = new Point(x, y);
                 PixelColor[count] = Color.Pink;  
@@ -371,7 +371,7 @@ class SharpShooterTank : BaseTank
         {
             position = new Point((int)cPosition.x, (int)cPosition.y);
             g = Graphics.FromImage(bitmap);
-            for (int l = 0; l < 1250; l++)
+            for (int l = 0; l < 5000; l++)
             {
                 bitmap.SetPixel(PixelCoords[l].X ,PixelCoords[l].Y, PixelColor[l]);
             }
@@ -392,7 +392,7 @@ class SharpShooterTank : BaseTank
             PixelColor = GetPixelColor(PixelCoords, bitmap);
 
 
-            g.DrawImage(SharpShooterTankimg, position.X, position.Y -23);
+            g.DrawImage(SharpShooterTankimg, position.X, position.Y -47);
             //g.DrawRectangle(Pens.White, position.X, position.Y, 100, 100);
             //g.FillRectangle(Brushes.White, position.X, position.Y, length, height);
             //MessageBox.Show(position.X.ToString(), position.Y.ToString());

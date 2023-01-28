@@ -15,17 +15,17 @@ public class TerrainGen
 			//TerrainOutln[i] = 250 + (100 * Math.Sin(i*Math.PI / 360) + (100 * Math.Cos(Math.Pow(i * Math.PI/ 180, 2) / 20)));
 			Random random = new Random();
 			Random outliers = new Random();
-			int iOutliers = outliers.Next(0, 199); 
+			int iOutliers = outliers.Next(0, 149); 
 			switch (iOutliers)
 			{
 				case 0:
                     switch (i)
                     {
-						case <= 699: for (int p = 0; p <= i + 300; p++)
+						case <= 699: for (int p = 0; p <= i + 500; p++)
                             { int t = random.Next(25, 100);  if (TerrainOutln[p] - t! < 0) { TerrainOutln[p] = TerrainOutln[p] - t; } }; break;   
-                        case >= 3500: for (int p = i - 300; p <= 3999; p++)
+                        case >= 3500: for (int p = i - 500; p <= 3999; p++)
 							{ int t = random.Next(25, 100); if (TerrainOutln[p] - t! < 0) { TerrainOutln[p] = TerrainOutln[p] - t; } } break;
-                        default: for (int p = i - 300; p <= i + 300; p++) 
+                        default: for (int p = i - 500; p <= i + 500; p++) 
 							{ int t = random.Next(25, 100); if (TerrainOutln[p] - t! < 0) { TerrainOutln[p] = TerrainOutln[p] - t; } } break;
                     }
                     break;
@@ -36,7 +36,7 @@ public class TerrainGen
 		for (int i = 0; i <= 400; i ++) { TerrainOutln[i] = 600; }
 		for (int i = 3599; i <= 3999; i++) { TerrainOutln[i] = 600; }
 
-		for (int k = 0; k <= 20; k++)
+		for (int k = 0; k <= 30; k++)
 		{
 			for (int i = 0; i <= 3999; i++)
 			{
