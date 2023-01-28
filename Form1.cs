@@ -261,7 +261,7 @@ namespace Multiplayer_game_met_bois
             ((pictureBox1.Location.X > -2200 && PanForce > 0) 
             || (PanForce < 0)))
             MoveCameraView(new Point(PanForce, 0), g);
-            bitmap = tank.UpdateImage(bitmap);  //probeer om die ander een te gebruik
+            bitmap = tank.UpdateImage(bitmap, 100, 100);  //probeer om die ander een te gebruik
             pictureBox1.Image = bitmap;  //UpdateImage.updateImage(bitmap, tank, tank.cPosition); 
 
             if (Client.connected)   //As hy die client is gebeur die
