@@ -236,7 +236,7 @@ class BaseTank : Rigidbody
         health -= damage;
         if (health <= 0)
         {
-            return -100;
+            return 0; //was -100
         }
         return health;
     }
@@ -250,8 +250,8 @@ class BaseTank : Rigidbody
             case "W": newForce = new Coordinate(0, -0.8); //MessageBox.Show(c.ToString());
                 break;
             case "S": 
-                newForce = new Coordinate(0, 0.3); //MessageBox.Show(c.ToString());
-                if (force.y > -0.5) { newForce = new Coordinate(0, -force.y); }
+                newForce = new Coordinate(0, 0.6); //MessageBox.Show(c.ToString());
+                if (force.y > -1) { newForce = new Coordinate(0, -force.y); }
                 break;
             case "A": newForce = new Coordinate(-0.3, 0); //MessageBox.Show(c.ToString());
                 break;
@@ -280,13 +280,13 @@ class BaseTank : Rigidbody
          }
         */
 
-        if (MovementForce.x > 2)
+        if (MovementForce.x > 2.5)
         {
-            MovementForce = new Coordinate(3, MovementForce.y);
+            MovementForce = new Coordinate(2.5, MovementForce.y);
         }
-        if (MovementForce.x < -2)
+        if (MovementForce.x < -2.5)
         {
-            MovementForce = new Coordinate(-3, MovementForce.y);
+            MovementForce = new Coordinate(-2.5, MovementForce.y);
         }
         if (MovementForce.y > 3)
         {
@@ -303,6 +303,73 @@ class BaseTank : Rigidbody
         force = new Coordinate(MovementForce.x, MovementForce.y);
         //UpdatePos();
     }
+
+    public void UnMove(char c)
+    {
+        Direction = c.ToString().ToUpper();
+
+        switch (Direction)
+        {
+            case "W":
+                newForce = new Coordinate(0, 0.8); //MessageBox.Show(c.ToString());
+                break;
+            case "S":
+                newForce = new Coordinate(0, -0.6); //MessageBox.Show(c.ToString());
+                if (force.y > -1) { newForce = new Coordinate(0, -force.y); }
+                break;
+            case "A":
+                newForce = new Coordinate(0.3, 0); //MessageBox.Show(c.ToString());
+                break;
+            case "D":
+                newForce = new Coordinate(-0.3, 0); //MessageBox.Show(c.ToString());
+                break;
+                //default : newForce = new Coordinate(0,0);
+                //break;
+                //MovementForce = newForce;                
+        }
+
+        /* while (Direction == "W")
+         {
+            newForce = new Point(0, -1); //MessageBox.Show(c.ToString());            
+         }
+         while (Direction == "A")
+         {
+             newForce = new Point(-1, 0); //MessageBox.Show(c.ToString());            
+         }
+         while (Direction == "S")
+         {
+             newForce = new Point(0, 1); //MessageBox.Show(c.ToString());            
+         }
+         while (Direction == "D")
+         {
+             newForce = new Point(1, 0); //MessageBox.Show(c.ToString());           
+         }
+        */
+
+        if (MovementForce.x > 2.5)
+        {
+            MovementForce = new Coordinate(2.5, MovementForce.y);
+        }
+        if (MovementForce.x < -2.5)
+        {
+            MovementForce = new Coordinate(-2.5, MovementForce.y);
+        }
+        if (MovementForce.y > 3)
+        {
+            MovementForce = new Coordinate(MovementForce.x, 3);
+        }
+        if (MovementForce.y < -2)
+        {
+            MovementForce = new Coordinate(MovementForce.x, -2);
+        }
+
+        MovementForce = new Coordinate(newForce.x + MovementForce.x,
+            newForce.y + MovementForce.y);
+
+        force = new Coordinate(MovementForce.x, MovementForce.y);
+        //UpdatePos();
+    }
+
 
     public BaseTank() 
 	{  
@@ -355,9 +422,13 @@ class SharpShooterTank : BaseTank
     public void Damage(int damage)
     {
         health = TakeDamage(damage, health);
-        if (health == -100) Destroy();
+        if (health <= 0) Destroy(); //was -100
+        
+        
     }
    
+    //private void GiveDamage(object sender, KeyPressEventArgs)
+
 	private void Destroy()
 	{
 		//SharpShooterTankimg.Dispose();   //Ek wil he dit moet clear
@@ -401,6 +472,17 @@ class SharpShooterTank : BaseTank
         return bitmap;
     }
 
+    public Bitmap ShootUlt(Bitmap bitmap)
+    {
+        Graphics g = Graphics.FromImage(bitmap);
+        g.DrawLine(new Pen(Brushes.DarkBlue),position, new Point(Form1.X+1, Form1.Y));
+        g.DrawLine(new Pen(Brushes.LightBlue), position, new Point(Form1.X, Form1.Y+1));
+        g.DrawLine(new Pen(Brushes.White), position, new Point(Form1.X, Form1.Y));
+        g.DrawLine(new Pen(Brushes.LightBlue), position, new Point(Form1.X-1, Form1.Y));
+        g.DrawLine(new Pen(Brushes.DarkBlue), position, new Point(Form1.X, Form1.Y-1));
+        return bitmap;
+    }
+
 	~SharpShooterTank()
 	{
 		
@@ -409,11 +491,13 @@ class SharpShooterTank : BaseTank
 
 public class UpdateImage
 {
+    public static Point MousePoint;
+    public static bool MouseMoved = false;
     static Graphics g = null!;
     public static Bitmap updateImage(Bitmap bitmap, Point position, object caller, Coordinate cPosition, int length, int height)
     {     
-        g = Graphics.FromImage(bitmap);       
-       
+        g = Graphics.FromImage(bitmap);
+        Point oldPos;
         switch (caller)
         {
             case SharpShooterTank tank:
@@ -443,6 +527,49 @@ public class UpdateImage
         //MessageBox.Show(MovementForce.ToString());
         return bitmap;
     }
+    public static int LocalCoordsX = 3;
+    public static int LocalCoordsY = 3;
+
+    public static void ChangeMouseCoords(int XInput, int YInput, Bitmap bitmap, Point oldPos, Point position)
+    {
+        DrawCannon(bitmap, true, oldPos);  //oldPos   
+        LocalCoordsX = XInput;
+        LocalCoordsY = YInput;
+        DrawCannon(bitmap, false, position);
+    }
+    //Hieronder sal jy bron vind van "nee andor jou mors van suurstof en spasie jou harlekyn van die dieretuin wat maak jy daai moet nie so werk nie
+
+    protected static void DrawCannon(Bitmap bitmap, bool DeleteLine, Point position)
+    {
+        float CanonCentreX = position.X + 5;
+        float CanonCentreY = position.Y + 5;
+        int val = 1;
+        float CanonMouseDiffX = (LocalCoordsX - CanonCentreX);
+        float CanonMouseDiffY = (LocalCoordsY - CanonCentreY);
+        if (CanonMouseDiffX < 0) val = -1;
+
+        double canonLength = 60;
+        double Difference = ((CanonMouseDiffY)) / ((CanonMouseDiffX));
+        //MessageBox.Show(Difference.ToString());
+        double angle = Math.Atan(Difference); //- Math.PI/2; /// Math.PI * 180;
+        //MessageBox.Show(angle.ToString());
+        double x = canonLength * Math.Cos(angle) * val;
+        double y = canonLength * Math.Sin(angle) * val;
+        MousePoint = new Point((int)(x + CanonCentreX), (int)(y + CanonCentreY));
+
+        Graphics g = Graphics.FromImage(bitmap);
+
+        if (DeleteLine)
+        {
+            g.DrawLine(new Pen(Brushes.Black), CanonCentreX, CanonCentreY, (CanonCentreX + (float)x), (CanonCentreY + (float)y));
+            return;
+        }
+
+        //nee andor jou stuk nonsens
+        //Pen goldPen = new Pen(Color.Gold, 1);
+        g.DrawLine(new Pen(Brushes.Gold), CanonCentreX, CanonCentreY, (CanonCentreX + (float)x), (CanonCentreY + (float)y));
+    }
+
 }
 
 

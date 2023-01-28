@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 public class Projectile: Rigidbody
 {
     int x; int y; //int mass; //Point inititalForce;
+    public bool Destroyed = false;
     public Projectile(int _x, int _y, double _mass, Coordinate _inititalForce)
 	{
         x = _x;
@@ -15,12 +16,13 @@ public class Projectile: Rigidbody
 	}
     public Bitmap ImageChange(Bitmap bitmap)
     {
-        bitmap = UpdateImage.updateImage(bitmap, position, this, cPosition, 1, 1);
+        if (Destroyed) return null!;
+        bitmap = UpdateImage.updateImage(bitmap, this, cPosition);
         return bitmap;
     }
     ~Projectile()
     {
-        MessageBox.Show("Destroyed");
+        //MessageBox.Show("Destroyed");
     }
 }
 
