@@ -494,19 +494,20 @@ public class UpdateImage
     public static Point MousePoint;
     public static bool MouseMoved = false;
     static Graphics g = null!;
-    public static Bitmap updateImage(Bitmap bitmap, Point position, object caller, Coordinate cPosition, int length, int height)
+    public static Bitmap updateImage(Bitmap bitmap, object caller, Coordinate cPosition, int length, int height)
     {     
         g = Graphics.FromImage(bitmap);
         Point oldPos;
+        Point position; 
         switch (caller)
         {
-            case SharpShooterTank tank:
+           /* case SharpShooterTank tank:
                 g.DrawRectangle(Pens.Black, position.X, position.Y, length, height);
                 g.FillRectangle(Brushes.Black, position.X, position.Y, length, height);
                 tank.UpdatePos(bitmap, length, height);
                 g.DrawRectangle(Pens.White, position.X, position.Y, length, height);
                 g.FillRectangle(Brushes.White, position.X, position.Y, length, height);
-                break;
+                break;*/
             case Projectile p:
                 //MessageBox.Show(p.position.ToString());
                 position = new Point((int)cPosition.x, (int)cPosition.y);
