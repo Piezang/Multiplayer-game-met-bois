@@ -22,7 +22,7 @@ public class Projectile: Rigidbody
     }
     ~Projectile()
     {
-        MessageBox.Show("Destroyed");
+        //MessageBox.Show("Destroyed");
     }
 }
 
