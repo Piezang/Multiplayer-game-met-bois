@@ -242,7 +242,7 @@ namespace Multiplayer_game_met_bois
             {
                 foreach (Projectile p in projectileList)
                 { 
-                    bitmap = p.ImageChange(bitmap);
+                    bitmap = p.ImageChange(bitmap, 1, 1);
                     if (p.cPosition.y > 500) { projectileList.Remove(p); break; }
                 }           
                 //MessageBox.Show(k.force.ToString());
@@ -261,7 +261,7 @@ namespace Multiplayer_game_met_bois
             ((pictureBox1.Location.X > -2200 && PanForce > 0) 
             || (PanForce < 0)))
             MoveCameraView(new Point(PanForce, 0), g);
-            bitmap = tank.UpdateImage(bitmap, 100, 100);  //probeer om die ander een te gebruik
+            bitmap = tank.UpdateImage(bitmap, 100, 50);  //probeer om die ander een te gebruik
             pictureBox1.Image = bitmap;  //UpdateImage.updateImage(bitmap, tank, tank.cPosition); 
 
             if (Client.connected)   //As hy die client is gebeur die
@@ -333,7 +333,7 @@ namespace Multiplayer_game_met_bois
             player.Stop();
             player.SoundLocation = path + "woosh.wav";
             //@"c:\mywavfile.wav"
-            player.Play();  //"C:\Users\Alexander\Desktop\Programming\2022\Desember\Multiplayer game met bois\assets\klanke\woosh.mp3"
+            //player.Play();  //"C:\Users\Alexander\Desktop\Programming\2022\Desember\Multiplayer game met bois\assets\klanke\woosh.mp3"
             Projectile p = new Projectile(tank.MousePoint.X, tank.MousePoint.Y,
             3.5, new Coordinate((tank.MousePoint.X - tank.position.X) / 6,
             (tank.MousePoint.Y - tank.position.Y) / 6));

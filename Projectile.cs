@@ -14,10 +14,10 @@ public class Projectile: Rigidbody
         gravity = new Point(0,Convert.ToInt32(_mass));
         force = _inititalForce;
 	}
-    public Bitmap ImageChange(Bitmap bitmap)
+    public Bitmap ImageChange(Bitmap bitmap, int length, int height)
     {
         if (Destroyed) return null!;
-        //bitmap = UpdateImage.updateImage(bitmap, this, cPosition);
+        bitmap = UpdateImage.updateImage(bitmap, this, cPosition, length, height);
         return bitmap;
     }
     ~Projectile()
