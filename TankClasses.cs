@@ -4,6 +4,7 @@ using System.Diagnostics.Contracts;
 using System.DirectoryServices.ActiveDirectory;
 using System.Drawing;
 using System.Drawing.Text;
+using System.Security.Cryptography.X509Certificates;
 using System.Windows.Input;
 
 public class Rigidbody
@@ -141,33 +142,33 @@ public class Rigidbody
 
     double grav;
     int impactForce = 0;
-    bool called = false;
+    public bool called = false;
+    public bool vall = false;
 
-    public void UpdatePos(Bitmap bitmap)    //
-    {     
+    public bool UpdatePos(Bitmap bitmap)    //
+    {
+        //if (called) MessageBox.Show("Kaas");
         grav += (mass * 0.03);
         if (gravity.Y < 8)
         {
             gravity = new Point(0,
                 Convert.ToInt32(grav));
         }
-
-        if (TerrainInteraction(bitmap, 10, 10).Y == 0) { gravity = new Point(0, 0); grav = 0; }
-        /*for (int i = 0; i <= gravity.Y + mass; i++)   //1 of 0 by begin???
-        {
-            impactForce = (i) - (TerrainInteraction(bitmap).Y * i);
-
-            position = new Point(position.X + TerrainInteraction(bitmap).X * (0 + force.X),
-            position.Y + TerrainInteraction(bitmap).Y * (i + force.Y));       
-
-            gravity = new Point(0, gravity.Y * TerrainInteraction(bitmap).Y);
-            if (TerrainInteraction(bitmap).Y == 0) break;
-        }*/
+        if (TerrainInteraction(bitmap, 10, 10).Y == 0)  //|| TerrainInteraction(bitmap, 10, 10).X == 0
+        {  
+            gravity = new Point(0, 0); grav = 0;
+            if (called)
+            { 
+                force = new Coordinate(0,0); vall = true;
+                //Graphics g = Graphics.FromImage(bitmap);
+                //g.FillEllipse(Brushes.Black, position.X-4, position.X + 4, 8, 8);
+                return true; 
+            } //MessageBox.Show(force.x.ToString());
+        }
         cPosition = new Coordinate(cPosition.x + TerrainInteraction(bitmap, 10, 10).X * (force.x)
             , cPosition.y + TerrainInteraction(bitmap, 10, 10).Y * (grav + force.y));
-        //if (TerrainInteraction(bitmap).Y == 0) break;
-        //}
-        //MessageBox.Show(force.ToString());
+        position = new Point((int)cPosition.x, (int)cPosition.y);
+        return false;
     }
 }
 
@@ -368,7 +369,6 @@ class BaseTank : Rigidbody
         //UpdatePos();
     }
 
-
     public BaseTank() 
 	{  
         //MovementForce = new Point(MovementForce.X + newForce.X,
@@ -460,11 +460,14 @@ class SharpShooterTank : BaseTank
     public Bitmap ShootUlt(Bitmap bitmap)
     {
         Graphics g = Graphics.FromImage(bitmap);
-        g.DrawLine(new Pen(Brushes.DarkBlue),position, new Point(Form1.X+1, Form1.Y));
-        g.DrawLine(new Pen(Brushes.LightBlue), position, new Point(Form1.X, Form1.Y+1));
-        g.DrawLine(new Pen(Brushes.White), position, new Point(Form1.X, Form1.Y));
-        g.DrawLine(new Pen(Brushes.LightBlue), position, new Point(Form1.X-1, Form1.Y));
-        g.DrawLine(new Pen(Brushes.DarkBlue), position, new Point(Form1.X, Form1.Y-1));
+        g.DrawLine(new Pen(Brushes.Navy), new Point(position.X + 2, position.Y + 2), new Point(Form1.X - 3, Form1.Y - 3));
+        g.DrawLine(new Pen(Brushes.DarkBlue), new Point(position.X+3, position.Y+3), new Point(Form1.X-2, Form1.Y-2));
+        g.DrawLine(new Pen(Brushes.Blue), new Point(position.X+4,position.Y+4), new Point(Form1.X-1, Form1.Y - 1));
+        g.DrawLine(new Pen(Brushes.LightBlue), new Point(position.X + 5, position.Y +5), new Point(Form1.X, Form1.Y));
+        g.DrawLine(new Pen(Brushes.Blue), new Point(position.X +6, position.Y + 6), new Point(Form1.X+1, Form1.Y+1));
+        g.DrawLine(new Pen(Brushes.DarkBlue), new Point(position.X + 7, position.Y + 7), new Point(Form1.X +2, Form1.Y + 2));
+        g.DrawLine(new Pen(Brushes.Navy), new Point(position.X + 8, position.Y + 8), new Point(Form1.X + 3, Form1.Y + 3));
+        Thread.Sleep(200);
         return bitmap;
     }
 
@@ -483,6 +486,7 @@ public class UpdateImage
     {     
         g = Graphics.FromImage(bitmap);
         Point oldPos;
+        bool val = false;
         switch (caller)
         {
             case SharpShooterTank tank:
@@ -501,12 +505,23 @@ public class UpdateImage
                     //g.DrawRectangle(Pens.White, position.X, position.Y, 10, 10);
                     g.FillRectangle(Brushes.White, positionn.X, positionn.Y, 10, 10);
                 }     
-                break;
+                break;   
             case Projectile p:
+                if (p.vall) { MessageBox.Show("Kaas"); return bitmap; }
                 Point position = new Point((int)cPosition.x, (int)cPosition.y);
                 g.FillRectangle(Brushes.Black, position.X, position.Y, 10, 10);
-                p.UpdatePos(bitmap);
-
+                p.called = true;
+                val = p.UpdatePos(bitmap);
+                if (p.force.x == 0) 
+                {
+                    //g = Graphics.FromImage(bitmap);
+                    //g.FillEllipse(Brushes.Black, position.X - 8, position.X + 8, 30, 30);
+                    //using (Graphics grD = Graphics.FromImage(Form1.t))
+                    //{
+                        //grD.DrawImage(bitmap, new Rectangle(0, 0, 4000, 497), new Rectangle(0, 0, 4000, 497), GraphicsUnit.Pixel);
+                    //}             
+                    return bitmap; 
+                }
                 // position.X = (int)(cPosition.x);
                 //position.Y = (int)(cPosition.y);
                 position = new Point((int)cPosition.x, (int)cPosition.y);   //Convert.ToInt32

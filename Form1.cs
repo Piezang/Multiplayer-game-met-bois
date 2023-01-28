@@ -14,6 +14,7 @@ using System.Runtime.CompilerServices;
 using System.Drawing;
 using static System.Net.Mime.MediaTypeNames;
 using System.Media;
+using Microsoft.VisualBasic.Devices;
 
 namespace Multiplayer_game_met_bois
 {
@@ -50,6 +51,7 @@ namespace Multiplayer_game_met_bois
             this.MouseClick += Form1_MouseClicked!;
 
             bitmap = terrain.TerrainImage(bitmap);
+            t = terrain.TerrainImage(bitmap);
             //bitmap = terrain.TerrainImage(bitmap);
             //Terrain = terrain.ServerTerrain;
         }  
@@ -61,9 +63,16 @@ namespace Multiplayer_game_met_bois
         private void Form1_keyPress(object sender, KeyPressEventArgs e)
         {
             DontUpdate = false;
+            if (e.KeyChar == 'z')
+            {
+                player.SoundLocation = path + "boom.wav";
+                //@"c:\mywavfile.wav"
+                //player.Play();  //"C:\Users\Alexander\Desk
+                bitmap = tank.ShootUlt(bitmap); pictureBox1.Image = bitmap;
+                return;
+            }
             //MessageBox.Show(e.KeyChar.ToString());
-            if (e.KeyChar != 'z') tank.Move(Char.ToLower(e.KeyChar));
-            
+            tank.Move(Char.ToLower(e.KeyChar)); 
             if (e.KeyChar >= 48 && e.KeyChar <= 57)
             {
                 MessageBox.Show($"Form.KeyPress: '{e.KeyChar}' pressed.");
@@ -77,14 +86,7 @@ namespace Multiplayer_game_met_bois
                         e.Handled = true;
                         break;
                 }
-            }
-            if (e.KeyChar == 'z') 
-            {
-                player.SoundLocation = path + "boom.wav";
-                //@"c:\mywavfile.wav"
-                player.Play();  //"C:\Users\Alexander\Desk
-                bitmap = tank.ShootUlt(bitmap); pictureBox1.Image = bitmap; 
-            }
+            }      
         }
         int lengthMoved = 0;
         int actualMoved = 0;
@@ -229,9 +231,6 @@ namespace Multiplayer_game_met_bois
 
         private void TimerUpdate(object sender, EventArgs e)   //60 keer per sekonde
         {
-
-            
-
             if (DontUpdate) return;
             if (!Server.Active)    //As hy nie die server is nie...
             {
@@ -244,6 +243,7 @@ namespace Multiplayer_game_met_bois
                 { 
                     bitmap = p.ImageChange(bitmap);
                     if (p.cPosition.y > 500) { projectileList.Remove(p); break; }
+                    if (p.force.x == 0 ) projectileList.Remove(p); break;
                 }           
                 //MessageBox.Show(k.force.ToString());
             }
@@ -255,7 +255,9 @@ namespace Multiplayer_game_met_bois
                                                    
             g = Graphics.FromImage(bitmap);
             //g.Clear(Color.Black); 
+            
             bitmap = terrain.TerrainImage(bitmap);
+            if (t != bitmap) bitmap = t;
             if (((pictureBox1.Location.X < 0 && PanForce < 0) 
             || ( PanForce > 0)) &&
             ((pictureBox1.Location.X > -2200 && PanForce > 0) 
@@ -299,7 +301,7 @@ namespace Multiplayer_game_met_bois
                 pictureBox1.Image = bitmap;
             }
         }
-
+        public static Bitmap t;
         public static int X, Y;
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {            
@@ -318,30 +320,36 @@ namespace Multiplayer_game_met_bois
         SoundPlayer player = new SoundPlayer(path);
         private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
         {
-            stop = true;
+            stop = true;   
         }
         private async void Form1_MouseDown(object sender, MouseEventArgs e)
         {
+            //Thread t = new Thread(()=> MouseDownn(sender, e));
+            //t.Start();   
+            if (e.Button != MouseButtons.Left || stop) return;
             while (e.Button == MouseButtons.Left)
             {
                 await SpawnProjectile();
-                if (stop || e.Clicks > 2) { stop = false;  return; }
-            }     
+                if (stop || e.Clicks > 1)
+                { stop = false; return; }
+            }
+        }
+        private async void MouseDownn(object sender, MouseEventArgs e)
+        {
+            
         }
         private async Task SpawnProjectile()
         {
             player.Stop();
             player.SoundLocation = path + "woosh.wav";
             //@"c:\mywavfile.wav"
-            player.Play();  //"C:\Users\Alexander\Desktop\Programming\2022\Desember\Multiplayer game met bois\assets\klanke\woosh.mp3"
+            //player.Play();  //"C:\Users\Alexander\Desktop\Programming\2022\Desember\Multiplayer game met bois\assets\klanke\woosh.mp3"
             Projectile p = new Projectile(tank.MousePoint.X, tank.MousePoint.Y,
             3.5, new Coordinate((tank.MousePoint.X - tank.position.X) / 6,
             (tank.MousePoint.Y - tank.position.Y) / 6));
             projectileList.Add(p);
             await Task.Delay(200);
-        }
-
-       
+        }     
     }
 
     class Server
