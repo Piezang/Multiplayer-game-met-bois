@@ -380,7 +380,7 @@ class BaseTank : Rigidbody
 
 class SharpShooterTank : BaseTank
 {
-    Image SharpShooterTankimg = Image.FromFile("SharpShooterTank.png");
+    Image SharpShooterTankimg = Image.FromFile("SharpShooterTankV2.png");
     Bitmap SharpShooterTankbmp = new Bitmap(100,50);  //Image.FromFile("image.png");  
     Bitmap bitmap = new Bitmap(4000, 800);
     Graphics g;
@@ -463,7 +463,7 @@ class SharpShooterTank : BaseTank
             PixelColor = GetPixelColor(PixelCoords, bitmap);
 
 
-            g.DrawImage(SharpShooterTankimg, position.X, position.Y -47);
+            g.DrawImage(SharpShooterTankimg, position.X, position.Y);
             //g.DrawRectangle(Pens.White, position.X, position.Y, 100, 100);
             //g.FillRectangle(Brushes.White, position.X, position.Y, length, height);
             //MessageBox.Show(position.X.ToString(), position.Y.ToString());
@@ -501,13 +501,16 @@ public class UpdateImage
         Point position; 
         switch (caller)
         {
-           /* case SharpShooterTank tank:
+            case SharpShooterTank tank:
+
+                position = new Point((int)cPosition.x, (int)cPosition.y);
+
                 g.DrawRectangle(Pens.Black, position.X, position.Y, length, height);
                 g.FillRectangle(Brushes.Black, position.X, position.Y, length, height);
                 tank.UpdatePos(bitmap, length, height);
                 g.DrawRectangle(Pens.White, position.X, position.Y, length, height);
                 g.FillRectangle(Brushes.White, position.X, position.Y, length, height);
-                break;*/
+                break;
             case Projectile p:
                 //MessageBox.Show(p.position.ToString());
                 position = new Point((int)cPosition.x, (int)cPosition.y);

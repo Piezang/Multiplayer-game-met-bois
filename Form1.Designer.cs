@@ -138,7 +138,7 @@
             this.ServerPage.Location = new System.Drawing.Point(4, 24);
             this.ServerPage.Name = "ServerPage";
             this.ServerPage.Padding = new System.Windows.Forms.Padding(3);
-            this.ServerPage.Size = new System.Drawing.Size(952, 809);
+            this.ServerPage.Size = new System.Drawing.Size(1419, 809);
             this.ServerPage.TabIndex = 0;
             this.ServerPage.Text = "Server";
             // 
@@ -183,7 +183,7 @@
             this.ClientPage.Location = new System.Drawing.Point(4, 24);
             this.ClientPage.Name = "ClientPage";
             this.ClientPage.Padding = new System.Windows.Forms.Padding(3);
-            this.ClientPage.Size = new System.Drawing.Size(952, 809);
+            this.ClientPage.Size = new System.Drawing.Size(1419, 809);
             this.ClientPage.TabIndex = 1;
             this.ClientPage.Text = "Client";
             // 
@@ -277,6 +277,7 @@
             this.pictureBox1.Size = new System.Drawing.Size(4000, 800);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.WaitOnLoad = true;
             this.pictureBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseClicked);
             this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
             this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
@@ -295,8 +296,7 @@
             this.Controls.Add(this.Tabs);
             this.Name = "Form1";
             this.Text = "Form1";
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_keyDown);
-        //    this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Form1_keyPress);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Form1_keyPress);
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseClicked);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
             this.Tabs.ResumeLayout(false);
