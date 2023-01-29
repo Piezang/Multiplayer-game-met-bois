@@ -142,9 +142,10 @@ public class Rigidbody
 
     double grav;
     int impactForce = 0;
-    bool called = false;
+    public bool called = false;
+    public bool vall = false;
 
-    public bool UpdatePos(Bitmap bitmap)    //
+    public bool UpdatePos(Bitmap bitmap, int length, int height)    //
     {
         //if (called) MessageBox.Show("Kaas");
         grav += (mass * 0.03);
@@ -153,7 +154,7 @@ public class Rigidbody
             gravity = new Point(0,
                 Convert.ToInt32(grav));
         }
-        if (TerrainInteraction(bitmap, 10, 10).Y == 0)  //|| TerrainInteraction(bitmap, 10, 10).X == 0
+        if (TerrainInteraction(bitmap, length, height).Y == 0)  //|| TerrainInteraction(bitmap, 10, 10).X == 0
         {  
             gravity = new Point(0, 0); grav = 0;
             if (called)
@@ -164,8 +165,8 @@ public class Rigidbody
                 return true; 
             } //MessageBox.Show(force.x.ToString());
         }
-        cPosition = new Coordinate(cPosition.x + TerrainInteraction(bitmap, 10, 10).X * (force.x)
-            , cPosition.y + TerrainInteraction(bitmap, 10, 10).Y * (grav + force.y));
+        cPosition = new Coordinate(cPosition.x + TerrainInteraction(bitmap, length, height).X * (force.x)
+            , cPosition.y + TerrainInteraction(bitmap, length, height).Y * (grav + force.y));
         position = new Point((int)cPosition.x, (int)cPosition.y);
         return false;
     }
@@ -401,20 +402,17 @@ class SharpShooterTank : BaseTank
             for (int y = pos.Y; y < pos.Y + 50; y++)
             {
                 PixelCoords[count] = new Point(x, y);
-                PixelColor[count] = Color.Pink;  
+                PixelColor[count] = Color.Black;  
                 count++;
             }
         }
 
         g = Graphics.FromImage(bitmap);
-        tank = Graphics.FromImage(SharpShooterTankbmp);
-        tank.DrawImage(SharpShooterTankimg, 0, 9);
+        //tank = Graphics.FromImage(SharpShooterTankbmp);
+        //tank.DrawImage(SharpShooterTankimg, 0, 9);
         //g.DrawRectangle(Pens.White, pos.X, pos.Y, 10, 10);
         //g.FillRectangle(Brushes.White, pos.X, pos.Y, 100, 50);
-        g.DrawImage(SharpShooterTankimg, pos);
-       
-        //Start();
-
+        //g.DrawImage(SharpShooterTankimg, pos);   
     }
     public void Damage(int damage)
     {
@@ -439,13 +437,11 @@ class SharpShooterTank : BaseTank
         {
             position = new Point((int)cPosition.x, (int)cPosition.y);
             g = Graphics.FromImage(bitmap);
-            for (int l = 0; l < 5000; l++)
-            {
-                bitmap.SetPixel(PixelCoords[l].X ,PixelCoords[l].Y, PixelColor[l]);
-            }
-
-            
-
+            g.FillRectangle(Brushes.Pink, position.X, position.Y, length, height);
+            //for (int l = 0; l < 5000; l++)
+            //{
+                //bitmap.SetPixel(PixelCoords[l].X ,PixelCoords[l].Y, PixelColor[l]);
+            //}
             //Wrywing
             //MovementForce = new Point((int)(MovementForce.X * 0.9), (int)(MovementForce.Y * 0.9));
             oldPos = new Point (position.X, position.Y);
@@ -455,12 +451,10 @@ class SharpShooterTank : BaseTank
             ChangeMouseCoords(Form1.X, Form1.Y, bitmap, oldPos);
             MouseMoved = false;
 
+            //PixelCoords = GetPixelCoords(position, length, height);
+            //PixelColor = GetPixelColor(PixelCoords, bitmap);
 
-            PixelCoords = GetPixelCoords(position, length, height);
-            PixelColor = GetPixelColor(PixelCoords, bitmap);
-
-
-            g.DrawImage(SharpShooterTankimg, position.X, position.Y -47);
+            g.DrawImage(SharpShooterTankimg, position.X, position.Y - 47); //
             //g.DrawRectangle(Pens.White, position.X, position.Y, 100, 100);
             //g.FillRectangle(Brushes.White, position.X, position.Y, length, height);
             //MessageBox.Show(position.X.ToString(), position.Y.ToString());
@@ -498,38 +492,26 @@ public class UpdateImage
     {     
         g = Graphics.FromImage(bitmap);
         Point oldPos;
+        Point position;
         bool val = false;
         switch (caller)
         {
-           /* case SharpShooterTank tank:
+           case SharpShooterTank tank:
+                position = new Point((int)cPosition.x, (int)cPosition.y);
                 g.DrawRectangle(Pens.Black, position.X, position.Y, length, height);
                 g.FillRectangle(Brushes.Black, position.X, position.Y, length, height);
                 tank.UpdatePos(bitmap, length, height);
                 g.DrawRectangle(Pens.White, position.X, position.Y, length, height);
                 g.FillRectangle(Brushes.White, position.X, position.Y, length, height);
-                break;*/
-            case Projectile p:
-                //MessageBox.Show(p.position.ToString());
-                position = new Point((int)cPosition.x, (int)cPosition.y);
-
-                    //g.DrawRectangle(Pens.White, position.X, position.Y, 10, 10);
-                    g.FillRectangle(Brushes.White, positionn.X, positionn.Y, 10, 10);
-                }     
-                break;   
+                break;
             case Projectile p:
                 if (p.vall) { MessageBox.Show("Kaas"); return bitmap; }
-                Point position = new Point((int)cPosition.x, (int)cPosition.y);
+                position = new Point((int)cPosition.x, (int)cPosition.y);
                 g.FillRectangle(Brushes.Black, position.X, position.Y, 10, 10);
                 p.called = true;
-                val = p.UpdatePos(bitmap);
+                val = p.UpdatePos(bitmap, length, height);
                 if (p.force.x == 0) 
-                {
-                    //g = Graphics.FromImage(bitmap);
-                    //g.FillEllipse(Brushes.Black, position.X - 8, position.X + 8, 30, 30);
-                    //using (Graphics grD = Graphics.FromImage(Form1.t))
-                    //{
-                        //grD.DrawImage(bitmap, new Rectangle(0, 0, 4000, 497), new Rectangle(0, 0, 4000, 497), GraphicsUnit.Pixel);
-                    //}             
+                {      
                     return bitmap; 
                 }
                 // position.X = (int)(cPosition.x);
@@ -539,7 +521,106 @@ public class UpdateImage
                 g.DrawRectangle(Pens.Red, position.X, position.Y, length, height);    //position
                 g.FillRectangle(Brushes.Red, position.X, position.Y, length, height);
                 break;
-        }      
+        }
+        return bitmap;
+        //MessageBox.Show(position.X.ToString(), position.Y.ToString());
+        //MessageBox.Show(MovementForce.ToString());
+        //return bitmap;
+    }
+    public static int LocalCoordsX = 3;
+    public static int LocalCoordsY = 3;
+
+    public static void ChangeMouseCoords(int XInput, int YInput, Bitmap bitmap, Point oldPos, Point position)
+    {
+        DrawCannon(bitmap, true, oldPos);  //oldPos   
+        LocalCoordsX = XInput;
+        LocalCoordsY = YInput;
+        DrawCannon(bitmap, false, position);
+    }
+    //Hieronder sal jy bron vind van "nee andor jou mors van suurstof en spasie jou harlekyn van die dieretuin wat maak jy daai moet nie so werk nie
+
+    protected static void DrawCannon(Bitmap bitmap, bool DeleteLine, Point position)
+    {
+        float CanonCentreX = position.X + 5;
+        float CanonCentreY = position.Y + 5;
+        int val = 1;
+        float CanonMouseDiffX = (LocalCoordsX - CanonCentreX);
+        float CanonMouseDiffY = (LocalCoordsY - CanonCentreY);
+        if (CanonMouseDiffX < 0) val = -1;
+
+        double canonLength = 60;
+        double Difference = ((CanonMouseDiffY)) / ((CanonMouseDiffX));
+        //MessageBox.Show(Difference.ToString());
+        double angle = Math.Atan(Difference); //- Math.PI/2; /// Math.PI * 180;
+        //MessageBox.Show(angle.ToString());
+        double x = canonLength * Math.Cos(angle) * val;
+        double y = canonLength * Math.Sin(angle) * val;
+        MousePoint = new Point((int)(x + CanonCentreX), (int)(y + CanonCentreY));
+
+        Graphics g = Graphics.FromImage(bitmap);
+
+        if (DeleteLine)
+        {
+            g.DrawLine(new Pen(Brushes.Black), CanonCentreX, CanonCentreY, (CanonCentreX + (float)x), (CanonCentreY + (float)y));
+            return;
+        }
+
+        //nee andor jou stuk nonsens
+        //Pen goldPen = new Pen(Color.Gold, 1);
+        g.DrawLine(new Pen(Brushes.Gold), CanonCentreX, CanonCentreY, (CanonCentreX + (float)x), (CanonCentreY + (float)y));
+    }
+}
+/*public class UpdateImage    //ou een
+{
+    public static Point MousePoint;
+    public static bool MouseMoved = false;
+    static Graphics g = null!;
+    public static Bitmap updateImage(Bitmap bitmap, object caller, Coordinate cPosition)
+    {
+        g = Graphics.FromImage(bitmap);
+        Point oldPos;
+        bool val = false;
+        switch (caller)
+        {
+            case SharpShooterTank tank:
+                for (int i = 0; i < 6; i++)
+                {
+                    Point positionn = new Point((int)tank.cPosition.x, (int)tank.cPosition.y);
+                    //g.DrawRectangle(Pens.Black, position.X, position.Y, 10, 10);
+                    g.FillRectangle(Brushes.Black, positionn.X, positionn.Y, 10, 10);
+                    oldPos = new Point(positionn.X, positionn.Y);
+
+                    tank.UpdatePos(bitmap);
+                    positionn = new Point((int)tank.cPosition.x, (int)tank.cPosition.y);
+                    ChangeMouseCoords(Form1.X, Form1.Y, bitmap, oldPos, positionn);
+                    MouseMoved = false;
+
+                    //g.DrawRectangle(Pens.White, position.X, position.Y, 10, 10);
+                    g.FillRectangle(Brushes.White, positionn.X, positionn.Y, 10, 10);
+                }
+                break;
+            case Projectile p:
+                if (p.vall) { MessageBox.Show("Kaas"); return bitmap; }
+                Point position = new Point((int)cPosition.x, (int)cPosition.y);
+                g.FillRectangle(Brushes.Black, position.X, position.Y, 10, 10);
+                p.called = true;
+                val = p.UpdatePos(bitmap);
+                if (p.force.x == 0)
+                {
+                    //g = Graphics.FromImage(bitmap);
+                    //g.FillEllipse(Brushes.Black, position.X - 8, position.X + 8, 30, 30);
+                    //using (Graphics grD = Graphics.FromImage(Form1.t))
+                    //{
+                    //grD.DrawImage(bitmap, new Rectangle(0, 0, 4000, 497), new Rectangle(0, 0, 4000, 497), GraphicsUnit.Pixel);
+                    //}             
+                    return bitmap;
+                }
+                // position.X = (int)(cPosition.x);
+                //position.Y = (int)(cPosition.y);
+                position = new Point((int)cPosition.x, (int)cPosition.y);   //Convert.ToInt32
+                g.FillRectangle(Brushes.Red, position.X, position.Y, 10, 10);
+                break;
+        }
         //MessageBox.Show(position.X.ToString(), position.Y.ToString());
         //MessageBox.Show(MovementForce.ToString());
         return bitmap;
@@ -587,6 +668,6 @@ public class UpdateImage
         g.DrawLine(new Pen(Brushes.Gold), CanonCentreX, CanonCentreY, (CanonCentreX + (float)x), (CanonCentreY + (float)y));
     }
 
-}
+}*/
 
 

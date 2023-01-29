@@ -97,15 +97,15 @@ namespace Multiplayer_game_met_bois
             actualMoved += pos.X / 6;
             lengthMoved+= pos.X;  //onseker oor die * 4 ding moet eintlik iets anders wees
         }
-        private void pictureBox1_Paint(object sender, PaintEventArgs e)
-        {
-            MessageBox.Show("gecall");
+        //private void pictureBox1_Paint(object sender, PaintEventArgs e)
+        //{
+            //MessageBox.Show("gecall");
             //if (hoeveelheidGecall < 3000) return;
             //using (Bitmap bitmapp = new Bitmap(bitmap))
             //{          
             //e.Graphics.DrawImage
-                Bitmap bitmapp = new Bitmap(pictureBox1.Image);
-                e.Graphics.DrawImage(bitmapp, new Point(-100, 0));   //Kan Layers in terrain maak as daar baie is
+                //Bitmap bitmapp = new Bitmap(pictureBox1.Image);
+                //e.Graphics.DrawImage(bitmapp, new Point(-100, 0));   //Kan Layers in terrain maak as daar baie is
                 //pictureBox1.Image= bitmap;
                 //bitmap.Dispose();
             //}
@@ -114,7 +114,7 @@ namespace Multiplayer_game_met_bois
 
             //e.Graphics.DrawImage(newbitmap, new Rectangle(10, 0, bitmap.Width, bitmap.Height));
             //new Rectangle(10, 0, bitmap.Width, bitmap.Height);
-        }
+        //}
 
         private void btnStart_Click(object sender, EventArgs e)
         {
@@ -253,15 +253,12 @@ namespace Multiplayer_game_met_bois
                 }           
                 //MessageBox.Show(k.force.ToString());
             }
-            
+         
             int PanForce = (int)(tank.force.x * 3.5);
             //MessageBox.Show("Running");
             tank.position = new Point((int)tank.cPosition.x, (int)tank.cPosition.y);  //nuut
             Server.ServerTankCords = tank.position;  //Message na die client
-                                                   
-            
-            //g.Clear(Color.Black); 
-            
+    
             //bitmap = terrain.TerrainImage(bitmap);
             if (t != bitmap) bitmap = t;
             if (((pictureBox1.Location.X < 0 && PanForce < 0)
@@ -269,7 +266,7 @@ namespace Multiplayer_game_met_bois
             ((pictureBox1.Location.X > -2200 && PanForce > 0)
             || (PanForce < 0)))
             { MoveCameraView(new Point(PanForce, 0), g); }
-            bitmap = tank.UpdateImage(bitmap);  //probeer om die ander een te gebruik
+            bitmap = tank.UpdateImage(bitmap, 100, 50);  //probeer om die ander een te gebruik
             pictureBox1.Image = bitmap;  //UpdateImage.updateImage(bitmap, tank, tank.cPosition); 
 
             if (Client.connected)   //As hy die client is gebeur die
