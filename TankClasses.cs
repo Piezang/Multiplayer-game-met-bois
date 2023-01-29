@@ -142,8 +142,7 @@ public class Rigidbody
 
     double grav;
     int impactForce = 0;
-    public bool called = false;
-    public bool vall = false;
+    bool called = false;
 
     public bool UpdatePos(Bitmap bitmap)    //
     {
@@ -221,7 +220,7 @@ class BaseTank : Rigidbody
         
         if (DeleteLine)
         {
-            g.DrawLine(new Pen(Brushes.Black), CanonCentreX, CanonCentreY, (CanonCentreX + (float)x) , (CanonCentreY + (float)y) );
+            g.DrawLine(new Pen(Brushes.Pink), CanonCentreX, CanonCentreY, (CanonCentreX + (float)x) , (CanonCentreY + (float)y) );
             return;
         }
         
@@ -378,14 +377,16 @@ class BaseTank : Rigidbody
 
 class SharpShooterTank : BaseTank
 {
-    Image SharpShooterTankimg = null!;  //Image.FromFile("image.png");  
-    Bitmap bitmap = new Bitmap(883, 497);
-    Graphics g; 
+    Image SharpShooterTankimg = Image.FromFile("SharpShooterTank.png");
+    Bitmap SharpShooterTankbmp = new Bitmap(100,50);  //Image.FromFile("image.png");  
+    Bitmap bitmap = new Bitmap(4000, 800);
+    Graphics g;
+    Graphics tank;
 
     private int health = 100;
     public bool destroyed = false;
-    public Point[] PixelCoords = new Point[100];
-    public Color[] PixelColor = new Color[100];
+    public Point[] PixelCoords = new Point[5000];
+    public Color[] PixelColor = new Color[5000];
 
     public SharpShooterTank(Point pos, int _mass, Coordinate frce, float angl) 
 	{ 
@@ -395,19 +396,23 @@ class SharpShooterTank : BaseTank
 
         //bitmap = new Bitmap(SharpShooterTankimg);
         int count = 0;
-        for (int x = pos.X; x < pos.X + 10; x++)
+        for (int x = pos.X; x < pos.X + 100; x++)
         {
-            for (int y = pos.Y; y < pos.Y + 10; y++)
+            for (int y = pos.Y; y < pos.Y + 50; y++)
             {
                 PixelCoords[count] = new Point(x, y);
-                PixelColor[count] = Color.Black;  
+                PixelColor[count] = Color.Pink;  
                 count++;
             }
         }
 
         g = Graphics.FromImage(bitmap);
-       // g.DrawRectangle(Pens.White, pos.X, pos.Y, 10, 10);
-        g.FillRectangle(Brushes.White, pos.X, pos.Y, 10, 10);
+        tank = Graphics.FromImage(SharpShooterTankbmp);
+        tank.DrawImage(SharpShooterTankimg, 0, 9);
+        //g.DrawRectangle(Pens.White, pos.X, pos.Y, 10, 10);
+        //g.FillRectangle(Brushes.White, pos.X, pos.Y, 100, 50);
+        g.DrawImage(SharpShooterTankimg, pos);
+       
         //Start();
 
     }
@@ -423,34 +428,41 @@ class SharpShooterTank : BaseTank
 
 	private void Destroy()
 	{
-        //SharpShooterTankimg.Dispose(); //Ek wil he dit moet clear
-        MessageBox.Show("Its destroyed (Source: trust me bro)");
-        destroyed = true;
-       
+		//SharpShooterTankimg.Dispose();   //Ek wil he dit moet clear
+        //destroyed = true;
     }
     public bool MouseMoved = false;
     Point oldPos;
-    public Bitmap UpdateImage(Bitmap bitmap)
+    public Bitmap UpdateImage(Bitmap bitmap, int length, int height)
     {
         for (int i = 0; i < 6; i++)
         {
             position = new Point((int)cPosition.x, (int)cPosition.y);
             g = Graphics.FromImage(bitmap);
-            g.FillRectangle(Brushes.Black, position.X, position.Y, 10, 10);
+            for (int l = 0; l < 5000; l++)
+            {
+                bitmap.SetPixel(PixelCoords[l].X ,PixelCoords[l].Y, PixelColor[l]);
+            }
+
+            
 
             //Wrywing
             //MovementForce = new Point((int)(MovementForce.X * 0.9), (int)(MovementForce.Y * 0.9));
             oldPos = new Point (position.X, position.Y);
    
-            UpdatePos(bitmap);
+            UpdatePos(bitmap, length, height);
             position = new Point((int)cPosition.x, (int)cPosition.y);
             ChangeMouseCoords(Form1.X, Form1.Y, bitmap, oldPos);
             MouseMoved = false;
 
-            //PixelCoords = GetPixelCoords(position, 10, 10);
-            //PixelColor = GetPixelColor(PixelCoords, bitmap);
 
-            g.FillRectangle(Brushes.White, position.X, position.Y, 10, 10);
+            PixelCoords = GetPixelCoords(position, length, height);
+            PixelColor = GetPixelColor(PixelCoords, bitmap);
+
+
+            g.DrawImage(SharpShooterTankimg, position.X, position.Y -47);
+            //g.DrawRectangle(Pens.White, position.X, position.Y, 100, 100);
+            //g.FillRectangle(Brushes.White, position.X, position.Y, length, height);
             //MessageBox.Show(position.X.ToString(), position.Y.ToString());
             //MessageBox.Show(MovementForce.ToString());
         }
@@ -482,25 +494,23 @@ public class UpdateImage
     public static Point MousePoint;
     public static bool MouseMoved = false;
     static Graphics g = null!;
-    public static Bitmap updateImage(Bitmap bitmap, object caller, Coordinate cPosition)
+    public static Bitmap updateImage(Bitmap bitmap, object caller, Coordinate cPosition, int length, int height)
     {     
         g = Graphics.FromImage(bitmap);
         Point oldPos;
         bool val = false;
         switch (caller)
         {
-            case SharpShooterTank tank:
-                for (int i = 0; i < 6; i++)
-                {
-                    Point positionn = new Point((int)tank.cPosition.x, (int)tank.cPosition.y);
-                    //g.DrawRectangle(Pens.Black, position.X, position.Y, 10, 10);
-                    g.FillRectangle(Brushes.Black, positionn.X, positionn.Y, 10, 10);
-                    oldPos = new Point(positionn.X, positionn.Y);
-
-                    tank.UpdatePos(bitmap);
-                    positionn = new Point((int)tank.cPosition.x, (int)tank.cPosition.y);
-                    ChangeMouseCoords(Form1.X, Form1.Y, bitmap, oldPos, positionn);
-                    MouseMoved = false;
+           /* case SharpShooterTank tank:
+                g.DrawRectangle(Pens.Black, position.X, position.Y, length, height);
+                g.FillRectangle(Brushes.Black, position.X, position.Y, length, height);
+                tank.UpdatePos(bitmap, length, height);
+                g.DrawRectangle(Pens.White, position.X, position.Y, length, height);
+                g.FillRectangle(Brushes.White, position.X, position.Y, length, height);
+                break;*/
+            case Projectile p:
+                //MessageBox.Show(p.position.ToString());
+                position = new Point((int)cPosition.x, (int)cPosition.y);
 
                     //g.DrawRectangle(Pens.White, position.X, position.Y, 10, 10);
                     g.FillRectangle(Brushes.White, positionn.X, positionn.Y, 10, 10);
@@ -525,7 +535,9 @@ public class UpdateImage
                 // position.X = (int)(cPosition.x);
                 //position.Y = (int)(cPosition.y);
                 position = new Point((int)cPosition.x, (int)cPosition.y);   //Convert.ToInt32
-                g.FillRectangle(Brushes.Red, position.X, position.Y, 10, 10);
+
+                g.DrawRectangle(Pens.Red, position.X, position.Y, length, height);    //position
+                g.FillRectangle(Brushes.Red, position.X, position.Y, length, height);
                 break;
         }      
         //MessageBox.Show(position.X.ToString(), position.Y.ToString());
