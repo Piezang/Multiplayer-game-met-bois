@@ -231,6 +231,8 @@ namespace Multiplayer_game_met_bois
 
         private void TimerUpdate(object sender, EventArgs e)   //60 keer per sekonde
         {
+            Graphics g;
+            g = Graphics.FromImage(bitmap);
             if (DontUpdate) return;
             if (!Server.Active)    //As hy nie die server is nie...
             {
@@ -243,26 +245,30 @@ namespace Multiplayer_game_met_bois
                 { 
                     bitmap = p.ImageChange(bitmap);
                     if (p.cPosition.y > 500) { projectileList.Remove(p); break; }
-                    if (p.force.x == 0 ) projectileList.Remove(p); break;
+                    if (p.force.x == 0)
+                    { projectileList.Remove(p);  
+                        Graphics.FromImage(t).FillEllipse(Brushes.Black, p.position.X-3 , p.position.Y-3 , 40, 40);
+                        break;
+                    }
                 }           
                 //MessageBox.Show(k.force.ToString());
             }
-            Graphics g;
+            
             int PanForce = (int)(tank.force.x * 3.5);
             //MessageBox.Show("Running");
             tank.position = new Point((int)tank.cPosition.x, (int)tank.cPosition.y);  //nuut
             Server.ServerTankCords = tank.position;  //Message na die client
                                                    
-            g = Graphics.FromImage(bitmap);
+            
             //g.Clear(Color.Black); 
             
-            bitmap = terrain.TerrainImage(bitmap);
+            //bitmap = terrain.TerrainImage(bitmap);
             if (t != bitmap) bitmap = t;
-            if (((pictureBox1.Location.X < 0 && PanForce < 0) 
-            || ( PanForce > 0)) &&
-            ((pictureBox1.Location.X > -2200 && PanForce > 0) 
+            if (((pictureBox1.Location.X < 0 && PanForce < 0)
+            || (PanForce > 0)) &&
+            ((pictureBox1.Location.X > -2200 && PanForce > 0)
             || (PanForce < 0)))
-            MoveCameraView(new Point(PanForce, 0), g);
+            { MoveCameraView(new Point(PanForce, 0), g); }
             bitmap = tank.UpdateImage(bitmap);  //probeer om die ander een te gebruik
             pictureBox1.Image = bitmap;  //UpdateImage.updateImage(bitmap, tank, tank.cPosition); 
 
@@ -329,7 +335,7 @@ namespace Multiplayer_game_met_bois
             if (e.Button != MouseButtons.Left || stop) return;
             while (e.Button == MouseButtons.Left)
             {
-                await SpawnProjectile();
+                await SpawnProjectile();   
                 if (stop || e.Clicks > 1)
                 { stop = false; return; }
             }
