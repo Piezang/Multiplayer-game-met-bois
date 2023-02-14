@@ -350,8 +350,8 @@ namespace Multiplayer_game_met_bois
             //@"c:\mywavfile.wav"
             //player.Play();  //"C:\Users\Alexander\Desktop\Programming\2022\Desember\Multiplayer game met bois\assets\klanke\woosh.mp3"
             Projectile p = new Projectile(tank.MousePoint.X, tank.MousePoint.Y,
-            3.5, new Coordinate((tank.MousePoint.X - tank.position.X) / 6,
-            (tank.MousePoint.Y - tank.position.Y) / 6));
+            3.5, new Coordinate((tank.MousePoint.X - tank.position.X-25) / 6,
+            (tank.MousePoint.Y - tank.position.Y-25) / 6));
             projectileList.Add(p);
             await Task.Delay(200);
         }     
