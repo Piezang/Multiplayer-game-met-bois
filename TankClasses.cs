@@ -201,7 +201,7 @@ class BaseTank : Rigidbody
 
     protected void DrawCannon(Bitmap bitmap, bool DeleteLine, Point position)
     {
-        float CanonCentreX = position.X + 5;
+        float CanonCentreX = position.X;
         float CanonCentreY = position.Y + 5;
         int val = 1;
         float CanonMouseDiffX = (LocalCoordsX - CanonCentreX);
