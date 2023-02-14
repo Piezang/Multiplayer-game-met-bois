@@ -248,7 +248,7 @@ namespace Multiplayer_game_met_bois
                     if (p.cPosition.y > 1000) { projectileList.Remove(p); break; }
                     if (p.TerrainInteractionV.X * p.force.x == 0)
                     { projectileList.Remove(p);  
-                        Graphics.FromImage(t).FillEllipse(Brushes.Pink, p.position.X-20 , p.position.Y-20 , 40, 40);
+                        Graphics.FromImage(t).FillEllipse(Brushes.Pink, p.position.X-20 , p.position.Y-20, 40, 40);
                         break;
                     }
                 }           
