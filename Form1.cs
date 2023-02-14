@@ -185,7 +185,7 @@ namespace Multiplayer_game_met_bois
             //txtOutput.Text = output;
         }
 
-        TerrainGen terrain = new TerrainGen(4000 - 1);  
+        TerrainGen terrain = new TerrainGen(4000-1);  
         bool TerrainGenerated = false;
         bool generated = false;
         Bitmap bitmap = new Bitmap(4000, 800);
@@ -244,10 +244,11 @@ namespace Multiplayer_game_met_bois
                 foreach (Projectile p in projectileList)
                 { 
                     bitmap = p.ImageChange(bitmap, 1, 1);
-                    if (p.cPosition.y > 500) { projectileList.Remove(p); break; }
+                    if (tank.CircleCollided(p.cPosition)) { MessageBox.Show("Collided"); }
+                    if (p.cPosition.y > 1000) { projectileList.Remove(p); break; }
                     if (p.force.x == 0)
                     { projectileList.Remove(p);  
-                        Graphics.FromImage(t).FillEllipse(Brushes.Black, p.position.X-3 , p.position.Y-3 , 40, 40);
+                        Graphics.FromImage(t).FillEllipse(Brushes.Pink, p.position.X-3 , p.position.Y-3 , 40, 40);
                         break;
                     }
                 }           
@@ -258,7 +259,7 @@ namespace Multiplayer_game_met_bois
             //MessageBox.Show("Running");
             tank.position = new Point((int)tank.cPosition.x, (int)tank.cPosition.y);  //nuut
             Server.ServerTankCords = tank.position;  //Message na die client
-    
+
             //bitmap = terrain.TerrainImage(bitmap);
             if (t != bitmap) bitmap = t;
             if (((pictureBox1.Location.X < 0 && PanForce < 0)
