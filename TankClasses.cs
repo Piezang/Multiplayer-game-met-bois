@@ -382,7 +382,7 @@ class BaseTank : Rigidbody
         //MovementForce = new Point(MovementForce.X + newForce.X,
         //MovementForce.Y + newForce.Y);
     }
-    int hitboxsize = 50;
+    int hitboxsize = 25;
     public bool CircleCollided(Coordinate input)
     {
         if (Math.Sqrt(Math.Pow(cPosition.x + 25 - input.x, 2) + Math.Pow(cPosition.y + 25 - input.y, 2)) < hitboxsize)

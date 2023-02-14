@@ -342,6 +342,7 @@ namespace Multiplayer_game_met_bois
         {
             
         }
+
         private async Task SpawnProjectile()
         {
             player.Stop();
