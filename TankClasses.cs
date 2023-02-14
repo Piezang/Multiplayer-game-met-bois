@@ -424,8 +424,6 @@ class SharpShooterTank : BaseTank
         //    }
         // }
 
-        
-
         g = Graphics.FromImage(bitmap);
 
         //tank = Graphics.FromImage(SharpShooterTankbmp);
@@ -437,15 +435,14 @@ class SharpShooterTank : BaseTank
     public void Damage(int damage)
     {
         health = TakeDamage(damage, health);
-        if (health <= 0) Destroy(); //was -100
-        
-        
+        if (health <= 0) Destroy(); //was -100      
     }
    
     //private void GiveDamage(object sender, KeyPressEventArgs)
 
 	private void Destroy()
 	{
+        MessageBox.Show("Destroyed");
 		//SharpShooterTankimg.Dispose();   //Ek wil he dit moet clear
         //destroyed = true;
     }
