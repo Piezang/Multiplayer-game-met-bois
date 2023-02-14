@@ -60,10 +60,10 @@ public class TerrainGen
 	int count = 0;
     public Bitmap TerrainImage(Bitmap bitmap)
 	{
-        if ( terrain != null)
+        if (terrain != null)
 		{  
-            bitmap = CopyRegionIntoImage(terrain,srcRegion, ref bitmap,destRegion);	
-			return bitmap;//new Bitmap(terrain);
+            bitmap = CopyRegionIntoImage(terrain,srcRegion, ref bitmap,destRegion);
+			return bitmap; //new Terrain(bitmap)
 		}  //bitmap.GetPixel(400, 400).ToString() == "Color [A=0, R=0, G=0, B=0]" &&
 		MessageBox.Show("Null");
         //Image basepng = Image.FromFile("base.png");
