@@ -378,7 +378,7 @@ class BaseTank : Rigidbody
 
 class SharpShooterTank : BaseTank
 {
-    Image SharpShooterTankimg = Image.FromFile("SharpShooterTank.png");
+    Image SharpShooterTankimg = Image.FromFile("SharpShooterTankV2.png");
     Bitmap SharpShooterTankbmp = new Bitmap(100,50);  //Image.FromFile("image.png");  
     Bitmap bitmap = new Bitmap(4000, 800);
     Graphics g;
@@ -454,7 +454,7 @@ class SharpShooterTank : BaseTank
             //PixelCoords = GetPixelCoords(position, length, height);
             //PixelColor = GetPixelColor(PixelCoords, bitmap);
 
-            g.DrawImage(SharpShooterTankimg, position.X, position.Y - 47); //
+            g.DrawImage(SharpShooterTankimg, position.X, position.Y);
             //g.DrawRectangle(Pens.White, position.X, position.Y, 100, 100);
             //g.FillRectangle(Brushes.White, position.X, position.Y, length, height);
             //MessageBox.Show(position.X.ToString(), position.Y.ToString());
