@@ -246,9 +246,9 @@ namespace Multiplayer_game_met_bois
                     bitmap = p.ImageChange(bitmap, 1, 1);
                     if (tank.CircleCollided(p.cPosition)) { MessageBox.Show("Collided"); }
                     if (p.cPosition.y > 1000) { projectileList.Remove(p); break; }
-                    if (p.force.x == 0)
+                    if (p.TerrainInteractionV.X * p.force.x == 0)
                     { projectileList.Remove(p);  
-                        Graphics.FromImage(t).FillEllipse(Brushes.Pink, p.position.X-3 , p.position.Y-3 , 40, 40);
+                        Graphics.FromImage(t).FillEllipse(Brushes.Pink, p.position.X-20 , p.position.Y-20 , 40, 40);
                         break;
                     }
                 }           
