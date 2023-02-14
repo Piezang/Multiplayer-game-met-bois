@@ -22,11 +22,11 @@ public class TerrainGen
                     switch (i)
                     {
 						case <= 699: for (int p = 0; p <= i + 500; p++)
-                            { int t = random.Next(25, 100);  if (TerrainOutln[p] - t! < 0) { TerrainOutln[p] = TerrainOutln[p] - t; } }; break;   
+                            { int t = random.Next(25, 100);  if (TerrainOutln[p] - t > 25) { TerrainOutln[p] = TerrainOutln[p] - t; } }; break;   
                         case >= 3500: for (int p = i - 500; p <= 3999; p++)
-							{ int t = random.Next(25, 100); if (TerrainOutln[p] - t! < 0) { TerrainOutln[p] = TerrainOutln[p] - t; } } break;
+							{ int t = random.Next(25, 100); if (TerrainOutln[p] - t > 25) { TerrainOutln[p] = TerrainOutln[p] - t; } } break;
                         default: for (int p = i - 500; p <= i + 500; p++) 
-							{ int t = random.Next(25, 100); if (TerrainOutln[p] - t! < 0) { TerrainOutln[p] = TerrainOutln[p] - t; } } break;
+							{ int t = random.Next(25, 100); if (TerrainOutln[p] - t > 25) { TerrainOutln[p] = TerrainOutln[p] - t; } } break;
                     }
                     break;
 				default: TerrainOutln[i] = TerrainOutln[i] = TerrainOutln[i] +  random.Next(450, 800); break;
