@@ -248,7 +248,7 @@ namespace Multiplayer_game_met_bois
                     if (p.cPosition.y > 1000) { projectileList.Remove(p); break; }
                     if (p.force.x == 0)
                     { projectileList.Remove(p);  
-                        Graphics.FromImage(t).FillEllipse(Brushes.Black, p.position.X-3 , p.position.Y-3 , 40, 40);
+                        Graphics.FromImage(t).FillEllipse(Brushes.Pink, p.position.X-3 , p.position.Y-3 , 40, 40);
                         break;
                     }
                 }           
@@ -267,7 +267,7 @@ namespace Multiplayer_game_met_bois
             ((pictureBox1.Location.X > -2200 && PanForce > 0)
             || (PanForce < 0)))
             { MoveCameraView(new Point(PanForce, 0), g); }
-            bitmap = tank.UpdateImage(bitmap, 100, 50);  //probeer om die ander een te gebruik
+            bitmap = tank.UpdateImage(bitmap, 50, 50);  //probeer om die ander een te gebruik
             pictureBox1.Image = bitmap;  //UpdateImage.updateImage(bitmap, tank, tank.cPosition); 
 
             if (Client.connected)   //As hy die client is gebeur die
