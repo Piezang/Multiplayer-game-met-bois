@@ -23,6 +23,8 @@ public class Rigidbody
 
     public bool colided;
 
+    public Point TerrainInteractionV;
+
     public Rigidbody()
     {
         gravityTimer = 0;
@@ -172,8 +174,8 @@ public class Rigidbody
         /*cPosition = new Coordinate(cPosition.x + TerrainInteraction(bitmap, length, height).X * (force.x)
             , cPosition.y + TerrainInteraction(bitmap, length, height).Y * (grav + force.y));
         position = new Point((int)cPosition.x, (int)cPosition.y);*/
-
-        cPosition = new Coordinate(cPosition.x + TerrainInteraction(bitmap, length, height).X * (force.x)
+        TerrainInteractionV = TerrainInteraction(bitmap, length, height);
+        cPosition = new Coordinate(cPosition.x + TerrainInteractionV.X * (force.x)
            , cPosition.y + TerrainInteraction(bitmap, length, height).Y * (grav + force.y));
         position = new Point((int)cPosition.x, (int)cPosition.y);
         return false;
