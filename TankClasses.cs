@@ -23,7 +23,6 @@ public class Rigidbody
 
     public bool colided;
 
-
     public Rigidbody()
     {
         gravityTimer = 0;
@@ -373,7 +372,16 @@ class BaseTank : Rigidbody
 	{  
         //MovementForce = new Point(MovementForce.X + newForce.X,
         //MovementForce.Y + newForce.Y);
-    }	
+    }
+    int hitboxsize = 50;
+    public bool CircleCollided(Coordinate input)
+    {
+        if (Math.Sqrt(Math.Pow(cPosition.x + 25 - input.x, 2) + Math.Pow(cPosition.y + 25 - input.y, 2)) < hitboxsize)
+        {
+            return true;
+        }
+        return false;
+    }
 }
 
 class SharpShooterTank : BaseTank
@@ -669,5 +677,3 @@ public class UpdateImage
     }
 
 }*/
-
-
