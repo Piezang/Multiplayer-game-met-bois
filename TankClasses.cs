@@ -244,8 +244,7 @@ class BaseTank : Rigidbody
     protected int TakeDamage(float damage, float health, float maxhp)
     {
         health -= damage;
-        MessageBox.Show((health / maxhp).ToString());
-        Graphics g = Graphics.FromImage(hpboxBitmap); //g.Clear(Color.Lime);
+        Graphics g = Graphics.FromImage(hpboxBitmap); 
         if (((health / maxhp) > 0.66) && ((health / maxhp) < 1.01)) g.Clear(Color.Lime);
         else if (((health / maxhp) > 0.33f) && ((health / maxhp) <= 0.66f)) g.Clear(Color.Yellow);
         else if ((health / maxhp) <= 0.33f) g.Clear(Color.Red);
