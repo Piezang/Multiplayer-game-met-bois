@@ -238,9 +238,9 @@ namespace Multiplayer_game_met_bois
                     if (tank.CircleCollided(p.cPosition) && !p.Destroyed) 
                     { tank.Damage(p.damage); p.Destroyed = true; }
                     if (p.cPosition.y > 1000) { projectileList.Remove(p); break; }
-                    if (p.TerrainInteractionV.X * p.force.x == 0)
+                    if (p.TerrainInteractionV.X * p.force.x == 0 || p.TerrainInteractionV.Y * p.force.y == 0)  
                     { projectileList.Remove(p);  
-                        Graphics.FromImage(t).FillEllipse(Brushes.Pink, p.position.X-20 , p.position.Y-20, 40, 40);
+                        Graphics.FromImage(t).FillEllipse(Brushes.Pink, p.position.X - 30 , p.position.Y - 30, 60, 60);
                         break;
                     }
                 }           

@@ -61,14 +61,29 @@ public class Rigidbody
         }
         return c;
     }
+
+    bool hitboundry;
     private Point TerrainInteraction(Bitmap bmp, int length, int height)
     {
+        hitboundry = false;
+
         Point CollisionAdjuster = new Point(1, 1);
         Point NW = new Point(position.X - 1, position.Y - 1);
         Point SW = new Point(position.X - 1, position.Y + height);
         Point NE = new Point(position.X + length, position.Y - 1);
         Point SE = new Point(position.X + length, position.Y + height);
 
+        switch (position.Y)
+        {
+            case <= 20: if (force.y + gravity.Y < 0) { { CollisionAdjuster = new Point(CollisionAdjuster.X, 0); hitboundry = true; } } break;
+            case >= 725: if (force.y + gravity.Y > 0) { { CollisionAdjuster = new Point(CollisionAdjuster.X, 0); } } break;
+        }
+        switch (position.X)
+        {
+            case <= 20: if (force.x < 0) { CollisionAdjuster = new Point(0, CollisionAdjuster.Y); } break;
+            case >= 3925 : if (force.x > 0) { CollisionAdjuster = new Point(0, CollisionAdjuster.Y); } break;
+        }
+        
         for (int i = SW.X; i <= SE.X; i++)
         {
             Color c = bmp.GetPixel(i, SW.Y);
@@ -76,7 +91,7 @@ public class Rigidbody
             {
                 case "Color [A=255, R=139, G=69, B=19]":
                 case "Color [A=255, R=0, G=100, B=0]":
-                    if (force.y + gravity.Y >= 0) { { CollisionAdjuster = new Point(1, 0); } } break;
+                    if (force.y + gravity.Y >= 0) { { CollisionAdjuster = new Point(CollisionAdjuster.X, 0); } } break;
             }
         }
 
@@ -87,7 +102,7 @@ public class Rigidbody
             {
                 case "Color [A=255, R=139, G=69, B=19]":
                 case "Color [A=255, R=0, G=100, B=0]":
-                    if (force.y + gravity.Y < 0) { { CollisionAdjuster = new Point(1, 0); } } break;
+                    if (force.y + gravity.Y < 0) { { CollisionAdjuster = new Point(CollisionAdjuster.X, 0); } } break;
             }
         }
 
@@ -106,7 +121,7 @@ public class Rigidbody
                 case "Color [A=255, R=0, G=100, B=0]":
                     if (force.x > 0)
                     {
-                        CollisionAdjuster = new Point(0, 1);
+                        CollisionAdjuster = new Point(0, CollisionAdjuster.Y);
                         if (force.y + gravity.Y == 0)
                         { CollisionAdjuster = new Point(0, 1); force = new Coordinate(force.x, force.y - 1); colided = true; }
                         if (force.y + gravity.Y > 0)
@@ -125,7 +140,7 @@ public class Rigidbody
                 case "Color [A=255, R=0, G=100, B=0]":
                     if (force.x < 0)
                     {
-                        CollisionAdjuster = new Point(0, 1);
+                        CollisionAdjuster = new Point(0, CollisionAdjuster.Y);
                         if (force.y + gravity.Y == 0)
                         { CollisionAdjuster = new Point(0, 1); force = new Coordinate(force.x, force.y- 1); colided = true; }
                         if (force.y + gravity.Y > 0)
@@ -160,7 +175,7 @@ public class Rigidbody
             gravity = new Point(0,
                 Convert.ToInt32(grav));
         }
-        if (TerrainInteraction(bitmap, length, height).Y == 0)  //|| TerrainInteraction(bitmap, 10, 10).X == 0
+        if (TerrainInteraction(bitmap, length, height).Y == 0 && hitboundry == false)  //|| TerrainInteraction(bitmap, 10, 10).X == 0
         {  
             gravity = new Point(0, 0); grav = 0;
             if (called)
@@ -537,7 +552,7 @@ public class UpdateImage
                 g.FillRectangle(Brushes.White, position.X, position.Y, length, height);
                 break;
             case Projectile p:
-                if (p.vall) { MessageBox.Show("Kaas"); return bitmap; }
+                if (p.vall) { return bitmap; } // wat op dees aarde doen jy hier Alex, hierdie kry dit reg om alles te breek en ek weet nie hoekom nie 
                 position = new Point((int)cPosition.x, (int)cPosition.y);
                 g.FillRectangle(Brushes.Pink, position.X, position.Y, length, height);
                 p.called = true;

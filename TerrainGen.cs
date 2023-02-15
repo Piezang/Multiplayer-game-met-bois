@@ -65,7 +65,7 @@ public class TerrainGen
             bitmap = CopyRegionIntoImage(terrain,srcRegion, ref bitmap,destRegion);
 			return bitmap; //new Terrain(bitmap)
 		}  //bitmap.GetPixel(400, 400).ToString() == "Color [A=0, R=0, G=0, B=0]" &&
-		MessageBox.Show("Null");
+		//FMessageBox.Show("Null");
         //Image basepng = Image.FromFile("base.png");
         Point p = new Point(20, 250);
 		//Bitmap bmp = new Bitmap(883, 497);
