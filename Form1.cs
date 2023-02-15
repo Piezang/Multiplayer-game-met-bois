@@ -22,6 +22,7 @@ namespace Multiplayer_game_met_bois
     {
         public static Form1 form1Instance;
         public PictureBox Pic;
+        public static PictureBox hpbox;
         bool DontUpdate = true;
         Stopwatch timer = new Stopwatch();
         static int elapsedTime = 0;
@@ -33,6 +34,7 @@ namespace Multiplayer_game_met_bois
             InitializeComponent();
             form1Instance = this;
             Pic = pictureBox1;
+            hpbox = HPbox;
             timer1.Enabled = true;
             //timer1.Enabled = false;
             KeyPreview = true;
@@ -40,6 +42,9 @@ namespace Multiplayer_game_met_bois
 
             bitmap = terrain.TerrainImage(bitmap);
             t = terrain.TerrainImage(bitmap);
+            //Graphics h = Graphics.FromImage(b);
+            //h.DrawRectangle(new Pen(Color.Black), 0, 0, 229, 58);
+            HPbox.Image = b;
         }  
 
         SharpShooterTank tank = new SharpShooterTank(new Point(200, 350), 1, new Coordinate(0,0), 180);
@@ -76,17 +81,12 @@ namespace Multiplayer_game_met_bois
         }
         int lengthMoved = 0;
         int actualMoved = 0;
+        Bitmap b = new Bitmap(230, 59);
+
         private void MoveCameraView(Point pos, Graphics g)
         {
-            g.DrawRectangle(new Pen(Color.Pink), lengthMoved - 250, 20, 180, 20);
-            //4000                                                  //4000
-            //g.DrawImage(bitmap, new Rectangle(0, 0, 4000, 497), new Rectangle(pos.X + lengthMoved, 0, 4000, 497), GraphicsUnit.Pixel);
-            pictureBox1.Location = new Point(-lengthMoved+650, pictureBox1.Location.Y); 
-            //actualMoved += pos.X / 6;
-            //lengthMoved+= pos.X;  //onseker oor die * 4 ding moet eintlik iets anders wees
-
-            lengthMoved = pos.X;         
-            g.DrawRectangle(new Pen(Color.Black), lengthMoved - 250, 20, 180, 20);
+            lengthMoved = pos.X;
+            pictureBox1.Location = new Point(-lengthMoved+650, pictureBox1.Location.Y);                
         }
         //private void pictureBox1_Paint(object sender, PaintEventArgs e)
         //{
@@ -234,9 +234,9 @@ namespace Multiplayer_game_met_bois
             {
                 foreach (Projectile p in projectileList)
                 { 
-                    bitmap = p.ImageChange(bitmap, 1, 1);
-                    if (tank.CircleCollided(p.cPosition)) 
-                    { MessageBox.Show("Collided"); tank.Damage(10); }
+                    if(!p.Destroyed) bitmap = p.ImageChange(bitmap, 1, 1);
+                    if (tank.CircleCollided(p.cPosition) && !p.Destroyed) 
+                    { tank.Damage(p.damage); p.Destroyed = true; }
                     if (p.cPosition.y > 1000) { projectileList.Remove(p); break; }
                     if (p.TerrainInteractionV.X * p.force.x == 0)
                     { projectileList.Remove(p);  
@@ -248,7 +248,7 @@ namespace Multiplayer_game_met_bois
             }
          
             //int PanForce = (int)(tank.force.x * 3.5);
-            int PanForce = tank.position.X;
+            int PanForce = Convert.ToInt32(tank.cPosition.x);
             //MessageBox.Show("Running");
             tank.position = new Point((int)tank.cPosition.x, (int)tank.cPosition.y);  //nuut
             Server.ServerTankCords = tank.position;  //Message na die client   
@@ -344,7 +344,7 @@ namespace Multiplayer_game_met_bois
             //player.Play();  //"C:\Users\Alexander\Desktop\Programming\2022\Desember\Multiplayer game met bois\assets\klanke\woosh.mp3"
             Projectile p = new Projectile(tank.MousePoint.X, tank.MousePoint.Y,
             3.5, new Coordinate((tank.MousePoint.X - tank.position.X-25) / 6,
-            (tank.MousePoint.Y - tank.position.Y-25) / 6));
+            (tank.MousePoint.Y - tank.position.Y-25) / 6), 10);
             projectileList.Add(p);
             await Task.Delay(200);
         }     

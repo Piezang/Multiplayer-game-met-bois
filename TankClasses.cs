@@ -240,14 +240,25 @@ class BaseTank : Rigidbody
         g.DrawLine(new Pen(Brushes.Gold),CanonCentreX,CanonCentreY, (CanonCentreX + (float)x), (CanonCentreY + (float)y));
     }
 
-    protected int TakeDamage(int damage, int health)
+    Bitmap hpboxBitmap = new Bitmap(230, 59);
+    protected int TakeDamage(float damage, float health, float maxhp)
     {
         health -= damage;
+        MessageBox.Show((health / maxhp).ToString());
+        Graphics g = Graphics.FromImage(hpboxBitmap); //g.Clear(Color.Lime);
+        if (((health / maxhp) > 0.66) && ((health / maxhp) < 1.01)) g.Clear(Color.Lime);
+        else if (((health / maxhp) > 0.33f) && ((health / maxhp) <= 0.66f)) g.Clear(Color.Yellow);
+        else if ((health / maxhp) <= 0.33f) g.Clear(Color.Red);
+
+        g.FillRectangle(Brushes.Gray,
+            229 - (int)((maxhp-health)*2.3), 0, 231, 59);
+        
+        Form1.hpbox.Image = hpboxBitmap;
         if (health <= 0)
         {
             return 0; //was -100
         }
-        return health;
+        return (int)health;
     }
     
     public void Move(char c)
@@ -436,7 +447,7 @@ class SharpShooterTank : BaseTank
     }
     public void Damage(int damage)
     {
-        health = TakeDamage(damage, health);
+        health = TakeDamage(damage, health, 100);
         if (health <= 0) Destroy(); //was -100      
     }
    
@@ -444,7 +455,7 @@ class SharpShooterTank : BaseTank
 
 	private void Destroy()
 	{
-        MessageBox.Show("Destroyed");
+        MessageBox.Show("Tank is Destroyed");
 		//SharpShooterTankimg.Dispose();   //Ek wil he dit moet clear
         //destroyed = true;
     }

@@ -50,12 +50,15 @@
             this.txtHostClient = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.HPbox = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.label3 = new System.Windows.Forms.Label();
             this.Tabs.SuspendLayout();
             this.ServerPage.SuspendLayout();
             this.ClientPage.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.HPbox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -260,6 +263,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.label3);
+            this.tabPage1.Controls.Add(this.HPbox);
             this.tabPage1.Controls.Add(this.pictureBox1);
             this.tabPage1.Location = new System.Drawing.Point(4, 24);
             this.tabPage1.Name = "tabPage1";
@@ -269,10 +274,19 @@
             this.tabPage1.Text = "tabPage1";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // HPbox
+            // 
+            this.HPbox.BackColor = System.Drawing.Color.Lime;
+            this.HPbox.Location = new System.Drawing.Point(18, 20);
+            this.HPbox.Name = "HPbox";
+            this.HPbox.Size = new System.Drawing.Size(230, 59);
+            this.HPbox.TabIndex = 0;
+            this.HPbox.TabStop = false;
+            // 
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.Pink;
-            this.pictureBox1.Location = new System.Drawing.Point(3, 6);
+            this.pictureBox1.Location = new System.Drawing.Point(3, 0);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(4000, 800);
             this.pictureBox1.TabIndex = 0;
@@ -285,8 +299,20 @@
             // 
             // timer1
             // 
-            this.timer1.Interval = 10;
+            this.timer1.Interval = 15;
             this.timer1.Tick += new System.EventHandler(this.TimerUpdate);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.BackColor = System.Drawing.Color.Pink;
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label3.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label3.Location = new System.Drawing.Point(18, 82);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(142, 32);
+            this.label3.TabIndex = 1;
+            this.label3.Text = "AMMO: 100";
             // 
             // Form1
             // 
@@ -305,6 +331,8 @@
             this.ClientPage.ResumeLayout(false);
             this.ClientPage.PerformLayout();
             this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.HPbox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
@@ -335,5 +363,7 @@
         private System.Windows.Forms.Timer timer1;
         private TabPage tabPage1;
         private PictureBox pictureBox1;
+        private PictureBox HPbox;
+        private Label label3;
     }
 }
