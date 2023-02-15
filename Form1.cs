@@ -33,18 +33,6 @@ namespace Multiplayer_game_met_bois
             InitializeComponent();
             form1Instance = this;
             Pic = pictureBox1;
-            //tabPage = tabPage1;
-            //tabControl = Tabs;
-
-            //timer.Start();
-            //while (true)
-            //{
-            //count++;
-            //if (Convert.ToInt32(timer.ElapsedMilliseconds) > 100) break; 
-            //}
-            //FixedDeltaTime = 1/(count*1000/timer.ElapsedMilliseconds);
-            //timer.Stop();
-            //MessageBox.Show(FixedDeltaTime.ToString());
             timer1.Enabled = true;
             //timer1.Enabled = false;
             KeyPreview = true;
@@ -52,8 +40,6 @@ namespace Multiplayer_game_met_bois
 
             bitmap = terrain.TerrainImage(bitmap);
             t = terrain.TerrainImage(bitmap);
-            //bitmap = terrain.TerrainImage(bitmap);
-            //Terrain = terrain.ServerTerrain;
         }  
 
         SharpShooterTank tank = new SharpShooterTank(new Point(200, 350), 1, new Coordinate(0,0), 180);
@@ -91,11 +77,16 @@ namespace Multiplayer_game_met_bois
         int lengthMoved = 0;
         int actualMoved = 0;
         private void MoveCameraView(Point pos, Graphics g)
-        {                                           //4000                                                  //4000
+        {
+            g.DrawRectangle(new Pen(Color.Pink), lengthMoved - 250, 20, 180, 20);
+            //4000                                                  //4000
             //g.DrawImage(bitmap, new Rectangle(0, 0, 4000, 497), new Rectangle(pos.X + lengthMoved, 0, 4000, 497), GraphicsUnit.Pixel);
-            pictureBox1.Location = new Point(-lengthMoved, pictureBox1.Location.Y); 
-            actualMoved += pos.X / 6;
-            lengthMoved+= pos.X;  //onseker oor die * 4 ding moet eintlik iets anders wees
+            pictureBox1.Location = new Point(-lengthMoved+650, pictureBox1.Location.Y); 
+            //actualMoved += pos.X / 6;
+            //lengthMoved+= pos.X;  //onseker oor die * 4 ding moet eintlik iets anders wees
+
+            lengthMoved = pos.X;         
+            g.DrawRectangle(new Pen(Color.Black), lengthMoved - 250, 20, 180, 20);
         }
         //private void pictureBox1_Paint(object sender, PaintEventArgs e)
         //{
@@ -244,7 +235,8 @@ namespace Multiplayer_game_met_bois
                 foreach (Projectile p in projectileList)
                 { 
                     bitmap = p.ImageChange(bitmap, 1, 1);
-                    if (tank.CircleCollided(p.cPosition)) { MessageBox.Show("Collided"); break; }
+                    if (tank.CircleCollided(p.cPosition)) 
+                    { MessageBox.Show("Collided"); tank.Damage(10); }
                     if (p.cPosition.y > 1000) { projectileList.Remove(p); break; }
                     if (p.TerrainInteractionV.X * p.force.x == 0 || p.TerrainInteractionV.Y * p.force.y == 0)  
                     { projectileList.Remove(p);  
@@ -255,17 +247,18 @@ namespace Multiplayer_game_met_bois
                 //MessageBox.Show(k.force.ToString());
             }
          
-            int PanForce = (int)(tank.force.x * 3.5);
+            //int PanForce = (int)(tank.force.x * 3.5);
+            int PanForce = tank.position.X;
             //MessageBox.Show("Running");
             tank.position = new Point((int)tank.cPosition.x, (int)tank.cPosition.y);  //nuut
-            Server.ServerTankCords = tank.position;  //Message na die client
+            Server.ServerTankCords = tank.position;  //Message na die client   
 
             //bitmap = terrain.TerrainImage(bitmap);
             if (t != bitmap) bitmap = t;
-            if (((pictureBox1.Location.X < 0 && PanForce < 0)
-            || (PanForce > 0)) &&
-            ((pictureBox1.Location.X > -2200 && PanForce > 0)
-            || (PanForce < 0)))
+            if (((pictureBox1.Location.X < 0 && tank.force.x*3 < 0)
+            || (tank.force.x*3 > 0)) &&
+            ((pictureBox1.Location.X > -2570 && tank.force.x * 3 > 0)  //-2200
+            || (tank.force.x*3 < 0)))
             { MoveCameraView(new Point(PanForce, 0), g); }
             bitmap = tank.UpdateImage(bitmap, 50, 50);  //probeer om die ander een te gebruik
             pictureBox1.Image = bitmap;  //UpdateImage.updateImage(bitmap, tank, tank.cPosition); 
