@@ -76,12 +76,12 @@ public class Rigidbody
         switch (position.Y)
         {
             case <= 20: if (force.y + gravity.Y < 0) { { CollisionAdjuster = new Point(CollisionAdjuster.X, 0); hitboundry = true; } } break;
-            case >= 745: if (force.y + gravity.Y > 0) { { CollisionAdjuster = new Point(CollisionAdjuster.X, 0); } } break;
+            case >= 725: if (force.y + gravity.Y > 0) { { CollisionAdjuster = new Point(CollisionAdjuster.X, 0); } } break;
         }
         switch (position.X)
         {
             case <= 20: if (force.x < 0) { CollisionAdjuster = new Point(0, CollisionAdjuster.Y); } break;
-            case >= 3945 : if (force.x > 0) { CollisionAdjuster = new Point(0, CollisionAdjuster.Y); } break;
+            case >= 3925 : if (force.x > 0) { CollisionAdjuster = new Point(0, CollisionAdjuster.Y); } break;
         }
         
         for (int i = SW.X; i <= SE.X; i++)
