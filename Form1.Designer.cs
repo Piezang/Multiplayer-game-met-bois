@@ -50,10 +50,10 @@
             this.txtHostClient = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.lblAmmo = new System.Windows.Forms.Label();
             this.HPbox = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.label3 = new System.Windows.Forms.Label();
             this.Tabs.SuspendLayout();
             this.ServerPage.SuspendLayout();
             this.ClientPage.SuspendLayout();
@@ -263,7 +263,7 @@
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.label3);
+            this.tabPage1.Controls.Add(this.lblAmmo);
             this.tabPage1.Controls.Add(this.HPbox);
             this.tabPage1.Controls.Add(this.pictureBox1);
             this.tabPage1.Location = new System.Drawing.Point(4, 24);
@@ -273,6 +273,18 @@
             this.tabPage1.TabIndex = 2;
             this.tabPage1.Text = "tabPage1";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // lblAmmo
+            // 
+            this.lblAmmo.AutoSize = true;
+            this.lblAmmo.BackColor = System.Drawing.Color.Pink;
+            this.lblAmmo.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.lblAmmo.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.lblAmmo.Location = new System.Drawing.Point(18, 82);
+            this.lblAmmo.Name = "lblAmmo";
+            this.lblAmmo.Size = new System.Drawing.Size(142, 32);
+            this.lblAmmo.TabIndex = 1;
+            this.lblAmmo.Text = "AMMO: 100";
             // 
             // HPbox
             // 
@@ -301,18 +313,6 @@
             // 
             this.timer1.Interval = 15;
             this.timer1.Tick += new System.EventHandler(this.TimerUpdate);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.BackColor = System.Drawing.Color.Pink;
-            this.label3.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label3.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label3.Location = new System.Drawing.Point(18, 82);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(142, 32);
-            this.label3.TabIndex = 1;
-            this.label3.Text = "AMMO: 100";
             // 
             // Form1
             // 
@@ -364,6 +364,6 @@
         private TabPage tabPage1;
         private PictureBox pictureBox1;
         private PictureBox HPbox;
-        private Label label3;
+        private Label lblAmmo;
     }
 }

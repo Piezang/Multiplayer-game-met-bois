@@ -202,10 +202,10 @@ class BaseTank : Rigidbody
 	private Coordinate newForce;
 	public Coordinate MovementForce { get; set; }
     public Point MousePoint;
-	float AimAngle;
+	public double AimAngle;
     public int LocalCoordsX = 3;
     public int LocalCoordsY = 3;
-	protected float CanonAngle
+	protected double CanonAngle
 	{
 		get { return AimAngle; }
 		set 
@@ -237,6 +237,7 @@ class BaseTank : Rigidbody
         double Difference = ((CanonMouseDiffY))/((CanonMouseDiffX));
         //MessageBox.Show(Difference.ToString());
         double angle = Math.Atan(Difference); //- Math.PI/2; /// Math.PI * 180;
+        AimAngle = angle * val;
         //MessageBox.Show(angle.ToString());
         double x = canonLength * Math.Cos(angle) * val; 
         double y = canonLength * Math.Sin(angle) * val;
@@ -265,7 +266,7 @@ class BaseTank : Rigidbody
         else if ((health / maxhp) <= 0.33f) g.Clear(Color.Red);
 
         g.FillRectangle(Brushes.Gray,
-            229 - (int)((maxhp-health)*2.3), 0, 231, 59);
+            229 - (int)((maxhp-health)*2.3), 0, 300, 59);
         
         Form1.hpbox.Image = hpboxBitmap;
         if (health <= 0)
@@ -422,12 +423,13 @@ class BaseTank : Rigidbody
 
 class SharpShooterTank : BaseTank
 {
-    Image SharpShooterTankimg = Image.FromFile("image.png");
+    public Image SharpShooterTankimg = Image.FromFile("image.png");
     Bitmap SharpShooterTankbmp = new Bitmap(100,50);  //Image.FromFile("image.png");  
-    Bitmap bitmap = new Bitmap(4000, 800);
+    //Bitmap bitmap = new Bitmap(4000, 800);
     Graphics g;
     Graphics tank;
 
+    public static readonly int MaxAmmo = 100;
     private int health = 100;
     public bool destroyed = false;
     public Point[] PixelCoords = new Point[5000];
@@ -438,26 +440,6 @@ class SharpShooterTank : BaseTank
 		position = pos; gravity = new Point(0, _mass * 1);
 		force = frce;   mass = _mass;
 		CanonAngle = angl; cPosition = new Coordinate(position.X, position.Y);
-
-        //bitmap = new Bitmap(SharpShooterTankimg);
-        //int count = 0;
-        //for (int x = pos.X; x < pos.X + 100; x++)
-        //{
-        //    for (int y = pos.Y; y < pos.Y + 50; y++)
-        //    {
-        //        PixelCoords[count] = new Point(x, y);
-        //        PixelColor[count] = Color.Pink;  
-        //        count++;
-        //    }
-        // }
-
-        g = Graphics.FromImage(bitmap);
-
-        //tank = Graphics.FromImage(SharpShooterTankbmp);
-        //tank.DrawImage(SharpShooterTankimg, 0, 9);
-        //g.DrawRectangle(Pens.White, pos.X, pos.Y, 10, 10);
-        //g.FillRectangle(Brushes.White, pos.X, pos.Y, 100, 50);
-        g.DrawImage(SharpShooterTankimg, pos);   
     }
     public void Damage(int damage)
     {
@@ -482,7 +464,7 @@ class SharpShooterTank : BaseTank
             
             //position = new Point((int)cPosition.x, (int)cPosition.y);
             g = Graphics.FromImage(bitmap);
-            g.FillRectangle(Brushes.Pink, position.X, position.Y, length, height);
+            g.FillEllipse(Brushes.Pink, position.X-2, position.Y-2, length, height);  //FillRectangle
             //for (int l = 0; l < 5000; l++)
             //{
               //  bitmap.SetPixel(PixelCoords[l].X ,PixelCoords[l].Y, PixelColor[l]);
