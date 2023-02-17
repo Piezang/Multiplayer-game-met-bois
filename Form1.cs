@@ -86,7 +86,7 @@ namespace Multiplayer_game_met_bois
         private void MoveCameraView(Point pos, Graphics g)
         {
             lengthMoved = pos.X;
-            pictureBox1.Location = new Point(-lengthMoved+650, pictureBox1.Location.Y);                
+           // pictureBox1.Location = new Point(-lengthMoved+650, pictureBox1.Location.Y);                
         }
         //private void pictureBox1_Paint(object sender, PaintEventArgs e)
         //{
@@ -240,7 +240,7 @@ namespace Multiplayer_game_met_bois
                     if (p.cPosition.y > 1000) { projectileList.Remove(p); break; }
                     if (p.TerrainInteractionV.X * p.force.x == 0 || p.TerrainInteractionV.Y * p.force.y == 0)  
                     { projectileList.Remove(p);  
-                        Graphics.FromImage(t).FillEllipse(Brushes.Pink, p.position.X - 30 , p.position.Y - 30, 60, 60);
+                        Graphics.FromImage(t).FillEllipse(Brushes.Pink, p.position.X - 45 , p.position.Y - 45, 60, 60);
                         break;
                     }
                 }           

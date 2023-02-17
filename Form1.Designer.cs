@@ -50,10 +50,10 @@
             this.txtHostClient = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label3 = new System.Windows.Forms.Label();
             this.HPbox = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.label3 = new System.Windows.Forms.Label();
             this.Tabs.SuspendLayout();
             this.ServerPage.SuspendLayout();
             this.ClientPage.SuspendLayout();
@@ -274,6 +274,18 @@
             this.tabPage1.Text = "tabPage1";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.BackColor = System.Drawing.Color.Pink;
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label3.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label3.Location = new System.Drawing.Point(18, 82);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(142, 32);
+            this.label3.TabIndex = 1;
+            this.label3.Text = "AMMO: 100";
+            // 
             // HPbox
             // 
             this.HPbox.BackColor = System.Drawing.Color.Lime;
@@ -299,20 +311,8 @@
             // 
             // timer1
             // 
-            this.timer1.Interval = 15;
+            this.timer1.Interval = 5;
             this.timer1.Tick += new System.EventHandler(this.TimerUpdate);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.BackColor = System.Drawing.Color.Pink;
-            this.label3.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label3.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label3.Location = new System.Drawing.Point(18, 82);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(142, 32);
-            this.label3.TabIndex = 1;
-            this.label3.Text = "AMMO: 100";
             // 
             // Form1
             // 

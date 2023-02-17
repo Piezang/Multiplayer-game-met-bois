@@ -24,6 +24,7 @@ public class Rigidbody
     public bool colided;
 
     public Point TerrainInteractionV;
+    public int gravityAdjuster = 1;
 
     public Rigidbody()
     {
@@ -62,10 +63,13 @@ public class Rigidbody
         return c;
     }
 
-    bool hitboundry;
+    bool hitupperboundry;
+    bool hitupper;
+    int climbing = 0;
     private Point TerrainInteraction(Bitmap bmp, int length, int height)
     {
-        hitboundry = false;
+        hitupperboundry = false;
+        hitupper = false;
 
         Point CollisionAdjuster = new Point(1, 1);
         Point NW = new Point(position.X - 1, position.Y - 1);
@@ -75,7 +79,7 @@ public class Rigidbody
 
         switch (position.Y)
         {
-            case <= 20: if (force.y + gravity.Y < 0) { { CollisionAdjuster = new Point(CollisionAdjuster.X, 0); hitboundry = true; } } break;
+            case <= 20: if (force.y + gravity.Y < 0) { { CollisionAdjuster = new Point(CollisionAdjuster.X, 0); hitupperboundry = true; } } break;
             case >= 725: if (force.y + gravity.Y > 0) { { CollisionAdjuster = new Point(CollisionAdjuster.X, 0); } } break;
         }
         switch (position.X)
@@ -91,7 +95,7 @@ public class Rigidbody
             {
                 case "Color [A=255, R=139, G=69, B=19]":
                 case "Color [A=255, R=0, G=100, B=0]":
-                    if (force.y + gravity.Y >= 0) { { CollisionAdjuster = new Point(CollisionAdjuster.X, 0); } } break;
+                    if (force.y + gravity.Y >= 0)  { CollisionAdjuster = new Point(CollisionAdjuster.X, 0); }  break;
             }
         }
 
@@ -102,7 +106,7 @@ public class Rigidbody
             {
                 case "Color [A=255, R=139, G=69, B=19]":
                 case "Color [A=255, R=0, G=100, B=0]":
-                    if (force.y + gravity.Y < 0) { { CollisionAdjuster = new Point(CollisionAdjuster.X, 0); } } break;
+                    if (force.y + gravity.Y < 0)  { CollisionAdjuster = new Point(CollisionAdjuster.X, 0); hitupper = true;  }  break;
             }
         }
 
@@ -124,8 +128,6 @@ public class Rigidbody
                         CollisionAdjuster = new Point(0, CollisionAdjuster.Y);
                         if (force.y + gravity.Y == 0)
                         { CollisionAdjuster = new Point(0, 1); force = new Coordinate(force.x, force.y - 1); colided = true; }
-                        if (force.y + gravity.Y > 0)
-                        { CollisionAdjuster = new Point(0, 0); }
                     }
                     break;
             }
@@ -143,8 +145,6 @@ public class Rigidbody
                         CollisionAdjuster = new Point(0, CollisionAdjuster.Y);
                         if (force.y + gravity.Y == 0)
                         { CollisionAdjuster = new Point(0, 1); force = new Coordinate(force.x, force.y- 1); colided = true; }
-                        if (force.y + gravity.Y > 0)
-                        { CollisionAdjuster = new Point(0, 0); }
                     }
                     break;
             }
@@ -175,7 +175,7 @@ public class Rigidbody
             gravity = new Point(0,
                 Convert.ToInt32(grav));
         }
-        if (TerrainInteraction(bitmap, length, height).Y == 0 && hitboundry == false)  //|| TerrainInteraction(bitmap, 10, 10).X == 0
+        if (TerrainInteraction(bitmap, length, height).Y == 0 && hitupperboundry == false && hitupper == false)  //|| TerrainInteraction(bitmap, 10, 10).X == 0
         {  
             gravity = new Point(0, 0); grav = 0;
             if (called)
@@ -191,7 +191,7 @@ public class Rigidbody
         position = new Point((int)cPosition.x, (int)cPosition.y);*/
         TerrainInteractionV = TerrainInteraction(bitmap, length, height);
         cPosition = new Coordinate(cPosition.x + TerrainInteractionV.X * (force.x)
-           , cPosition.y + TerrainInteraction(bitmap, length, height).Y * (grav + force.y));
+           , cPosition.y + TerrainInteraction(bitmap, length, height).Y * (force.y) + grav);
         position = new Point((int)cPosition.x, (int)cPosition.y);
         return false;
     }
