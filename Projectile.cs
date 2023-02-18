@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 
 public class Projectile: Rigidbody
 {
+    public Image image = null!;
     int x; int y; //int mass; //Point inititalForce;
     public bool Destroyed = false;
     public int damage { get; set; }

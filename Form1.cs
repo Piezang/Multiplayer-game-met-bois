@@ -269,7 +269,8 @@ namespace Multiplayer_game_met_bois
                 //MessageBox.Show("Kaas2");
                 tank.position = new Point((int)tank.cPosition.x, (int)tank.cPosition.y);  //nuut
                 //MessageBox.Show(tank.position.ToString() + ">" + tank.AimAngle.ToString());
-                Client.Message(tank.position.ToString() + ">" + tank.AimAngle.ToString());   //Message na die server
+                Client.Message(tank.position.ToString() + ">" + tank.AimPoint + shot);   //Message na die server
+                if (shot == "Y") shot = "N";
                 string t = Client.ServerCords.Trim();       //Server se response, sy tank se cords
                 int x = Convert.ToInt32(t.Substring(t.IndexOf('=')+1, t.IndexOf(',') - t.IndexOf('=')-1));
                 //MessageBox.Show(x);
@@ -290,18 +291,20 @@ namespace Multiplayer_game_met_bois
                 int x = Convert.ToInt32(t.Substring(t.IndexOf('=') + 1, t.IndexOf(',') - t.IndexOf('=') - 1));
                 //MessageBox.Show(x);
                 int y = Convert.ToInt32(t.Substring(t.IndexOf('Y') + 2, t.IndexOf('}') - t.IndexOf('Y') - 2));
-                int _val = 1;
-                if (Server.OtherTankAngle[0] == '-') _val = -1;
-                double Angle = Convert.ToDouble(Server.OtherTankAngle.Substring(0));
+                //int _val = 1;
+                //if (Server.OtherTankAngle[0] == '-') _val = -1;
+                Point othertankCanonPoint = Server.OtherTankCanonPoint;
+
                 g = Graphics.FromImage(bitmap);
-                
+                g.DrawLine(new Pen(Brushes.Black), new Point(x + 25, y + 25), othertankCanonPoint);
                 g.FillEllipse(Brushes.Pink, ServerTank.position.X-2, ServerTank.position.Y-2, 50, 50);
                 ServerTank.position = new Point(x, y);
                 ServerTank.cPosition = new Coordinate(x , y);  //nuut
                 g.DrawImage(ServerTank.SharpShooterTankimg, ServerTank.position.X, ServerTank.position.Y);
-                g.DrawLine(new Pen(Brushes.Yellow), new Point(x+25, y+25),
-                    new Point(((int)(Math.Cos(Angle) * 60 * 1)) + x+25,
-                    ((int)(Math.Sin(Angle) * 60 * 1)) + y+25));
+                g.DrawLine(new Pen(Brushes.Yellow), new Point(x+25, y+25), othertankCanonPoint
+                    //new Point(((int)(Math.Cos(Angle) * 60 * 1)) + x+25,
+                    //((int)(Math.Sin(Angle) * 60 * 1)) + y+25)
+                    );
                 pictureBox1.Image = bitmap;
             }
         }
@@ -344,9 +347,10 @@ namespace Multiplayer_game_met_bois
         }
 
         private int ammocount = SharpShooterTank.MaxAmmo;
+        private string shot = "N";
         private async Task SpawnProjectile()
         {
-            ammocount--;
+            ammocount--; shot = "Y";
             lblAmmo.Text = "AMMO: " + ammocount.ToString();
             player.Stop();
             player.SoundLocation = path + "woosh.wav";
@@ -439,7 +443,8 @@ namespace Multiplayer_game_met_bois
         }
         public static Point ServerTankCords; 
         public static string ClientTankCords = "";
-        public static string OtherTankAngle = "";
+        public static Point OtherTankCanonPoint;
+        public static bool ProjectileShot = false;
         public static int counter = 0;
         public static bool Active = false;
         public static void start(string ip, int port, Point cords)
@@ -479,10 +484,16 @@ namespace Multiplayer_game_met_bois
                 if (message[0] == 'm') //Cords message
                 {
                     message = message.Substring(1);
+                    ProjectileShot = false;
+                    if (message[message.Length-1] == 'Y') ProjectileShot = true;
+                    message = message.Remove(message.Length-1);
                     //MessageBox.Show(message);
                     //MessageBox.Show("Message from client: " + message);
                     ClientTankCords = message.Substring(1, message.IndexOf("}"));
-                    OtherTankAngle = message.Substring(message.IndexOf(">") + 1, message.Length-1- message.IndexOf(">"));
+                    string sPoint = message.Substring(message.IndexOf(">") + 1, message.Length - 1 - message.IndexOf(">"));
+                    OtherTankCanonPoint = new Point(Convert.ToInt32(sPoint.Substring(0, sPoint.IndexOf('|'))),
+                        Convert.ToInt32(sPoint.Substring(sPoint.IndexOf('|') + 1)));
+                       
                     msg = Encoding.Default.GetBytes(ServerTankCords.ToString());    //Stuur my eie cords vir client
                     client.Send(msg);
                 }

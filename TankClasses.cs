@@ -202,16 +202,17 @@ class BaseTank : Rigidbody
 	private Coordinate newForce;
 	public Coordinate MovementForce { get; set; }
     public Point MousePoint;
-	public double AimAngle;
+	public string AimPoint;
     public int LocalCoordsX = 3;
     public int LocalCoordsY = 3;
+    public double angle;
 	protected double CanonAngle
 	{
-		get { return AimAngle; }
+		get { return angle; }
 		set 
 		{
             if ((value >= 0) && (value < 360))
-            AimAngle = value; 
+            angle = value; 
 		}
 	}
 
@@ -237,11 +238,11 @@ class BaseTank : Rigidbody
         double Difference = ((CanonMouseDiffY))/((CanonMouseDiffX));
         //MessageBox.Show(Difference.ToString());
         double angle = Math.Atan(Difference); //- Math.PI/2; /// Math.PI * 180;
-        AimAngle = angle * val;
         //MessageBox.Show(angle.ToString());
         double x = canonLength * Math.Cos(angle) * val; 
         double y = canonLength * Math.Sin(angle) * val;
         MousePoint = new Point((int)(x + CanonCentreX), (int)(y + CanonCentreY));
+        AimPoint = ((int)(x + CanonCentreX)).ToString() + "|" + ((int)(y + CanonCentreY)).ToString();
 
         Graphics g = Graphics.FromImage(bitmap);
         
@@ -296,24 +297,6 @@ class BaseTank : Rigidbody
                 //break;
             //MovementForce = newForce;                
         }
-
-        /* while (Direction == "W")
-         {
-            newForce = new Point(0, -1); //MessageBox.Show(c.ToString());            
-         }
-         while (Direction == "A")
-         {
-             newForce = new Point(-1, 0); //MessageBox.Show(c.ToString());            
-         }
-         while (Direction == "S")
-         {
-             newForce = new Point(0, 1); //MessageBox.Show(c.ToString());            
-         }
-         while (Direction == "D")
-         {
-             newForce = new Point(1, 0); //MessageBox.Show(c.ToString());           
-         }
-        */
 
         if (MovementForce.x > 2.5)
         {
