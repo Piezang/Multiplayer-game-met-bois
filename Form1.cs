@@ -45,6 +45,8 @@ namespace Multiplayer_game_met_bois
             //Graphics h = Graphics.FromImage(b);
             //h.DrawRectangle(new Pen(Color.Black), 0, 0, 229, 58);
             HPbox.Image = b;
+           // pictureBox2.Parent = pictureBox1;
+            //pictureBox2.BackColor = Color.FromArgb(0, 0, 0, 0);
         }  
 
         SharpShooterTank tank = new SharpShooterTank(new Point(200, 350), 1, new Coordinate(0,0), 180);
