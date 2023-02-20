@@ -56,9 +56,9 @@ namespace Multiplayer_game_met_bois
             DontUpdate = false;
             if (e.KeyChar == 'z')
             {
-                player.SoundLocation = path + "boom.wav";
+                //player.SoundLocation = path + "boom.wav";
                 //@"c:\mywavfile.wav"
-                //player.Play();  //"C:\Users\Alexander\Desk
+                player.Play();  //"C:\Users\Alexander\Desk
                 bitmap = tank.ShootUlt(bitmap); pictureBox1.Image = bitmap;
                 return;
             }
@@ -195,10 +195,10 @@ namespace Multiplayer_game_met_bois
             Graphics g = Graphics.FromImage(bitmap);
             Pen pen = new Pen(Brushes.SaddleBrown);
             Pen pen2 = new Pen(Brushes.DarkGreen);
-            g.Clear(Color.Black);
+            g.Clear(Color.Pink);
             for (int i = 0; i < newTerrainFromServer.Length; i++)
             {
-                Point pt1 = new Point(i, 497);
+                Point pt1 = new Point(i, 800);  //497
                 Point pt2 = new Point(i, newTerrainFromServer[i]-10 + 10);
                 Point pt3 = new Point(i, newTerrainFromServer[i] + 10);
                 g.DrawLine(pen, pt1, pt2);
@@ -256,11 +256,8 @@ namespace Multiplayer_game_met_bois
             Server.ServerMousePoint = tank.MousePoint;
 
             //bitmap = terrain.TerrainImage(bitmap);
-            if (t != bitmap) bitmap = t;
-            if (((pictureBox1.Location.X < 0 && tank.force.x*3 < 0)
-            || (tank.force.x*3 > 0)) &&
-            ((pictureBox1.Location.X > -2570 && tank.force.x * 3 > 0)  //-2200
-            || (tank.force.x*3 < 0)))
+            //if (t != bitmap) bitmap = t;
+            if ((tank.position.X > 650) && (tank.position.X < 3233)) 
             { MoveCameraView(new Point(PanForce, 0), g); }
             bitmap = tank.UpdateImage(bitmap, 51, 51);  //probeer om die ander een te gebruik
             pictureBox1.Image = bitmap;  //UpdateImage.updateImage(bitmap, tank, tank.cPosition); 
@@ -280,7 +277,7 @@ namespace Multiplayer_game_met_bois
                 //MessageBox.Show(y);
                 
                 g = Graphics.FromImage(bitmap);
-                g.DrawLine(new Pen(Brushes.Black), new Point(x + 25, y + 25), othertankCanonPoint);
+                g.DrawLine(new Pen(Brushes.Pink), new Point(x + 25, y + 25), othertankCanonPoint);
                 g.FillEllipse(Brushes.Pink, ServerTank.position.X, ServerTank.position.Y, 50, 50);
                 othertankCanonPoint = Client.ServerMousePoint;
                 
@@ -302,7 +299,7 @@ namespace Multiplayer_game_met_bois
                 int y = Convert.ToInt32(t.Substring(t.IndexOf('Y') + 2, t.IndexOf('}') - t.IndexOf('Y') - 2));
                 
                 g = Graphics.FromImage(bitmap);
-                g.DrawLine(new Pen(Brushes.Black), new Point(x + 25, y + 25), othertankCanonPoint);
+                g.DrawLine(new Pen(Brushes.Pink), new Point(x + 25, y + 25), othertankCanonPoint);
                 g.FillEllipse(Brushes.Pink, ServerTank.position.X-2, ServerTank.position.Y-2, 50, 50);
                 othertankCanonPoint = Server.OtherTankCanonPoint;
                 
@@ -342,7 +339,7 @@ namespace Multiplayer_game_met_bois
             //Thread t = new Thread(()=> MouseDownn(sender, e));
             //t.Start();   
             if (e.Button != MouseButtons.Left || stop || ammocount < 1) return;
-            while (e.Button == MouseButtons.Left || ammocount < 1)
+            while (e.Button == MouseButtons.Left && ammocount > 0)
             {
                 await SpawnProjectile(tank.MousePoint, tank.position);   
                 if (stop || e.Clicks > 1)
@@ -359,17 +356,19 @@ namespace Multiplayer_game_met_bois
         private async Task SpawnProjectile(Point mouse, Point pos)
         {
             //MessageBox.Show(Client.ServerMousePoint.ToString());
-            ammocount--; shot = "Y";
+            ammocount--; shot = "Y"; Server.ServerProjectileShot = "Y";
             lblAmmo.Text = "AMMO: " + ammocount.ToString();
             player.Stop();
             player.SoundLocation = path + "woosh.wav";
             //@"c:\mywavfile.wav"
             //player.Play();  //"C:\Users\Alexander\Desktop\Programming\2022\Desember\Multiplayer game met bois\assets\klanke\woosh.mp3"
+            float value = mouse.X - pos.X - 25;
+            if (Math.Abs(value) <= 0.5) { value = 0.5f; }
             Projectile p = new Projectile(mouse.X, mouse.Y,
-            3.5, new Coordinate((mouse.X - pos.X-25) / 6,
+            3.5, new Coordinate((value) / 6,
             (mouse.Y - pos.Y-25) / 6), 10);
             projectileList.Add(p);
-            await Task.Delay(300);
+            await Task.Delay(100);
         }     
     }
 
@@ -495,6 +494,7 @@ namespace Multiplayer_game_met_bois
                     msg = Encoding.Default.GetBytes(ServerTankCords.ToString() + //Stuur my eie cords vir client
                         ServerMousePoint.ToString() + ServerProjectileShot);    //Stuur CanonAngle en stuff
                     client.Send(msg);
+                    ServerProjectileShot = "N";
                 }
                 if (message == "Ready")  //TErrain message
                 {
@@ -508,7 +508,7 @@ namespace Multiplayer_game_met_bois
     {
         public static string ServerCords = "";
         public static Point ServerMousePoint;
-        public static bool ServerProjectileShot = false;
+        public static bool ServerProjectileShot;
         public static bool connected = false;
         private static Socket ClientSocket = new Socket(AddressFamily
                 .InterNetwork, SocketType.Stream, ProtocolType.Tcp);
