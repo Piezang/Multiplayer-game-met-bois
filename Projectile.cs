@@ -12,7 +12,7 @@ public class Projectile: Rigidbody
         x = _x;
         y = _y;
         cPosition = new Coordinate(x, y);
-        position= new Point(x,y); mass= _mass;
+        position = new Point(x,y); mass= _mass;
         gravity = new Point(0,Convert.ToInt32(_mass));
         force = _inititalForce; damage= _damage;
 	}

@@ -56,9 +56,9 @@ namespace Multiplayer_game_met_bois
             DontUpdate = false;
             if (e.KeyChar == 'z')
             {
-                //player.SoundLocation = path + "boom.wav";
+                player.SoundLocation = path + "boom.wav";
                 //@"c:\mywavfile.wav"
-                player.Play();  //"C:\Users\Alexander\Desk
+                //player.Play();  //"C:\Users\Alexander\Desk
                 bitmap = tank.ShootUlt(bitmap); pictureBox1.Image = bitmap;
                 return;
             }
@@ -279,8 +279,7 @@ namespace Multiplayer_game_met_bois
                 g = Graphics.FromImage(bitmap);
                 g.DrawLine(new Pen(Brushes.Pink), new Point(x + 25, y + 25), othertankCanonPoint);
                 g.FillEllipse(Brushes.Pink, ServerTank.position.X, ServerTank.position.Y, 50, 50);
-                othertankCanonPoint = Client.ServerMousePoint;
-                
+                othertankCanonPoint = Client.ServerMousePoint; 
 
                 ServerTank.position = new Point(x, y);   
                 ServerTank.cPosition = new Coordinate(x, y);
@@ -293,6 +292,7 @@ namespace Multiplayer_game_met_bois
             othertankCanonPoint = Server.OtherTankCanonPoint;
             if (Server.ClientTankCords!= "") //As hy die server is gebeur die
             {
+                //if (Server.ServerProjectileShot == "Y") MessageBox.Show("Projectile shot is true");
                 string t = Server.ClientTankCords.Trim();       //Client se response, sy tank se cords
                 int x = Convert.ToInt32(t.Substring(t.IndexOf('=') + 1, t.IndexOf(',') - t.IndexOf('=') - 1));
                 //MessageBox.Show(x);
@@ -436,7 +436,7 @@ namespace Multiplayer_game_met_bois
             ServerBitmap = TerrainGen.ServerTerrain;    
         }
         public static Point ServerTankCords;
-        public static string ServerProjectileShot = "N";
+        public static string ServerProjectileShot;
         public static Point ServerMousePoint;
 
         public static string ClientTankCords = "";
@@ -474,12 +474,13 @@ namespace Multiplayer_game_met_bois
         {
             while (true)
             {
-                byte[] msg = new byte[2048*4];   //1024  //2048 2048 * 2 = 4kilo bytes WAS *7
+                byte[] msg = new byte[2048*2];   //1024  //2048 2048 * 2 = 4kilo bytes WAS *7
                 int size = client.Receive(msg);
                 string message = System.Text.Encoding.ASCII.GetString(msg, 0, size);
                 //MessageBox.Show(message);
                 if (message[0] == 'm') //Cords message
                 {
+                    //if (Server.ServerProjectileShot == "Y") MessageBox.Show("Projectile shot is true");
                     message = message.Substring(1);
                     ProjectileShot = false;
                     if (message[message.Length-1] == 'Y') ProjectileShot = true;
@@ -493,6 +494,7 @@ namespace Multiplayer_game_met_bois
                        
                     msg = Encoding.Default.GetBytes(ServerTankCords.ToString() + //Stuur my eie cords vir client
                         ServerMousePoint.ToString() + ServerProjectileShot);    //Stuur CanonAngle en stuff
+                    //if (ServerProjectileShot == "Y") MessageBox.Show("Hy werk");
                     client.Send(msg);
                     ServerProjectileShot = "N";
                 }
@@ -543,14 +545,23 @@ namespace Multiplayer_game_met_bois
             //MessageBox.Show("Server responds: " +
             //System.Text.Encoding.ASCII.GetString(msgFromServer, 0, size));
             string msg = Encoding.Default.GetString(msgFromServer);
-            if (ServerCords == msg)
-            {
-                return;
-            }
-            ServerProjectileShot = false;
-            ServerCords = msg;   
-            ServerCords = msg.Substring(0, msg.IndexOf('}')+1);
+            //if (msg != null)
+            //{
+                //msg = msg;
+            //}
 
+            
+            ServerProjectileShot = false;
+            //MessageBox.Show(msg.Substring(msg.Length - 1));
+            if (msg[26] == 'Y') { /*MessageBox.Show("Client also sees it");*/ ServerProjectileShot = true; }
+
+            //if (ServerCords == msg.Substring(0, msg.IndexOf('}') + 1))
+            //{
+                //return;
+            //}
+            //Server.ServerProjectileShot = "N";
+            //ServerCords = msg;   
+            ServerCords = msg.Substring(0, msg.IndexOf('}')+1);
 
             string t = msg.Substring(msg.IndexOf('}') + 1).Trim();       //Server se response, sy tank se cords
             int x = Convert.ToInt32(t.Substring(t.IndexOf('=') + 1, t.IndexOf(',') - t.IndexOf('=') - 1));
@@ -558,7 +569,7 @@ namespace Multiplayer_game_met_bois
             int y = Convert.ToInt32(t.Substring(t.IndexOf('Y') + 2, t.IndexOf('}') - t.IndexOf('Y') - 2));
 
             ServerMousePoint = new Point(x,y);
-            if (msg[msg.Length-1] == 'Y') ServerProjectileShot = true;
+            
             //MessageBox.Show(ServerCords);
         }
         public static int[] Ready()
