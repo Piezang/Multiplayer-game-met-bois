@@ -6,20 +6,21 @@ public class Projectile: Rigidbody
     public Image image = null!;
     int x; int y; //int mass; //Point inititalForce;
     public bool Destroyed = false;
+    public bool NewP = true;
     public int damage { get; set; }
     public Projectile(int _x, int _y, double _mass, Coordinate _inititalForce, int _damage)
 	{
         x = _x;
         y = _y;
         cPosition = new Coordinate(x, y);
-        position= new Point(x,y); mass= _mass;
+        Position= new Point(x,y); mass= _mass;
         gravity = new Point(0,Convert.ToInt32(_mass));
         force = _inititalForce; damage= _damage;
 	}
     public Bitmap ImageChange(Bitmap bitmap, int length, int height)
     {
-        if (Destroyed) return null!;
-        bitmap = UpdateImage.updateImage(bitmap, this, cPosition, length, height);
+        if (Destroyed) return null!;                    
+        bitmap = UpdateImage.updateImage(bitmap, null!, new Size(0,0), this, cPosition, length, height); // ignoreer die size dis net om die plek te full, dis nie relavant vir projectiles nie, net by die tank.
         return bitmap;
     }
     ~Projectile()
