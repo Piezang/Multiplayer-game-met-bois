@@ -496,14 +496,8 @@ public class UpdateImage
         bool val = false;
         switch (caller)
         {
-           case SharpShooterTank tank:
-                /*position = new Point((int)cPosition.x, (int)cPosition.y);
-                g.DrawRectangle(Pens.Black, position.X, position.Y, length, height);
-                g.FillRectangle(Brushes.Black, position.X, position.Y, length, height);
-                tank.UpdatePos(bitmap, length, height);
-                g.DrawRectangle(Pens.White, position.X, position.Y, length, height);
-                g.FillRectangle(Brushes.White, position.X, position.Y, length, height);*/
-                
+           case SharpShooterTank tank:  // ek het hier probeer om die tank se update image te laat werk maar dit het nie so goed gegaan nie
+
                 g = Graphics.FromImage(Tankbmp);
 
                 tank.cPosition = cPosition;
