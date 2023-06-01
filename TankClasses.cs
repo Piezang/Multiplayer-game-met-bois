@@ -511,7 +511,7 @@ public class UpdateImage
                 break;
 
             case Projectile p:
-                if (p.vall) { return bitmap; } // wat op dees aarde doen jy hier Alex, hierdie kry dit reg om alles te breek en ek weet nie hoekom nie 
+               // if (p.vall) { return bitmap; } // wat op dees aarde doen jy hier Alex, hierdie kry dit reg om alles te breek en ek weet nie hoekom nie 
                 p.cPosition = cPosition;
                 oldPos = new Point((int)p.cPosition.x, (int)p.cPosition.y);
                 g.FillRectangle(Brushes.Pink, oldPos.X, oldPos.Y, length, height);

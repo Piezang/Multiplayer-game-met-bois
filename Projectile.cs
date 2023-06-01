@@ -7,6 +7,8 @@ public class Projectile: Rigidbody
     int x; int y; //int mass; //Point inititalForce;
     public bool Destroyed = false;
     public bool NewP = true;
+    public int plength;
+    public int pheight;
     public int damage { get; set; }
     public Projectile(int _x, int _y, double _mass, Coordinate _inititalForce, int _damage)
 	{
@@ -21,6 +23,8 @@ public class Projectile: Rigidbody
     {
         if (Destroyed) return null!;                    
         bitmap = UpdateImage.updateImage(bitmap, null!, new Size(0,0), this, cPosition, length, height); // ignoreer die size dis net om die plek te full, dis nie relavant vir projectiles nie, net by die tank.
+        plength = length;
+        pheight = height;
         return bitmap;
     }
     ~Projectile()
