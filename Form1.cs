@@ -103,11 +103,8 @@ namespace Multiplayer_game_met_bois
         private void MoveCameraView(Point pos, Graphics g)
         {
             lengthMoved = pos.X;
-            //pictureBox1.Location = new Point(-lengthMoved + 650, pictureBox1.Location.Y);
-           // pictureBox1.Width = pictureBox1.Width + lengthMoved;
-            //pictureBox1.Region = new Region(new Rectangle(new Point(lengthMoved - 700, 0), new Size(1500, 800)));
-            //pictureBox1.Region.
-            
+            pictureBox1.Location = new Point(-lengthMoved + 650, pictureBox1.Location.Y);
+          
         }
 
         private void btnStart_Click(object sender, EventArgs e)
