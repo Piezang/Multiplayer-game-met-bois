@@ -470,7 +470,7 @@ namespace Multiplayer_game_met_bois
             }
         }
        
-        public void User(Socket client)
+        public async void User(Socket client)
         {
             while (true)
             {
@@ -483,7 +483,11 @@ namespace Multiplayer_game_met_bois
                     //if (Server.ServerProjectileShot == "Y") MessageBox.Show("Projectile shot is true");
                     message = message.Substring(1);
                     ProjectileShot = false;
-                    if (message[message.Length-1] == 'Y') ProjectileShot = true;
+                    if (message[message.Length - 1] == 'Y')
+                    {
+                        //await Task.Delay(100); 
+                        ProjectileShot = true;
+                    }
                     message = message.Remove(message.Length-1);
                     //MessageBox.Show(message);
                     //MessageBox.Show("Message from client: " + message);
@@ -497,11 +501,13 @@ namespace Multiplayer_game_met_bois
                     //if (ServerProjectileShot == "Y") MessageBox.Show("Hy werk");
                     client.Send(msg);
                     ServerProjectileShot = "N";
+                    //if (ProjectileShot) { await Task.Delay(100); }
                 }
                 if (message == "Ready")  //TErrain message
                 {
                     client.Send(IntArrToByte(ServerBitmap));
                 }
+                
             }
         }
     }
