@@ -244,38 +244,32 @@ namespace Multiplayer_game_met_bois
                         break;
                     }
                 }           
-                //MessageBox.Show(k.force.ToString());
             }
 
             Graphics g;
             g = Graphics.FromImage(bitmap);
-
-            //int PanForce = (int)(tank.force.x * 3.5);
-            //MessageBox.Show("Running");
-            tank.Position = new Point((int)tank.cPosition.x, (int)tank.cPosition.y);  //nuut
-            int PanForce = tank.Position.X;
+            
             Server.ServerTankCords = tank.Position;  //Message na die client   
             Server.ServerMousePoint = tank.MousePoint;
 
-            //bitmap = terrain.TerrainImage(bitmap);
-            //if (t != bitmap) bitmap = t;
             
-            for (int i = 0; i < 4; i++)
+            int PanForce = tank.Position.X;
+            if ((tank.Position.X > 650) && (tank.Position.X < 3233))
+            { MoveCameraView(new Point(PanForce, 0), g); }
+              
+            TankBitMap = tank.UpdateImage(bitmap, TankBitMap, TankBitMap.Size, 50, 50);
+                
+            TankBitMap.MakeTransparent(Color.Pink);
+
+            TankPictureBox.Image = TankBitMap;
+
+            TankPictureBox.Location = tank.updateTankPicPos(TankBitMap.Size);
+
+            if (TerrainEdited == true)
             {
-                if ((tank.Position.X > 650) && (tank.Position.X < 3233))
-                { MoveCameraView(new Point(PanForce, 0), g); }
-                TankBitMap = tank.UpdateImage(bitmap, TankBitMap, TankBitMap.Size, 50, 50);
-                //TankBitMap = UpdateImage.updateImage(bitmap, TankBitMap, TankBitMap.Size, tank, tank.cPosition, 50, 50); so hierdie wil nie werk nie
-                TankBitMap.MakeTransparent(Color.Pink);
-                TankPictureBox.Image = TankBitMap;
-                
-                TankPictureBox.Location = new Point(TankPicPos.X, TankPicPos.Y);
-                
-                if (TerrainEdited == true)
-                {
-                    pictureBox1.Image = bitmap;  //UpdateImage.updateImage(bitmap, tank, tank.cPosition); 
-                }
+                pictureBox1.Image = bitmap;  //UpdateImage.updateImage(bitmap, tank, tank.cPosition); 
             }
+            
             if (Client.connected)   //As hy die client is gebeur die
             {
                 //MessageBox.Show("Kaas2");
