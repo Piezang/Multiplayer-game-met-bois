@@ -5,6 +5,7 @@ using System.DirectoryServices.ActiveDirectory;
 using System.Drawing;
 using System.Drawing.Text;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 public class Rigidbody
@@ -13,6 +14,7 @@ public class Rigidbody
     protected Point gravity { get; set; }
     public Coordinate force { get; set; }
     public Coordinate cPosition { get; set; }
+    public Coordinate MovementForce { get; set; }
     protected double mass;
 
     public Bitmap bmp;
@@ -95,7 +97,19 @@ public class Rigidbody
             {
                 case "Color [A=255, R=139, G=69, B=19]":
                 case "Color [A=255, R=0, G=100, B=0]":
-                    if (force.y + gravity.Y >= 0)  { CollisionAdjuster = new Point(CollisionAdjuster.X, 0); }  break;
+                    if (force.y + gravity.Y >= 0)                           
+                    { 
+                        CollisionAdjuster = new Point(CollisionAdjuster.X, 0);
+                        //wrywing
+                        //force = new Coordinate((Math.Abs(force.x) - 0.1) * (force.x/Math.Abs(force.x)), force.y);
+                    }
+                    if (Math.Abs(MovementForce.x) >= 0.5 ) //As hy op die grond is is vernsnelling baie moeilik
+                    {
+                        MovementForce = new Coordinate((Math.Abs(MovementForce.x) - 0.002) * (MovementForce.x / Math.Abs(MovementForce.x)), MovementForce.y);
+                        force = MovementForce;
+                    }
+                    ////MovementForce = MovementForce + (new Coordinate(2 - Math.Abs(MovementForce.x), 0) * (MovementForce.x / Math.Abs(MovementForce.x)));
+                    break;
             }
         }
 
@@ -128,6 +142,12 @@ public class Rigidbody
                         CollisionAdjuster = new Point(0, CollisionAdjuster.Y);
                         if (force.y + gravity.Y == 0)
                         { CollisionAdjuster = new Point(0, 1); force = new Coordinate(force.x, force.y - 1); colided = true; }
+                       // MovementForce = new Coordinate((Math.Abs(MovementForce.x) - 0.1) * (MovementForce.x / Math.Abs(MovementForce.x)), MovementForce.y);
+                    }
+                    if (Math.Abs(MovementForce.x) >= 0.5) //As hy op die grond is is vernsnelling baie moeilik
+                    {
+                        MovementForce = new Coordinate((Math.Abs(MovementForce.x) - 0.002) * (MovementForce.x / Math.Abs(MovementForce.x)), MovementForce.y);
+                        force = MovementForce;
                     }
                     break;
             }
@@ -145,6 +165,12 @@ public class Rigidbody
                         CollisionAdjuster = new Point(0, CollisionAdjuster.Y);
                         if (force.y + gravity.Y == 0)
                         { CollisionAdjuster = new Point(0, 1); force = new Coordinate(force.x, force.y- 1); colided = true; }
+                        //MovementForce = new Coordinate((Math.Abs(MovementForce.x) - 0.1) * (MovementForce.x / Math.Abs(MovementForce.x)), MovementForce.y);
+                    }
+                    if (Math.Abs(MovementForce.x) >= 0.5) //As hy op die grond is is vernsnelling baie moeilik
+                    {
+                        MovementForce = new Coordinate((Math.Abs(MovementForce.x) - 0.002) * (MovementForce.x / Math.Abs(MovementForce.x)), MovementForce.y);
+                        force = MovementForce;
                     }
                     break;
             }
@@ -162,7 +188,7 @@ public class Rigidbody
     }
 
     double grav;
-    int impactForce = 0;
+    //int impactForce = 0;
     public bool called = false;
     public bool vall = false;
 
@@ -197,11 +223,11 @@ public class Rigidbody
     }
 }
 
-class BaseTank : Rigidbody
+public abstract class BaseTank : Rigidbody
 {   
 	private Coordinate newForce;
-	public Coordinate MovementForce { get; set; }
     public Point MousePoint;
+    public Point CanonPoint;
 	public string AimPoint;
     public int LocalCoordsX = 3;
     public int LocalCoordsY = 3;
@@ -247,6 +273,7 @@ class BaseTank : Rigidbody
         double y = canonLength * Math.Sin(angle) * val;
         MousePoint = new Point((int)(x + CanonCentreX), (int)(y + CanonCentreY));
         AimPoint = ((int)(x + CanonCentreX)).ToString() + "|" + ((int)(y + CanonCentreY)).ToString();
+        CanonPoint = new Point((int)(TankCenter.X + x), (int)(TankCenter.Y + y));
 
         Graphics g = Graphics.FromImage(Tankbmp);
 
@@ -286,7 +313,6 @@ class BaseTank : Rigidbody
     public void Move(char c)
     {
         Direction = c.ToString().ToUpper();
-        
         switch (Direction)
         {
             case "W": newForce = new Coordinate(0, -0.8); //MessageBox.Show(c.ToString());
@@ -298,10 +324,7 @@ class BaseTank : Rigidbody
             case "A": newForce = new Coordinate(-0.3, 0); //MessageBox.Show(c.ToString());
                 break;
             case "D": newForce = new Coordinate(0.3, 0); //MessageBox.Show(c.ToString());
-                break;
-            //default : newForce = new Coordinate(0,0);
-                //break;
-            //MovementForce = newForce;                
+                break;               
         }
 
         if (MovementForce.x > 2.5)
@@ -321,9 +344,7 @@ class BaseTank : Rigidbody
             MovementForce = new Coordinate(MovementForce.x, -2);
         }
 
-        MovementForce = new Coordinate(newForce.x + MovementForce.x ,
-            newForce.y + MovementForce.y);
-
+        MovementForce = MovementForce + newForce;
         force = new Coordinate(MovementForce.x, MovementForce.y);
         //UpdatePos();
     }
@@ -394,10 +415,11 @@ class BaseTank : Rigidbody
         //UpdatePos();
     }
 
-    public BaseTank() 
-	{  
-        //MovementForce = new Point(MovementForce.X + newForce.X,
-        //MovementForce.Y + newForce.Y);
+    public BaseTank() //Point pos, int _mass, Coordinate frce
+    {
+        //Position = pos; gravity = new Point(0, _mass * 1);
+        //force = frce; mass = _mass;
+        //cPosition = new Coordinate(Position.X, Position.Y);
     }
     int hitboxsize = 25;
     public bool CircleCollided(Coordinate input)
@@ -424,19 +446,17 @@ class SharpShooterTank : BaseTank
     public Point[] PixelCoords = new Point[5000];
     public Color[] PixelColor = new Color[5000];
 
-    public SharpShooterTank(Point pos, int _mass, Coordinate frce, float angl)
+    public SharpShooterTank(Point pos, int _mass, Coordinate frce, float angl) //Point pos, int _mass, Coordinate frce, float angl
     {
         Position = pos; gravity = new Point(0, _mass * 1);
         force = frce; mass = _mass;
-        CanonAngle = angl; cPosition = new Coordinate(Position.X, Position.Y);
+        cPosition = new Coordinate(Position.X, Position.Y);
     }
     public void Damage(int damage)
     {
         health = TakeDamage(damage, health, 100);
         if (health <= 0) Destroy(); //was -100      
     }
-   
-    //private void GiveDamage(object sender, KeyPressEventArgs)
 
 	private void Destroy()
 	{
@@ -447,8 +467,7 @@ class SharpShooterTank : BaseTank
     public bool MouseMoved = false;
     Point oldPos;
     public Bitmap UpdateImage(Bitmap bitmap,Bitmap Tankbmp,Size TankbmpSize, int length, int height)
-    {    
-           
+    {           
         g = Graphics.FromImage(Tankbmp);
            
         oldPos = new Point (Position.X, Position.Y);
@@ -524,6 +543,10 @@ public class UpdateImage
                 position = p.Position;
                 g.FillRectangle(Brushes.Red, position.X, position.Y, length, height);
                 break;
+            case MachineGun mg:
+                mg.cPosition = cPosition;
+                oldPos = new Point(mg.Position.X, mg.Position.Y);
+                break;
         }
         return bitmap;
     }
@@ -570,6 +593,13 @@ public class UpdateImage
         g.DrawLine(new Pen(Brushes.Gold), CanonCentreX, CanonCentreY, (CanonCentreX + (float)x), (CanonCentreY + (float)y));
     }
 }
+
+public enum tankType
+{
+    SharpShooterTank,
+    MachineGun
+}
+
 /*public class UpdateImage    //ou een
 {
     public static Point MousePoint;

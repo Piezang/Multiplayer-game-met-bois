@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Runtime.InteropServices;
 
 public class Projectile: Rigidbody
@@ -41,6 +42,14 @@ public struct Coordinate
     {
         this.x = x;
         this.y = y;
+    }
+    public static Coordinate operator +(Coordinate a, Coordinate b)
+    {    
+        return new Coordinate(a.x + b.x, b.y + a.y);
+    }
+    public static Coordinate operator *(Coordinate a, double b)
+    {
+        return new Coordinate(a.x * b, a.y * b);
     }
 }
 
