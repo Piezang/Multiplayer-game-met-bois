@@ -467,18 +467,24 @@ class SharpShooterTank : BaseTank
     public bool MouseMoved = false;
     Point oldPos;
     public Bitmap UpdateImage(Bitmap bitmap,Bitmap Tankbmp,Size TankbmpSize, int length, int height)
-    {           
-        g = Graphics.FromImage(Tankbmp);
-           
-        oldPos = new Point (Position.X, Position.Y);
-   
-        UpdatePos(bitmap, length, height);
-        Position = new Point((int)cPosition.x, (int)cPosition.y);
-        Tankbmp = ChangeMouseCoords(Form1.X, Form1.Y, Tankbmp,TankbmpSize, SharpShooterTankimg, oldPos);
-        MouseMoved = false;
-        Form1.form1Instance.TankPicPos = new Point(Position.X - (int)(TankbmpSize.Width / 2) + 25, Position.Y - (int)(TankbmpSize.Height / 2) + 25);
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            g = Graphics.FromImage(Tankbmp);
 
+            oldPos = new Point(Position.X, Position.Y);
+
+            UpdatePos(bitmap, length, height);
+            Position = new Point((int)cPosition.x, (int)cPosition.y);
+            Tankbmp = ChangeMouseCoords(Form1.X, Form1.Y, Tankbmp, TankbmpSize, SharpShooterTankimg, oldPos);
+            MouseMoved = false;
+        }
         return Tankbmp;
+    }
+
+    public Point updateTankPicPos(Size TankbmpSize)
+    {
+        return new Point(Position.X - (int)(TankbmpSize.Width / 2) + 25, Position.Y - (int)(TankbmpSize.Height / 2) + 25);
     }
 
     public Bitmap ShootUlt(Bitmap bitmap)

@@ -70,6 +70,7 @@ public class TerrainGen
         Point p = new Point(20, 250);
 		//Bitmap bmp = new Bitmap(883, 497);
 		Graphics g = Graphics.FromImage(bitmap);
+		Pen pensky = new Pen(Brushes.Pink);
 		Pen penDirt = new Pen(Brushes.SaddleBrown);
 		Pen penGrass = new Pen(Brushes.DarkGreen);
 		
@@ -81,6 +82,7 @@ public class TerrainGen
 			ServerTerrain[i] = Convert.ToInt32(TerrainOutln[i] - 20);
             g.DrawLine(penDirt, pt1, pt2);
 			g.DrawLine(penGrass, pt2, pt3);
+			g.DrawLine(pensky, pt3, new Point(i, 0));
 		}
 		terrain = new Bitmap(bitmap);
         return bitmap;

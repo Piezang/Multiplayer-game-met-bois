@@ -240,7 +240,6 @@ namespace Multiplayer_game_met_bois
                         break;
                     }
                 }           
-                //MessageBox.Show(k.force.ToString());
             }
 
             Graphics g;
@@ -250,25 +249,25 @@ namespace Multiplayer_game_met_bois
             int PanForce = tank.Position.X;
             Server.ServerTankCords = tank.Position;  //Message na die client   
             Server.ServerMousePoint = tank.MousePoint;
+
             
-            for (int i = 0; i < 4; i++)
-            {
-                if ((tank.Position.X > 650) && (tank.Position.X < 3233))
-                { MoveCameraView(new Point(PanForce, 0)); }
-                TankBitMap = tank.UpdateImage(bitmap, TankBitMap, TankBitMap.Size, 50, 50);
-                //TankBitMap = UpdateImage.updateImage(bitmap, TankBitMap, TankBitMap.Size, tank, tank.cPosition, 50, 50); so hierdie wil nie werk nie
-                TankBitMap.MakeTransparent(Color.Pink);
-                TankPictureBox.Image = TankBitMap;
-                //Graphics l = Graphics.FromImage(TankBitMap);
-                //l.DrawLine(new Pen(Color.Pink), new Point(70,70), tank.CanonPoint);
-                EnemyPictureBox.Image = TankBitMap;
-                TankPictureBox.Location = new Point(TankPicPos.X, TankPicPos.Y);
+            int PanForce = tank.Position.X;
+            if ((tank.Position.X > 650) && (tank.Position.X < 3233))
+            { MoveCameraView(new Point(PanForce, 0), g); }
+              
+            TankBitMap = tank.UpdateImage(bitmap, TankBitMap, TankBitMap.Size, 50, 50);
                 
-                if (TerrainEdited == true)
-                {
-                    pictureBox1.Image = bitmap;  //UpdateImage.updateImage(bitmap, tank, tank.cPosition); 
-                }
+            TankBitMap.MakeTransparent(Color.Pink);
+
+            TankPictureBox.Image = TankBitMap;
+
+            TankPictureBox.Location = tank.updateTankPicPos(TankBitMap.Size);
+
+            if (TerrainEdited == true)
+            {
+                pictureBox1.Image = bitmap;  //UpdateImage.updateImage(bitmap, tank, tank.cPosition); 
             }
+            
             if (Client.connected)   //As hy die client is gebeur die
             {  
                 tank.Position = new Point((int)tank.cPosition.x, (int)tank.cPosition.y);  //nuut
