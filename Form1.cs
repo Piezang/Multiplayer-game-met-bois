@@ -34,37 +34,46 @@ namespace Multiplayer_game_met_bois
         Bitmap bitmap = new Bitmap(4000, 800);
         Bitmap TankBitMap = new Bitmap(140, 140);
         bool TerrainEdited = false;
+        frmTerrain f2 = new frmTerrain();
 
         public Form1()
         {
             InitializeComponent();
+            f2.Show();
+            f2.BringToFront();
+
+            this.BackColor = Color.AliceBlue;
+            this.TransparencyKey = Color.AliceBlue;
+            tabPage1.BackColor = TransparencyKey;
+
             form1Instance = this;
-            //TankPicPos = TankPicPos!;
             hpbox = HPbox;
-            timer1.Enabled = true;
-            //timer1.Enabled = false;
+            timer1.Enabled = true; ;
             KeyPreview = true;
             this.MouseClick += Form1_MouseClicked!;
 
             bitmap = terrain.TerrainImage(bitmap);
             t = terrain.TerrainImage(bitmap);
-            pictureBox1.Image = bitmap;
-            //Graphics h = Graphics.FromImage(b);
-            //h.DrawRectangle(new Pen(Color.Black), 0, 0, 229, 58);
+            //pictureBox1.Image = bitmap;
+            f2.TerrainPicBox.Image = bitmap;
+
             HPbox.Image = b;
 
 
+
             TankPictureBox = new PictureBox();
-            TankPictureBox.Location = new Point (SpawnPt.X - (int)(TankBitMap.Width / 2) - 25, SpawnPt.Y - (int)(TankBitMap.Height / 2) - 25);
+            TankPictureBox.Location = new Point(SpawnPt.X - (int)(TankBitMap.Width / 2) - 25, SpawnPt.Y - (int)(TankBitMap.Height / 2) - 25);
             TankPictureBox.Size = TankBitMap.Size;
             this.tabPage1.Controls.Add(TankPictureBox);
             TankPictureBox.BringToFront();
             TankPictureBox.Parent = pictureBox1;
             TankPictureBox.BackColor = Color.FromArgb(0, 0, 0, 0);
 
-        }  
+
+
+        }
         static Point SpawnPt = new Point(200, 350);
-        SharpShooterTank tank = new SharpShooterTank(SpawnPt, 1, new Coordinate(0,0), 180);
+        SharpShooterTank tank = new SharpShooterTank(SpawnPt, 1, new Coordinate(0, 0), 180);
         SharpShooterTank ServerTank = new SharpShooterTank(new Point(-10, -10), 1, new Coordinate(0, 0), 0);
         //ServerTank tree eintlik net op as die ander tank in die konneksie. Nie noodwendig die server se tank nie.
 
@@ -80,7 +89,7 @@ namespace Multiplayer_game_met_bois
                 return;
             }
             //MessageBox.Show(e.KeyChar.ToString());
-            tank.Move(Char.ToLower(e.KeyChar)); 
+            tank.Move(Char.ToLower(e.KeyChar));
             if (e.KeyChar >= 48 && e.KeyChar <= 57)
             {
                 MessageBox.Show($"Form.KeyPress: '{e.KeyChar}' pressed.");
@@ -94,7 +103,7 @@ namespace Multiplayer_game_met_bois
                         e.Handled = true;
                         break;
                 }
-            }      
+            }
         }
         int lengthMoved = 0;
         int actualMoved = 0;
@@ -103,8 +112,9 @@ namespace Multiplayer_game_met_bois
         private void MoveCameraView(Point pos, Graphics g)
         {
             lengthMoved = pos.X;
-            pictureBox1.Location = new Point(-lengthMoved + 650, pictureBox1.Location.Y);
-          
+            //pictureBox1.Location = new Point(-lengthMoved + 650, pictureBox1.Location.Y);
+            f2.TerrainPicBox.Location = new Point(-lengthMoved + 650, pictureBox1.Location.Y);
+
         }
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -176,10 +186,10 @@ namespace Multiplayer_game_met_bois
             //txtOutput.Text = output;
         }
 
-        TerrainGen terrain = new TerrainGen(4000-1);  
+        TerrainGen terrain = new TerrainGen(4000 - 1);
         bool TerrainGenerated = false;
         bool generated = false;
-        
+
         //int[] Terrain = new int[883];
         int[] newTerrainFromServer;
         //Die probleem is iets met static variables
@@ -199,7 +209,7 @@ namespace Multiplayer_game_met_bois
             for (int i = 0; i < newTerrainFromServer.Length; i++)
             {
                 Point pt1 = new Point(i, 800);  //497
-                Point pt2 = new Point(i, newTerrainFromServer[i]-10 + 10);
+                Point pt2 = new Point(i, newTerrainFromServer[i] - 10 + 10);
                 Point pt3 = new Point(i, newTerrainFromServer[i] + 10);
                 g.DrawLine(pen, pt1, pt2);
                 g.DrawLine(pen2, pt2, pt3);
@@ -227,47 +237,59 @@ namespace Multiplayer_game_met_bois
             if (!Server.Active)    //As hy nie die server is nie...
             {
                 if (newTerrainFromServer == null) return;
-                if (newTerrainFromServer[200 -2] == 0) return;
+                if (newTerrainFromServer[200 - 2] == 0) return;
             }                           //pictureBox1.Width //nuut
             if (projectileList.Count != 0)
             {
                 foreach (Projectile p in projectileList)
-                { 
-                    if(!p.Destroyed) {bitmap = p.ImageChange(bitmap, 4, 2); TerrainEdited = true; }
-                    if (tank.CircleCollided(p.cPosition) && !p.Destroyed) 
+                {
+                    if (!p.Destroyed) { bitmap = p.ImageChange(bitmap, 4, 2); TerrainEdited = true; }
+                    if (tank.CircleCollided(p.cPosition) && !p.Destroyed)
                     { tank.Damage(p.damage); p.Destroyed = true; Graphics.FromImage(t).FillRectangle(Brushes.Pink, p.Position.X, p.Position.Y, p.plength, p.pheight); }
                     if (p.cPosition.y > 1000) { projectileList.Remove(p); break; }
-                    if (p.TerrainInteractionV.X * p.force.x == 0 || p.TerrainInteractionV.Y * p.force.y == 0)  
-                    { projectileList.Remove(p);  
-                        Graphics.FromImage(t).FillEllipse(Brushes.Pink, p.Position.X - 45 , p.Position.Y - 45, 60, 60);
+                    if (p.TerrainInteractionV.X * p.force.x == 0 || p.TerrainInteractionV.Y * p.force.y == 0)
+                    { projectileList.Remove(p);
+                        Graphics.FromImage(t).FillEllipse(Brushes.Pink, p.Position.X - 45, p.Position.Y - 45, 60, 60);
                         TerrainEdited = true;
                         break;
                     }
-                }           
+                }
             }
 
             Graphics g;
             g = Graphics.FromImage(bitmap);
-            
+
             Server.ServerTankCords = tank.Position;  //Message na die client   
             Server.ServerMousePoint = tank.MousePoint;
 
-            
+
             int PanForce = tank.Position.X;
             if ((tank.Position.X > 650) && (tank.Position.X < 3233))
-            { MoveCameraView(new Point(PanForce, 0), g); }
-              
-            TankBitMap = tank.UpdateImage(bitmap, TankBitMap, TankBitMap.Size, 50, 50);
-                
-            TankBitMap.MakeTransparent(Color.Pink);
+            {
+                MoveCameraView(new Point(PanForce, 0), g);
 
-            TankPictureBox.Image = TankBitMap;
+                TankBitMap = tank.UpdateImage(bitmap, TankBitMap, TankBitMap.Size, 50, 50);
 
-            TankPictureBox.Location = tank.updateTankPicPos(TankBitMap.Size);
+                TankBitMap.MakeTransparent(Color.Pink);
+
+                TankPictureBox.Image = TankBitMap;
+
+                TankPictureBox.Location = new Point(600, tank.updateTankPicPos(TankBitMap.Size).Y);
+            }
+            else
+            {
+                TankBitMap = tank.UpdateImage(bitmap, TankBitMap, TankBitMap.Size, 50, 50);
+
+                TankBitMap.MakeTransparent(Color.Pink);
+
+                TankPictureBox.Image = TankBitMap;
+
+                TankPictureBox.Location = tank.updateTankPicPos(TankBitMap.Size);
+            }
 
             if (TerrainEdited == true)
             {
-                pictureBox1.Image = bitmap;  //UpdateImage.updateImage(bitmap, tank, tank.cPosition); 
+                f2.TerrainPicBox.Image = bitmap;  //UpdateImage.updateImage(bitmap, tank, tank.cPosition); 
             }
             
             if (Client.connected)   //As hy die client is gebeur die
@@ -355,6 +377,12 @@ namespace Multiplayer_game_met_bois
 
         private int ammocount = SharpShooterTank.MaxAmmo;
         private string shot = "N";
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
         private async Task SpawnProjectile(Point mouse, Point pos)
         {
             //MessageBox.Show(Client.ServerMousePoint.ToString());

@@ -121,6 +121,7 @@
             this.Tabs.Controls.Add(this.ClientPage);
             this.Tabs.Controls.Add(this.tabPage1);
             this.Tabs.Location = new System.Drawing.Point(12, 12);
+            this.Tabs.Margin = new System.Windows.Forms.Padding(0);
             this.Tabs.Name = "Tabs";
             this.Tabs.SelectedIndex = 0;
             this.Tabs.Size = new System.Drawing.Size(1427, 837);
@@ -297,7 +298,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.BackColor = System.Drawing.Color.Pink;
+            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox1.Location = new System.Drawing.Point(3, 0);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(4000, 800);
@@ -321,7 +322,9 @@
             this.ClientSize = new System.Drawing.Size(1444, 861);
             this.Controls.Add(this.Tabs);
             this.Name = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Form1_keyPress);
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseClicked);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
