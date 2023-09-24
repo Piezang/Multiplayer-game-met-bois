@@ -16,6 +16,7 @@ using static System.Net.Mime.MediaTypeNames;
 using System.Media;
 using Microsoft.VisualBasic.Devices;
 using System.Drawing.Drawing2D;
+using System;
 
 namespace Multiplayer_game_met_bois
 {
@@ -30,6 +31,7 @@ namespace Multiplayer_game_met_bois
         int count = 0;
         double FixedDeltaTime; //'n poging om 'n variable te kry om 'n vinnige masjien uit te kanseleer 
         PictureBox TankPictureBox;
+        PictureBox EnemyPictureBox;
         public Point TankPicPos;
         Bitmap bitmap = new Bitmap(4000, 800);
         Bitmap TankBitMap = new Bitmap(140, 140);
@@ -69,12 +71,18 @@ namespace Multiplayer_game_met_bois
             TankPictureBox.Parent = pictureBox1;
             TankPictureBox.BackColor = Color.FromArgb(0, 0, 0, 0);
 
-
-
+            EnemyPictureBox = new PictureBox();
+            EnemyPictureBox.Location = new Point(SpawnPt.X - (int)(TankBitMap.Width / 2) - 25, SpawnPt.Y - (int)(TankBitMap.Height / 2) - 25);
+            EnemyPictureBox.Size = TankBitMap.Size;
+            this.tabPage1.Controls.Add(EnemyPictureBox);
+            EnemyPictureBox.BringToFront();
+            EnemyPictureBox.Parent = pictureBox1;
+            EnemyPictureBox.BackColor = Color.FromArgb(0, 0, 0, 0);
+            cmboTankPick.SelectedIndex = 1;
         }
         static Point SpawnPt = new Point(200, 350);
-        SharpShooterTank tank = new SharpShooterTank(SpawnPt, 1, new Coordinate(0, 0), 180);
-        SharpShooterTank ServerTank = new SharpShooterTank(new Point(-10, -10), 1, new Coordinate(0, 0), 0);
+        SharpShooterTank tank; // = new SharpShooterTank(SpawnPt, 1, new Coordinate(0,0), 180);
+        SharpShooterTank ServerTank = new SharpShooterTank(new Point(80, 20), 1, new Coordinate(0, 0), 0);
         //ServerTank tree eintlik net op as die ander tank in die konneksie. Nie noodwendig die server se tank nie.
 
         private void Form1_keyPress(object sender, KeyPressEventArgs e)
@@ -109,7 +117,7 @@ namespace Multiplayer_game_met_bois
         int actualMoved = 0;
         Bitmap b = new Bitmap(230, 59);
 
-        private void MoveCameraView(Point pos, Graphics g)
+        private void MoveCameraView(Point pos)
         {
             lengthMoved = pos.X;
             //pictureBox1.Location = new Point(-lengthMoved + 650, pictureBox1.Location.Y);
@@ -119,14 +127,20 @@ namespace Multiplayer_game_met_bois
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-            //Server server = new Server();
-            //server.start(txtHost.Text, Convert.ToInt32(txtPort.Text));
+            unsafe
+            {
+                SharpShooterTank sharp = new SharpShooterTank(SpawnPt, 1, new Coordinate(0, 0), 180);
+                SharpShooterTank* sharpPointer = &sharp;
+                //fixed (SharpShooterTank* sharpPointer = sharp)
+                //{
+                    if (cmboTankPick.Text == "SharpShooter") { tank = *sharpPointer; }
+                //}
+                //(sharpPointer)->tank;
+            }   //(SharpShooterTank)sharpPointer;
 
             Thread ServerThread = new Thread(() =>
             Server.start(txtHost.Text, Convert.ToInt32(txtPort.Text), tank.Position));
             ServerThread.Start();
-
-            //asyncVoorbeeld();
         }
         async void asyncVoorbeeld()
         {
@@ -161,36 +175,18 @@ namespace Multiplayer_game_met_bois
         {
             //Form1 f = new Form1();
             await Task.Delay(14);  //Baie weird moet eintlik 17 wees maar ok
-
-            /*int count = 0;
-            for (int i = 0; i < 1000000000; i++)
-            {
-                count++;
-            }*/
-
-            //output += "r";
-            //MessageBox.Show(output);
-
             TrueFixedUpdate();
-            //await Task.Run(FixedUpdate); // Wag totdat task klaar is
-            //Wag vir daardie hoeveelheid millisekondes
-
-            //return;
         }
 
         public void TrueFixedUpdate() //Word tussen 61 en 63 keer per sekonde gecall
         {
             count++;
-            //MessageBox.Show(timer.ElapsedMilliseconds.ToString());
-            //MessageBox.Show(elapsedTime.ToString());
-            //txtOutput.Text = output;
         }
 
         TerrainGen terrain = new TerrainGen(4000 - 1);
         bool TerrainGenerated = false;
         bool generated = false;
-
-        //int[] Terrain = new int[883];
+        
         int[] newTerrainFromServer;
         //Die probleem is iets met static variables
 
@@ -230,7 +226,9 @@ namespace Multiplayer_game_met_bois
             //change();
         }
 
-        private void TimerUpdate(object sender, EventArgs e)   //60 keer per sekonde
+        Bitmap test = new Bitmap(140,140);
+
+        private async void TimerUpdate(object sender, EventArgs e)   //100 keer per sekonde
         {
             TerrainEdited = false;
             if (DontUpdate) return;
@@ -257,8 +255,10 @@ namespace Multiplayer_game_met_bois
             }
 
             Graphics g;
-            g = Graphics.FromImage(bitmap);
-
+            //g = Graphics.FromImage(bitmap);
+         
+            tank.Position = new Point((int)tank.cPosition.x, (int)tank.cPosition.y);  //nuut
+            int PanForce = tank.Position.X;
             Server.ServerTankCords = tank.Position;  //Message na die client   
             Server.ServerMousePoint = tank.MousePoint;
 
@@ -293,24 +293,27 @@ namespace Multiplayer_game_met_bois
             }
             
             if (Client.connected)   //As hy die client is gebeur die
-            {
-                //MessageBox.Show("Kaas2");
+            {  
                 tank.Position = new Point((int)tank.cPosition.x, (int)tank.cPosition.y);  //nuut
-                //MessageBox.Show(tank.position.ToString() + ">" + tank.AimAngle.ToString());
+                
                 Client.Message(tank.Position.ToString() + ">" + tank.AimPoint + shot);   //Message na die server
                 if (shot == "Y") shot = "N";
                 string t = Client.ServerCords.Trim();       //Server se response, sy tank se cords
                 int x = Convert.ToInt32(t.Substring(t.IndexOf('=')+1, t.IndexOf(',') - t.IndexOf('=')-1));
-                //MessageBox.Show(x);
                 int y = Convert.ToInt32(t.Substring(t.IndexOf('Y') + 2, t.IndexOf('}') - t.IndexOf('Y')-2));
-                //MessageBox.Show(y);
+                Point Servercanonpoint = Client.ServerMousePoint;
                 
                 g = Graphics.FromImage(bitmap);               
-                g.FillEllipse(Brushes.Pink, ServerTank.Position.X, ServerTank.Position.Y, 50, 50);
+                //g.FillEllipse(Brushes.Pink, ServerTank.Position.X, ServerTank.Position.Y, 50, 50);
                 ServerTank.Position = new Point(x, y);   //PanForce was nie daar nie
                 ServerTank.cPosition = new Coordinate(x, y);
-                
-                g.DrawImage(ServerTank.SharpShooterTankimg, ServerTank.Position.X, ServerTank.Position.Y);
+
+                if (Client.ServerProjectileShot) 
+                    await SpawnProjectile(Servercanonpoint, ServerTank.Position);  //await dalk hier?
+   
+                //g.DrawLine(new Pen(Brushes.Yellow), new Point(x + 25, y + 25), Servercanonpoint);
+                //g.DrawImage(ServerTank.SharpShooterTankimg, ServerTank.Position.X, ServerTank.Position.Y);
+                EnemyPictureBox.Location = new Point(x - 47, y - 47);
                 pictureBox1.Image = bitmap;            
             }
             Point othertankCanonPoint = Server.OtherTankCanonPoint;
@@ -323,19 +326,20 @@ namespace Multiplayer_game_met_bois
                 int y = Convert.ToInt32(t.Substring(t.IndexOf('Y') + 2, t.IndexOf('}') - t.IndexOf('Y') - 2));
                 
                 g = Graphics.FromImage(bitmap);
-                g.DrawLine(new Pen(Brushes.Pink), new Point(x + 25, y + 25), othertankCanonPoint);
-                g.FillEllipse(Brushes.Pink, ServerTank.Position.X-2, ServerTank.Position.Y-2, 50, 50);
+                //g.DrawLine(new Pen(Brushes.Pink), new Point(x + 25, y + 25), othertankCanonPoint);
+                //g.FillEllipse(Brushes.Pink, ServerTank.Position.X-2, ServerTank.Position.Y-2, 50, 50);
                 othertankCanonPoint = Server.OtherTankCanonPoint;
                 
                 ServerTank.Position = new Point(x, y);
                 ServerTank.cPosition = new Coordinate(x , y);  //nuut
                 if (Server.ProjectileShot) 
-                    SpawnProjectile(othertankCanonPoint, ServerTank.Position);  //await dalk hier?
-                g.DrawLine(new Pen(Brushes.Yellow), new Point(x + 25, y + 25), othertankCanonPoint);
-                g.DrawImage(ServerTank.SharpShooterTankimg, ServerTank.Position.X, ServerTank.Position.Y);
+                    await SpawnProjectile(othertankCanonPoint, ServerTank.Position);  //await dalk hier?
+                //g.DrawLine(new Pen(Brushes.Yellow), new Point(x + 25, y + 25), othertankCanonPoint);
+                //g.DrawImage(ServerTank.SharpShooterTankimg, ServerTank.Position.X, ServerTank.Position.Y);
+                EnemyPictureBox.Location = new Point(x - 47, y - 47);
                 pictureBox1.Image = bitmap;
+                //(SpawnPt.X - (int)(TankBitMap.Width / 2) - 25, SpawnPt.Y - (int)(TankBitMap.Height / 2) - 25);
             }
-            //pictureBox1.Image = bitmap; 
         }
         public static Bitmap t;
         public static int X, Y;
@@ -370,23 +374,38 @@ namespace Multiplayer_game_met_bois
                 { stop = false; return; }
             }
         }
-        private async void MouseDownn(object sender, MouseEventArgs e)
-        {
-            
-        }
 
         private int ammocount = SharpShooterTank.MaxAmmo;
         private string shot = "N";
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void TankPicked(object sender, EventArgs e)
         {
-
+            switch(cmboTankPick.Text)
+            {
+                case "SharpShooter":
+                    {
+                        ServerTank = new SharpShooterTank(SpawnPt, 3, new Coordinate(0, 0), 120);
+                        //tank = ;
+                    } 
+                    break;
+                case "MachineGun":
+                    break;
+            }
         }
 
         private async Task SpawnProjectile(Point mouse, Point pos)
         {
-            //MessageBox.Show(Client.ServerMousePoint.ToString());
-            ammocount--; shot = "Y"; Server.ServerProjectileShot = "Y";
+            shot = "Y";
+            if (Server.ClientTankCords != "") // as die een die server is:
+                Server.ServerProjectileShot = "Y";
+            if (pos == ServerTank.Position) //as die bullet van die ander tank afkomstig is:
+            {
+                ammocount++; shot = "N";  
+                if (Server.ClientTankCords != "")  // as die een die server is:
+                    Server.ServerProjectileShot = "N";    
+            }
+           
+            ammocount--;  
             lblAmmo.Text = "AMMO: " + ammocount.ToString();
             player.Stop();
             player.SoundLocation = path + "woosh.wav";
@@ -504,13 +523,12 @@ namespace Multiplayer_game_met_bois
         {
             while (true)
             {
-                byte[] msg = new byte[2048*2];   //1024  //2048 2048 * 2 = 4kilo bytes WAS *7
+                byte[] msg = new byte[1024*1];   //1024  //2048 2048 * 2 = 4kilo bytes WAS *7
                 int size = client.Receive(msg);
                 string message = System.Text.Encoding.ASCII.GetString(msg, 0, size);
-                //MessageBox.Show(message);
+                
                 if (message[0] == 'm') //Cords message
-                {
-                    //if (Server.ServerProjectileShot == "Y") MessageBox.Show("Projectile shot is true");
+                {  
                     message = message.Substring(1);
                     ProjectileShot = false;
                     if (message[message.Length - 1] == 'Y')
@@ -519,8 +537,7 @@ namespace Multiplayer_game_met_bois
                         ProjectileShot = true;
                     }
                     message = message.Remove(message.Length-1);
-                    //MessageBox.Show(message);
-                    //MessageBox.Show("Message from client: " + message);
+                    
                     ClientTankCords = message.Substring(1, message.IndexOf("}"));
                     string sPoint = message.Substring(message.IndexOf(">") + 1, message.Length - 1 - message.IndexOf(">"));
                     OtherTankCanonPoint = new Point(Convert.ToInt32(sPoint.Substring(0, sPoint.IndexOf('|'))),
@@ -528,10 +545,9 @@ namespace Multiplayer_game_met_bois
                        
                     msg = Encoding.Default.GetBytes(ServerTankCords.ToString() + //Stuur my eie cords vir client
                         ServerMousePoint.ToString() + ServerProjectileShot);    //Stuur CanonAngle en stuff
-                    //if (ServerProjectileShot == "Y") MessageBox.Show("Hy werk");
+                    
                     client.Send(msg);
-                    ServerProjectileShot = "N";
-                    //if (ProjectileShot) { await Task.Delay(100); }
+                    ServerProjectileShot = "N"; 
                 }
                 if (message == "Ready")  //TErrain message
                 {
@@ -570,32 +586,14 @@ namespace Multiplayer_game_met_bois
                 messageFromClient.Length, SocketFlags.None);
             //ClientSocket.Send(Server.IntArrToByte(new int[1000]), 0, messageFromClient.Length, SocketFlags.None);
 
-            byte[] msgFromServer = new byte[2048 * 2];  //WAS * 2
+            byte[] msgFromServer = new byte[50];  //WAS 1024 * 1 (kan eintlik 26 wees)
             int size = ClientSocket.Receive(msgFromServer);
-            
-            //if (Encoding.Default.GetString(msgFromServer).IndexOf('}') < 0)   //As die boodskap nie '}' bevat nie stuur weer 'n message om die socket te clear
-            //{
-                //Message(messageFromClient.Substring(1));
-            //}
-
-            //MessageBox.Show("Server responds: " +
-            //System.Text.Encoding.ASCII.GetString(msgFromServer, 0, size));
             string msg = Encoding.Default.GetString(msgFromServer);
-            //if (msg != null)
-            //{
-                //msg = msg;
-            //}
-
             
             ServerProjectileShot = false;
             //MessageBox.Show(msg.Substring(msg.Length - 1));
             if (msg[26] == 'Y') { /*MessageBox.Show("Client also sees it");*/ ServerProjectileShot = true; }
 
-            //if (ServerCords == msg.Substring(0, msg.IndexOf('}') + 1))
-            //{
-                //return;
-            //}
-            //Server.ServerProjectileShot = "N";
             //ServerCords = msg;   
             ServerCords = msg.Substring(0, msg.IndexOf('}')+1);
 
@@ -605,8 +603,6 @@ namespace Multiplayer_game_met_bois
             int y = Convert.ToInt32(t.Substring(t.IndexOf('Y') + 2, t.IndexOf('}') - t.IndexOf('Y') - 2));
 
             ServerMousePoint = new Point(x,y);
-            
-            //MessageBox.Show(ServerCords);
         }
         public static int[] Ready()
         {         
@@ -622,29 +618,6 @@ namespace Multiplayer_game_met_bois
             //MessageBox.Show("Server responds: " +
 
             ServerBitmapp = Server.ByteArrToInt(msgFromServer);
-
-            /*string msg = Encoding.Default.GetString(msgFromServer);
-            //MessageBox.Show(msg);
-            int count = 0;
-
-            //if (msg[0] == 't')
-            //{
-                //msg = msg.Substring(1);
-                foreach (char c in msg)
-                {                       //Hierdie moet groter wees
-                    if (c == ' ' && count < 4000  && msg.IndexOf(' ') > -1)
-                    {
-                        //MessageBox.Show(msg.Substring(0, msg.IndexOf(' ') ));
-                        //MessageBox.Show(msg.Substring(0, msg.IndexOf(' ')));
-                        ServerBitmapp[count] = Convert.ToInt32(msg.Substring(0, msg.IndexOf(' ')));
-                        //MessageBox.Show(ServerBitmapp[count].ToString());
-                        msg = msg.Remove(0, msg.IndexOf(' ') + 1);
-                        //MessageBox.Show(msg);
-                        count++;
-                    }
-                }
-                MessageBox.Show(count.ToString() + " count");
-            //}*/
             return ServerBitmapp;
         }
     }

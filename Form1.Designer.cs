@@ -37,6 +37,7 @@
             this.rtServer = new System.Windows.Forms.RichTextBox();
             this.Tabs = new System.Windows.Forms.TabControl();
             this.ServerPage = new System.Windows.Forms.TabPage();
+            this.cmboTankPick = new System.Windows.Forms.ComboBox();
             this.btnSendServer = new System.Windows.Forms.Button();
             this.txtOutput = new System.Windows.Forms.TextBox();
             this.btnStop = new System.Windows.Forms.Button();
@@ -130,6 +131,7 @@
             // ServerPage
             // 
             this.ServerPage.BackColor = System.Drawing.Color.DimGray;
+            this.ServerPage.Controls.Add(this.cmboTankPick);
             this.ServerPage.Controls.Add(this.btnSendServer);
             this.ServerPage.Controls.Add(this.txtOutput);
             this.ServerPage.Controls.Add(this.btnStop);
@@ -145,6 +147,19 @@
             this.ServerPage.Size = new System.Drawing.Size(1419, 809);
             this.ServerPage.TabIndex = 0;
             this.ServerPage.Text = "Server";
+            // 
+            // cmboTankPick
+            // 
+            this.cmboTankPick.FormattingEnabled = true;
+            this.cmboTankPick.Items.AddRange(new object[] {
+            "None",
+            "SharpShooter",
+            "MachineGun"});
+            this.cmboTankPick.Location = new System.Drawing.Point(520, 119);
+            this.cmboTankPick.Name = "cmboTankPick";
+            this.cmboTankPick.Size = new System.Drawing.Size(228, 23);
+            this.cmboTankPick.TabIndex = 9;
+            this.cmboTankPick.SelectedIndexChanged += new System.EventHandler(this.TankPicked);
             // 
             // btnSendServer
             // 
@@ -368,5 +383,6 @@
         private PictureBox pictureBox1;
         private PictureBox HPbox;
         private Label lblAmmo;
+        private ComboBox cmboTankPick;
     }
 }
